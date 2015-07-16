@@ -61,6 +61,8 @@ setup(
         'xlsxwriter',
         'xlwt',
         'pandas',
+        'pkg_resources',
+        'glob'
         ],
     message_extractors = {
         'ipp-macro-series-parser': [
