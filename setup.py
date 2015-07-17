@@ -61,6 +61,7 @@ setup(
         'glob',
         'pandas',
         'pkg_resources',
+        'xlrd'
         'xlsxwriter',
         'xlwt',
         ],
