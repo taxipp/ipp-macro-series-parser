@@ -58,7 +58,7 @@ setup(
     # url = 'https://github.com/ipp-aggregates-parser',
 
     install_requires = [
-        'glob'
+        'glob',
         'pandas',
         'pkg_resources',
         'xlsxwriter',
