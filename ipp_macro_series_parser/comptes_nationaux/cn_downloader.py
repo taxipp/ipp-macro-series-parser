@@ -13,14 +13,12 @@ import zipfile
 
 from ipp_macro_series_parser.config import Config
 
+
+# get the name of local folder for comptabilite national data (= destination of download)
 parser = Config(
     config_files_directory = os.path.join(pkg_resources.get_distribution('ipp-macro-series-parser').location)
     )
-
 cn_directory = parser.get('data', 'cn_directory')
-
-# to delete:
-# cn_directory = 'C:\Users\Antoine\Documents\data_aggregates'
 
 
 # download a zip file from theurl and unzipp it in directory thedir
@@ -54,7 +52,7 @@ def getunzipped(theurl, thedir):
                 shutil.copyfileobj(source, target)
 
 
-# use getunzipped for INSEE comptabilite national zip file data for a given year
+# use getunzipped for INSEE comptabilite national zip file data for a list of years (one zipfile per year)
 def cn_downloader(years):
     if years is None:
         years = range(1949, 2013 + 1, 1)
