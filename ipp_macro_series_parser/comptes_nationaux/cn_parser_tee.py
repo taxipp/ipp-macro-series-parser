@@ -18,12 +18,17 @@ tee_file_parser: transform the excel file into a pandas dataframe
 tee_folder_parser: transform all the TEE excel files in a given folder into a datafrane
 """
 
+
+import logging
 import os
 import pandas
 import pkg_resources
 
 from ipp_macro_series_parser.config import Config
 from ipp_macro_series_parser.comptes_nationaux.cn_get_file_infos import file_infos
+
+
+log = logging.getLogger(__name__)
 
 
 # get the name of local folder for comptabilite national data
@@ -97,7 +102,10 @@ def tee_df_tidy(df):
 
 def tee_df_generator(folder_year, list_years = None):
     if list_years is None:
-        print 'User did not provide list of years. I will generate TEE dataframe for every year from 1949 to ' + str(folder_year)
+        log.info(
+            'User did not provide list of years. I will generate TEE dataframe for every year from 1949 to {}'.format(
+                folder_year)
+            )
         list_years = range(1949, folder_year + 1, 1)
     if type(list_years) is int:
         list_years = [list_years]
