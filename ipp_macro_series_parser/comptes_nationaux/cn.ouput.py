@@ -5,9 +5,13 @@ Created on Thu Jul 16 14:13:25 2015
 @author: Antoine
 """
 
+"""
+THIS FILE IS A DRAFT - PLEASE DISCARD FOR NOW
+"""
 
 
-# builds up the output dataframe
+
+# builds the output dataframe
 
 # revenu national depuis 1949 avec description
 df = df_t_1115[df_t_1115['name'] == 'revenu_national']

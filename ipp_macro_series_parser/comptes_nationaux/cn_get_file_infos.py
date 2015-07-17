@@ -9,7 +9,6 @@ import os
 
 
 def file_infos(excelfile_name):
-    # filename = os.path.splitext(excelfile_name)[0]  # removes extension (but keeps the path)
     filename = os.path.split(excelfile_name)[1].split('.')[0]  # name of the file, without extension
     filename = filename.lower()
     file_version = os.path.dirname(excelfile_name)
@@ -53,6 +52,7 @@ def file_infos(excelfile_name):
             agent = 'S2'  # (reste du monde)
             title = 'Operations avec le reste du monde'
 
+    # to be completed for all the files of interest in the folder
     # elif filename == 't_3101':
     #    agent = 'S13'  # (administrations publiques)
     #    title = 'Dette des administrations publiques (S13) au sens de Maastricht et sa répartition par sous-secteur'

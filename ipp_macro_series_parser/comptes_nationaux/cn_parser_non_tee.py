@@ -24,12 +24,6 @@ cn_directory = parser.get('data', 'cn_directory')
 
 def file_parser(excelfile_name):
     infos = file_infos(excelfile_name)
-#    if infos['tee_flag'] == 1:
-#        header = None
-#        skiprows = 0  # prviously 4
-#        skip_footer = 0  # previously 2 but unnecessary since cleaner
-#        index_col = None
-#        parse_cols = "A:end"
 
     if infos['tee_flag'] == 0:
         header = 1
@@ -93,7 +87,7 @@ def df_tidy(df, folder_year):
 
 
 def non_tee_df_generator(folder_year):
-    dico = dict()
+    non_tee_df_by_key = dict()
     path_to_dir = os.path.join(cn_directory, 'comptes_annee_{}'.format(folder_year), '*.xls')
     list_of_files = glob.glob(path_to_dir)
     for filename in list_of_files:
@@ -106,5 +100,5 @@ def non_tee_df_generator(folder_year):
         df = file_parser(filename)
         df = df_cleaner(df)
         df = df_tidy(df, int(infos['version']))
-        dico[infos['filename']] = df
-    return dico
+        non_tee_df_by_key[infos['filename']] = df
+    return non_tee_df_by_key

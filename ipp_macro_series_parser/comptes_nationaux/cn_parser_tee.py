@@ -101,9 +101,9 @@ def tee_df_generator(folder_year, list_years = None):
         list_years = range(1949, folder_year + 1, 1)
     if type(list_years) is int:
         list_years = [list_years]
-    dico = tee_folder_parser(folder_year, list_years)
+    tee_df_by_key = tee_folder_parser(folder_year, list_years)
     for year in list_years:
         df_name = 'tee_' + str(year)
-        dico[df_name] = tee_df_cleaner(dico[df_name])
-        dico[df_name] = tee_df_tidy(dico[df_name])
-    return dico
+        tee_df_by_key[df_name] = tee_df_cleaner(tee_df_by_key[df_name])
+        tee_df_by_key[df_name] = tee_df_tidy(tee_df_by_key[df_name])
+    return tee_df_by_key

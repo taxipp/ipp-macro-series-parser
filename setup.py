@@ -58,11 +58,11 @@ setup(
     # url = 'https://github.com/ipp-aggregates-parser',
 
     install_requires = [
-        'xlsxwriter',
-        'xlwt',
+        'glob'
         'pandas',
         'pkg_resources',
-        'glob'
+        'xlsxwriter',
+        'xlwt',
         ],
     message_extractors = {
         'ipp-macro-series-parser': [
