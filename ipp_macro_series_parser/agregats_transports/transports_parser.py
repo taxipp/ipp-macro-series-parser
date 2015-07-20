@@ -45,18 +45,18 @@ def transports_parser_categ(excelfile_name, onglet):
     return data_frame
 
 
-a3_a = transports_parser(a_activite_economique, 14)  # OK
-a3_b = transports_parser(a_activite_economique, 15)  # OK
-a6_b = transports_parser(a_activite_economique, 30)  # OK
-d2_f = transports_parser(d_developpement_durable, 10)  # OK
+a3_a = transports_parser(a_activite_economique, 14)
+a3_b = transports_parser(a_activite_economique, 15)
+a6_b = transports_parser(a_activite_economique, 30)
+d2_f = transports_parser(d_developpement_durable, 10)
 
-g1_a1 = transports_parser(g_bilan_circulation, 1)  # OK
-g1_b1 = transports_parser(g_bilan_circulation, 3)  # OK
-g2_1 = transports_parser(g_bilan_circulation, 7)  # OK
-g3_c1 = transports_parser(g_bilan_circulation, 11)  # OK
+g1_a1 = transports_parser(g_bilan_circulation, 1)
+g1_b1 = transports_parser(g_bilan_circulation, 3)
+g2_1 = transports_parser(g_bilan_circulation, 7)
+g3_c1 = transports_parser(g_bilan_circulation, 11)
 
-d2_g = transports_parser(d_developpement_durable, 11)  # compliqué
-f1_a = transports_parser(f_voyageurs, 1)  # compliqué
+d2_g = transports_parser(d_developpement_durable, 11)
+f1_a = transports_parser(f_voyageurs, 1)
 
-a1_b = transports_parser_categ(a_activite_economique, 2)  # compliqué
+a1_b = transports_parser_categ(a_activite_economique, 2)
 g_3a = transports_parser_categ(g_bilan_circulation, 9)
