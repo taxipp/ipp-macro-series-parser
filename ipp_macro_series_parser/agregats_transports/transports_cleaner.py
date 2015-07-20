@@ -27,11 +27,16 @@ def cleaner_dont(data_frame):
 
 
 def cleaner_achat_vehicule(data_frame):
-    data_frame['identification_categ'] = 0
-    data_frame['identification_categ'] = data_frame['index'].str[:3]
+    data_frame['categorie'] = 0
+    data_frame['categorie'] = data_frame['index'].str[:3]
     cols = data_frame.columns.tolist()
     cols = cols[-1:] + cols[:-1]
     data_frame = data_frame[cols]
+    data_frame.loc[data_frame['categorie'].str[:2] != '07', 'categorie'] = 'autres'
+    data_frame.loc[data_frame['categorie'] == '071', 'categorie'] = 'achats_de_vehicules'
+    data_frame.loc[data_frame['categorie'] == '072', 'categorie'] = 'depenses_utilisation_vehicules'
+    data_frame.loc[data_frame['categorie'] == '073', 'categorie'] = 'services_de_transports'
+    data_frame.loc[data_frame['categorie'] == '07 ', 'categorie'] = 'Total'
     return data_frame
 
 
@@ -51,7 +56,7 @@ def cleaner_au_profit(data_frame):
     return data_frame
 
 
-def cleaner_alinea(data_frame):
+def cleaner_mode_transport(data_frame):
     data_frame['identification_categ'] = 0
     data_frame['identification_categ'] = data_frame['index'].str[:1]
     data_frame['sous_sous_categorie'] = data_frame['index']
@@ -78,6 +83,7 @@ def cleaner_depense(data_frame):
     cols.insert(0, cols.pop(cols.index('sous_categorie')))
     cols.insert(0, cols.pop(cols.index('categorie')))
     data_frame = data_frame.ix[:, cols]
+    data_frame.loc[data_frame['sous_categorie'] == data_frame['sous_sous_categorie'], 'sous_sous_categorie'] = 'Total'
     return data_frame
 
 
@@ -104,6 +110,49 @@ def cleaner_f(data_frame):
     return data_frame
 
 
+def cleaner_d2g(data_frame):
+    data_frame['identification_categ'] = np.nan
+    data_frame['identification_categ'] = data_frame['index'].str[:10]
+    data_frame['categorie'] = np.nan
+    data_frame.loc[data_frame['identification_categ'] == 'Transports', 'categorie'] = \
+        data_frame.loc[data_frame['identification_categ'] == 'Transports', 'index']
+    data_frame.loc[data_frame['identification_categ'] == 'Transports', 'index'] = 'Total'
+
+    data_frame.loc[data_frame['identification_categ'] == 'Navigation', 'categorie'] = \
+        data_frame.loc[data_frame['identification_categ'] == 'Navigation', 'index']
+    data_frame.loc[data_frame['identification_categ'] == 'Navigation', 'index'] = 'Total'
+
+    data_frame.loc[data_frame['identification_categ'] == u'Oléoducs (', 'categorie'] = \
+        data_frame.loc[data_frame['identification_categ'] == u'Oléoducs (', 'index']
+    data_frame.loc[data_frame['identification_categ'] == u'Oléoducs (', 'index'] = 'Total'
+
+    data_frame.loc[data_frame['identification_categ'] == 'Plaisance ', 'categorie'] = \
+        data_frame.loc[data_frame['identification_categ'] == 'Plaisance ', 'index']
+    data_frame.loc[data_frame['identification_categ'] == 'Plaisance ', 'index'] = 'Total'
+
+    data_frame.loc[data_frame['identification_categ'] == 'Ensemble', 'categorie'] = \
+        data_frame.loc[data_frame['identification_categ'] == 'Ensemble', 'index']
+    data_frame.loc[data_frame['identification_categ'] == 'Ensemble', 'index'] = 'Total'
+
+    data_frame.loc[data_frame['identification_categ'] == 'Transport ', 'categorie'] = \
+        data_frame.loc[data_frame['identification_categ'] == 'Transport ', 'index']
+    data_frame.loc[data_frame['identification_categ'] == 'Transport ', 'index'] = 'Total'
+
+    data_frame['categorie'].fillna(method = 'ffill', inplace = True)
+    cols = list(data_frame)
+    cols.insert(0, cols.pop(cols.index('categorie')))
+    data_frame = data_frame.ix[:, cols]
+    del data_frame['identification_categ']
+    return data_frame
+
+
+def cleaner_alinea(data_frame):
+    data_frame['index'] = data_frame['index'].str.replace(' dont', 'dont')
+    data_frame['index'] = data_frame['index'].str.replace('        en', 'en')
+    data_frame['index'] = data_frame['index'].str.replace('    D', 'D')
+    return data_frame
+
+
 g1_a1 = cleaner_dont(g1_a1)
 g1_b1 = cleaner_dont(g1_b1)
 g2_1 = cleaner_dont(g2_1)
@@ -114,9 +163,16 @@ a3_b = cleaner_achat_vehicule(a3_b)
 
 a6_b = cleaner_au_profit(a6_b)
 
-a1_b = cleaner_alinea(a1_b)
+a1_b = cleaner_mode_transport(a1_b)
 a1_b = cleaner_depense(a1_b)
+a1_b = cleaner_alinea(a1_b)
 
 f1_a = cleaner_f(f1_a)
 
-# d2_f does not need to be cleaned. We still have to clean d2_g and g_3a.
+d2_g = cleaner_d2g(d2_g)
+
+g_3a = cleaner_alinea(g_3a)
+
+# If we want to set the index:
+# cols = list(a1_b)
+# a1_b.set_index(cols[:4], inplace = True)
