@@ -45,18 +45,18 @@ def transports_parser_categ(excelfile_name, onglet):
     return data_frame
 
 
-a3_a = transports_parser(a_activite_economique, 14)
-a3_b = transports_parser(a_activite_economique, 15)
-a6_b = transports_parser(a_activite_economique, 30)
-d2_f = transports_parser(d_developpement_durable, 10)
+a3_a = transports_parser(a_activite_economique, 14)  # depenses en achat et entretien de véhicule, service de transports
+a3_b = transports_parser(a_activite_economique, 15)  # même chose en volume et non en valeur
+a6_b = transports_parser(a_activite_economique, 30)  # recettes TICPE
+d2_f = transports_parser(d_developpement_durable, 10)  # part taxes dans prix par type de carburant
 
-g1_a1 = transports_parser(g_bilan_circulation, 1)
-g1_b1 = transports_parser(g_bilan_circulation, 3)
-g2_1 = transports_parser(g_bilan_circulation, 7)
-g3_c1 = transports_parser(g_bilan_circulation, 11)
+g1_a1 = transports_parser(g_bilan_circulation, 1)  # distance moyenne annuelle par type véhicule (ess/die)
+g1_b1 = transports_parser(g_bilan_circulation, 3)  # distance totale annuelle par type de véhicule (ess/die)
+g2_1 = transports_parser(g_bilan_circulation, 7)  # composition moyenne du parc automobile (ess/die)
+g3_c1 = transports_parser(g_bilan_circulation, 11)  # consommation en L au 100 par type de véhicule (ess/die)
 
-d2_g = transports_parser(d_developpement_durable, 11)
-f1_a = transports_parser(f_voyageurs, 1)
+d2_g = transports_parser(d_developpement_durable, 11)  # ventilation par type de carburant en TEP (à convertir en tonne)
+f1_a = transports_parser(f_voyageurs, 1)  # nombre de voyageurs par km par type de transport
 
-a1_b = transports_parser_categ(a_activite_economique, 2)
-g_3a = transports_parser_categ(g_bilan_circulation, 9)
+a1_b = transports_parser_categ(a_activite_economique, 2)  # dépenses transports ménages, entreprises, etc.
+g_3a = transports_parser_categ(g_bilan_circulation, 9)  # conso en France par type de véhicule (ess/die)
