@@ -79,16 +79,16 @@ def tee_folder_parser(folder_year, list_years):  # last year of data
     for year in list_years:
         excelfile_name = os.path.join(cn_directory, 'comptes_annee_{}/Tee_{}.xls'.format(folder_year, year))
         df = tee_file_parser(excelfile_name)
-        dict_df_tee['tee_' + str(year)] = df  # could just write 'tee_' + year
+        dict_df_tee['tee_' + str(year)] = df
     return dict_df_tee
 
 
 def tee_df_cleaner(tee_df):
-    tee_df = tee_df.drop_duplicates()
+    tee_df = tee_df.drop_duplicates(inplace = False)       # does not seem to remove duplicates. I can't understand why.
     tee_df = tee_df[pandas.notnull(tee_df.code)]             # if code is nan, it means it is blank line, or title
-    tee_df = tee_df[pandas.notnull(tee_df.description)]     # same as above
+    tee_df = tee_df[pandas.notnull(tee_df.description)]
     tee_df = tee_df[tee_df['code'].str.contains(' ') == False]
-    # at least on eline sums up two previous lines with space after + so will be deleted
+    # at least one line sums up two previous lines with space after + so will be deleted
     return tee_df
 
 
@@ -100,7 +100,7 @@ def tee_df_tidy(df):
     return df
 
 
-def tee_df_generator(folder_year, list_years = None):
+def tee_df_by_key_generator(folder_year, list_years = None):
     if list_years is None:
         log.info(
             'User did not provide list of years. I will generate TEE dataframe for every year from 1949 to {}'.format(
@@ -110,8 +110,8 @@ def tee_df_generator(folder_year, list_years = None):
     if type(list_years) is int:
         list_years = [list_years]
     tee_df_by_key = tee_folder_parser(folder_year, list_years)
-    for year in list_years:
-        df_name = 'tee_' + str(year)
-        tee_df_by_key[df_name] = tee_df_cleaner(tee_df_by_key[df_name])
-        tee_df_by_key[df_name] = tee_df_tidy(tee_df_by_key[df_name])
-    return tee_df_by_key
+    tee_df_by_key_final = tee_df_by_key
+    for key, df in tee_df_by_key.items():
+        tee_df_by_key_final[key] = tee_df_cleaner(tee_df_tidy(df))  # should use this one but it does not work (duplicates remain)
+        # tee_df_by_key_final[key] = tee_df_tidy(tee_df_cleaner(df))
+    return tee_df_by_key_final
