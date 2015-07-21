@@ -7,12 +7,12 @@ Created on Wed Jul 15 15:14:31 2015
 
 import pandas
 # import functions from other files:
-from ipp_macro_series_parser.comptes_nationaux.cn_parser_tee import tee_df_generator
+from ipp_macro_series_parser.comptes_nationaux.cn_parser_tee import tee_df_by_key_generator
 from ipp_macro_series_parser.comptes_nationaux.cn_parser_non_tee import non_tee_df_generator
 
 
 def cn_df_generator(year, list_years = None):
-    tee_df_dict = tee_df_generator(year, list_years)  # arguments: (year, [years_list])
+    tee_df_dict = tee_df_by_key_generator(year, list_years)  # arguments: (year, [years_list])
     non_tee_df_dict = non_tee_df_generator(year)  # arguement: (year)
 
     df_full = pandas.DataFrame()
