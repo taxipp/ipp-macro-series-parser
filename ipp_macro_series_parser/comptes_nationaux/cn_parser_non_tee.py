@@ -86,8 +86,8 @@ def df_tidy(df, folder_year):
     return df
 
 
-def non_tee_df_generator(folder_year):
-    non_tee_df_by_key = dict()
+def non_tee_df_by_filename_generator(folder_year):
+    non_tee_df_by_filename = dict()
     path_to_dir = os.path.join(cn_directory, 'comptes_annee_{}'.format(folder_year), '*.xls')
     list_of_files = glob.glob(path_to_dir)
     for filename in list_of_files:
@@ -100,5 +100,5 @@ def non_tee_df_generator(folder_year):
         df = file_parser(filename)
         df = df_cleaner(df)
         df = df_tidy(df, int(infos['version']))
-        non_tee_df_by_key[infos['filename']] = df
-    return non_tee_df_by_key
+        non_tee_df_by_filename[infos['filename']] = df
+    return non_tee_df_by_filename

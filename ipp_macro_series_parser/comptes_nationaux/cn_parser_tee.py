@@ -73,22 +73,21 @@ def tee_file_parser(excelfile_name):
     return result
 
 
-def tee_folder_parser(folder_year, list_years):  # last year of data
+def tee_folder_parser(folder_year, list_years):
     assert max(list_years) <= folder_year, "the folder does not contain the year(s) demanded"
     dict_df_tee = dict()
     for year in list_years:
         excelfile_name = os.path.join(cn_directory, 'comptes_annee_{}/Tee_{}.xls'.format(folder_year, year))
         df = tee_file_parser(excelfile_name)
-        dict_df_tee['tee_' + str(year)] = df
+        dict_df_tee[str(year)] = df
     return dict_df_tee
 
 
 def tee_df_cleaner(tee_df):
-    tee_df = tee_df.drop_duplicates(inplace = False)       # does not seem to remove duplicates. I can't understand why.
+    tee_df = tee_df.drop_duplicates(inplace = False)
     tee_df = tee_df[pandas.notnull(tee_df.code)]             # if code is nan, it means it is blank line, or title
     tee_df = tee_df[pandas.notnull(tee_df.description)]
-    tee_df = tee_df[tee_df['code'].str.contains(' ') == False]
-    # at least one line sums up two previous lines with space after + so will be deleted
+    tee_df = tee_df[tee_df['code'].str.contains(' ') == False]  # for line summing up previous lines using " + "
     return tee_df
 
 
@@ -97,10 +96,11 @@ def tee_df_tidy(df):
     df = pandas.melt(df, id_vars=['code', 'ressources', 'description', 'source', 'link', 'file_name',
                                   'file_title', 'version', 'year'],
                      value_vars = list_institutions, var_name='institution')
+    df = df.drop_duplicates()
     return df
 
 
-def tee_df_by_key_generator(folder_year, list_years = None):
+def tee_df_by_year_generator(folder_year, list_years = None):
     if list_years is None:
         log.info(
             'User did not provide list of years. I will generate TEE dataframe for every year from 1949 to {}'.format(
@@ -109,9 +109,7 @@ def tee_df_by_key_generator(folder_year, list_years = None):
         list_years = range(1949, folder_year + 1, 1)
     if type(list_years) is int:
         list_years = [list_years]
-    tee_df_by_key = tee_folder_parser(folder_year, list_years)
-    tee_df_by_key_final = tee_df_by_key
-    for key, df in tee_df_by_key.items():
-        tee_df_by_key_final[key] = tee_df_cleaner(tee_df_tidy(df))  # should use this one but it does not work (duplicates remain)
-        # tee_df_by_key_final[key] = tee_df_tidy(tee_df_cleaner(df))
-    return tee_df_by_key_final
+    tee_df_by_year = tee_folder_parser(folder_year, list_years)
+    for key, df in tee_df_by_year.items():
+        tee_df_by_year[key] = tee_df_tidy(tee_df_cleaner(df))
+    return tee_df_by_year
