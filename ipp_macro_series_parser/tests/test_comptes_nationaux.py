@@ -13,7 +13,7 @@ def test_duplicate_tee_df():
             assert element == 0, "There are duplicate rows in TEE " + key + ", in folder: comptes_annees " + folder_year
 
 
-def test_cn_main():
+def test_cn_main1():
     try:
         cn_main.cn_df_generator(2013)
         result = True
