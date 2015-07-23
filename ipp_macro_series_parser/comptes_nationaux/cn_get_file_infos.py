@@ -22,7 +22,7 @@ def file_infos(excelfile_name):
     if filename.startswith('tee'):
         year = str(filename[-4:])
         agent = 'economie'
-        title = 'TEE ' + str(year)
+        title = 'TEE'
         tee_flag = 1  # 'tee'
 
     # Non TEE file
