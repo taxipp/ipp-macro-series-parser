@@ -2,7 +2,7 @@
 
 
 from ipp_macro_series_parser.comptes_nationaux import cn_parser_tee
-from ipp_macro_series_parser.comptes_nationaux import cn_main
+from ipp_macro_series_parser.comptes_nationaux import cn_parser_main
 
 
 def test_duplicate_tee_df():
@@ -15,7 +15,7 @@ def test_duplicate_tee_df():
 
 def test_cn_main1():
     try:
-        cn_main.cn_df_generator(2013)
+        cn_parser_main.cn_df_generator(2013)
         result = True
     except:
         result = False
