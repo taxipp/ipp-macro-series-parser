@@ -26,12 +26,10 @@ def cn_df_generator(year, list_years = None):
     Example
     --------
     >>> year = 2013
-    >>> entry_by_index_list = [{'code': None, 'institution': 'S1', 'ressources': False, 'description': 'PIB'},
-             {'code': None, 'institution': 'S1', 'ressources': False, 'description': 'PIN'}]
-    >>> output_path = "table_for_IPP.xlsx"
-    >>> table2013  = cn_df_generator(2013)
+    >>> list_years = None
+    >>> table2013 = cn_df_generator(2013)
 
-    Returns the main table of comptabilite nationale data for years from all years from 1949 to 2013.
+    Returns the main table of comptabilite nationale data for all years from 1949 to 2013.
     """
     tee_df_by_year = tee_df_by_year_generator(year, list_years)  # arguments: (year, [years_list])
     non_tee_df_by_filename = non_tee_df_by_filename_generator(year)  # arguement: (year)
