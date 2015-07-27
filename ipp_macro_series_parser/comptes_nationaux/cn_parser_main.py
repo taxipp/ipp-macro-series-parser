@@ -13,6 +13,24 @@ from ipp_macro_series_parser.comptes_nationaux.cn_parser_non_tee import non_tee_
 
 
 def cn_df_generator(year, list_years = None):
+    """
+    Generates the table with all the data from Comptabilite Nationale.
+
+    Parameters
+    ----------
+    year : int
+        year of INSEE data realease
+    list_years : list of integers
+        list of years of interest. Optional.
+
+    Example
+    --------
+    >>> year = 2013
+    >>> list_years = None
+    >>> table2013 = cn_df_generator(2013)
+
+    Returns the main table of comptabilite nationale data for all years from 1949 to 2013.
+    """
     tee_df_by_year = tee_df_by_year_generator(year, list_years)  # arguments: (year, [years_list])
     non_tee_df_by_filename = non_tee_df_by_filename_generator(year)  # arguement: (year)
 
@@ -25,6 +43,3 @@ def cn_df_generator(year, list_years = None):
         df_full = df_full.append(value, ignore_index = True)
 
     return df_full
-
-
-table = cn_df_generator(2013, range(2010, 2014))
