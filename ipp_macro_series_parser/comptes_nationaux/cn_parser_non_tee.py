@@ -74,6 +74,7 @@ def df_cleaner(df):
     df = df[df.description != u' ']
     df = df[df.description != u'']
     df = df[df['code'].str.contains('\+') == False]
+    df = df.drop_duplicates()
     return df
 
 
@@ -83,6 +84,7 @@ def df_tidy(df, folder_year):
     df = pandas.melt(df, id_vars=['code', 'ressources', 'description', 'source', 'link', 'file_name',
                                   'file_title', 'version', 'institution'],
                      value_vars = list_years, var_name='year')
+    df = df.drop_duplicates()
     return df
 
 
