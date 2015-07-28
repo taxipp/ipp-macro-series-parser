@@ -27,7 +27,7 @@ def file_infos(excelfile_name):
 
     # Non TEE file
     else:
-        year = 'all'
+        year = ''
         agent = ''
         title = ''
         tee_flag = 0  # 'not tee'
