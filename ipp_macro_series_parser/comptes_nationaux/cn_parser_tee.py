@@ -62,7 +62,7 @@ def tee_file_parser(excelfile_name):
     df_rp['ressources'] = False
 
     for df in [df_ea, df_rp]:
-        df['year'] = infos['year']
+        df['year'] = int(infos['year'])
         df['version'] = infos['version']
         df['source'] = infos['source']
         df['link'] = infos['link']

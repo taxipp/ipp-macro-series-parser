@@ -75,4 +75,5 @@ def look_many(df, entry_by_index_list):
     for entity in entry_by_index_list:
         df_inter = look_up(df, entity)
         df_output = pandas.concat([df_output, df_inter], axis = 0, ignore_index=False, verify_integrity=False)
+    df_output = df_output.drop_duplicates()
     return df_output
