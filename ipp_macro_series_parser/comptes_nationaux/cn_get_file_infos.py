@@ -52,13 +52,13 @@ def file_infos(excelfile_name):
             agent = 'S2'  # (reste du monde)
             title = 'Operations avec le reste du monde'
 
-    # to be completed for all the files of interest in the folder
-    # elif filename == 't_3101':
-    #    agent = 'S13'  # (administrations publiques)
-    #    title = 'Dette des administrations publiques (S13) au sens de Maastricht et sa répartition par sous-secteur'
-    # elif filename == 't_3201':
-    #   agent = 'S13'  # (administrations publiques)
-    #    title = 'Dette et recettes des administrations publiques'
+        # to be completed for all the files of interest in the folder
+        # elif filename == 't_3101':
+        #    agent = 'S13'  # (administrations publiques)
+        #    title = 'Dette des administrations publiques (S13) au sens de Maastricht et sa répartition par sous-secteur'
+        # elif filename == 't_3201':
+        #   agent = 'S13'  # (administrations publiques)
+        #    title = 'Dette et recettes des administrations publiques'
 
         else:
             skip = 1
