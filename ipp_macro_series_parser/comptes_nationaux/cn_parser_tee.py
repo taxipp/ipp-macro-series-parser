@@ -97,6 +97,8 @@ def tee_df_tidy(df):
                                   'file_title', 'version', 'year'],
                      value_vars = list_institutions, var_name='institution')
     df = df.drop_duplicates()
+    df = df.drop_duplicates((u'code', u'ressources', u'description', u'source', u'link',
+       u'file_name', u'file_title', u'version', u'year', u'institution'))  # fixes pb of code P51c
     return df
 
 
