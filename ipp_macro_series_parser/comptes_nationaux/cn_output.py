@@ -136,4 +136,5 @@ def df_long_to_csv(df, csv_file_name):
     The dataframe is shaped vertically, each row corresponding to a year, and each column to an observation
     (PIB or PIN)
     """
-    df.to_csv(os.path.join(excel_output_directory, csv_file_name), tupleize_cols = False, index = None, na_rep = 'NaN')
+    df.to_csv(os.path.join(excel_output_directory, csv_file_name), tupleize_cols = False, index = None, na_rep = 'NaN',
+              sep='\t')
