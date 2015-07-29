@@ -46,15 +46,26 @@ def file_parser(excelfile_name):
 
     ressource_dummy = 0
     df['ressources'] = False
-    for ind in df.index:
-        if df.ix[ind]['description'] == "ressources":
-            ressource_dummy = 1
-        elif df.ix[ind]['description'] == "emplois":
-            ressource_dummy = 0
-        if ressource_dummy == 1:
-            df.ix[ind, ['ressources']] = True
-        else:
-            df.ix[ind, ['ressources']] = False
+    if infos['filename'] == 't_7601':
+        for ind in df.index:
+            if df.ix[ind]['description'] == u"à destination du reste du monde":
+                ressource_dummy = 1
+            elif df.ix[ind]['description'] == u"en provenance du reste du monde":
+                ressource_dummy = 0
+            if ressource_dummy == 1:
+                df.ix[ind, ['ressources']] = True
+            else:
+                df.ix[ind, ['ressources']] = False
+    else:
+        for ind in df.index:
+            if df.ix[ind]['description'] == "ressources":
+                ressource_dummy = 1
+            elif df.ix[ind]['description'] == "emplois":
+                ressource_dummy = 0
+            if ressource_dummy == 1:
+                df.ix[ind, ['ressources']] = True
+            else:
+                df.ix[ind, ['ressources']] = False
 
     df['source'] = infos['source']
     df['version'] = infos['version']
