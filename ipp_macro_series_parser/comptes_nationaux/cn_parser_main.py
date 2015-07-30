@@ -42,4 +42,6 @@ def cn_df_generator(year, list_years = None):
     for key, value in non_tee_df_by_filename.items():
         df_full = df_full.append(value, ignore_index = True)
 
+    df_full[['year']] = df_full[['year']].astype(int)
+
     return df_full

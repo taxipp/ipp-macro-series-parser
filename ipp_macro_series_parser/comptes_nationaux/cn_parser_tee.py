@@ -58,8 +58,8 @@ def tee_file_parser(excelfile_name):
     df_rp = pandas.read_excel(excelfile_name, sheetname = 2, header = header, skiprows = skiprows,
                               skip_footer = skip_footer, index_col = index_col, parse_cols = parse_cols,
                               names = col_names_passifs)
-    df_ea['ressources'] = True
-    df_rp['ressources'] = False
+    df_ea['ressources'] = False
+    df_rp['ressources'] = True
 
     for df in [df_ea, df_rp]:
         df['year'] = int(infos['year'])
@@ -97,6 +97,8 @@ def tee_df_tidy(df):
                                   'file_title', 'version', 'year'],
                      value_vars = list_institutions, var_name='institution')
     df = df.drop_duplicates()
+    df = df.drop_duplicates((u'code', u'ressources', u'description', u'source', u'link',
+       u'file_name', u'file_title', u'version', u'year', u'institution'))  # fixes pb of code P51c
     return df
 
 
