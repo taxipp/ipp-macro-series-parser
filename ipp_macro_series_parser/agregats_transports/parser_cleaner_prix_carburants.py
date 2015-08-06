@@ -8,8 +8,9 @@ Created on Tue Jul 21 13:57:18 2015
 import os
 import pkg_resources
 import pandas as pd
-import numpy as np
+import datetime as dt
 
+from openfisca_france_indirect_taxation.almost_ideal_demand_system.aids_price_index_builder import vagues, date_to_vag
 from ipp_macro_series_parser.config import Config
 
 parser = Config(
@@ -161,10 +162,10 @@ prix_mensuel_carburants_13_15 = prix_mensuel_date_cleaner(prix_mensuel_carburant
 
 # Tidy datasets:
 
-prix_carburants_90_14 = pd.concat([prix_carburants_90_96, prix_carburants_97_06,
+prix_annuel_carburants_90_14 = pd.concat([prix_carburants_90_96, prix_carburants_97_06,
     prix_carburants_07_12, prix_carburants_13_14], axis = 0)
-carburants = list(prix_carburants_90_14)
-prix_carburants_90_14 = pd.melt(prix_carburants_90_14, id_vars = ['Date'], value_vars = carburants[1:],
+carburants = list(prix_annuel_carburants_90_14)
+prix_carburants_90_14 = pd.melt(prix_annuel_carburants_90_14, id_vars = ['Date'], value_vars = carburants[1:],
     value_name = 'prix', var_name = 'carburant')
 
 prix_carburants_90_14['Date'] = prix_carburants_90_14['Date'].astype(int)
@@ -173,3 +174,10 @@ prix_carburants_90_14 = prix_carburants_90_14.set_index(['Date'])
 prix_mensuel_carburants_90_15 = pd.concat([prix_mensuel_carburants_90_96, prix_mensuel_carburants_97_06,
     prix_mensuel_carburants_07_12, prix_mensuel_carburants_13_15], axis = 0)
 prix_mensuel_carburants_90_15 = prix_mensuel_carburants_90_15.convert_objects(convert_numeric=True)
+
+prix_mensuel_carburants_90_15[['annee'] + ['mois']] = prix_mensuel_carburants_90_15[['annee'] + ['mois']].astype(str)
+prix_mensuel_carburants_90_15['date'] = \
+    prix_mensuel_carburants_90_15['annee'] + '_' + prix_mensuel_carburants_90_15['mois']
+
+prix_mensuel_carburants_90_15['vag'] = prix_mensuel_carburants_90_15['date'].map(date_to_vag)
+del prix_mensuel_carburants_90_15['date']
