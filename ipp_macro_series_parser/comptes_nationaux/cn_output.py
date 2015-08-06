@@ -17,7 +17,7 @@ from ipp_macro_series_parser.comptes_nationaux.cn_extract_data import look_many
 parser = Config(
     config_files_directory = os.path.join(pkg_resources.get_distribution('ipp-macro-series-parser').location)
     )
-excel_output_directory = parser.get('data', 'excel_output_directory')
+excel_output_directory = parser.get('data', 'cn_xls_directory')
 
 
 def reshape_to_long_for_output(df):
