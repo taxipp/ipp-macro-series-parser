@@ -95,12 +95,16 @@ def get_or_construct_value(df, arg, overall_dict, years = range(1949, 2014)):
     years : list of integers
         Years of interest
 
-
-
     Example
     --------
+    >>> table_cn = cn_df_generator(2013)
+    >>> overall_dict = ['pib': {'code': 'B1g/PIB', 'institution': 'S1', 'ressources': False},
+        ...             'computed_variable': {'code': '', 'institution': 'S1', 'ressources': False,
+        ...             'formula': 'pib^2 - pib*pib'}]
+    >>> computed_variable_vector, compute_variable_formula = get_or_construct(df, çomputed_variable', overall_dict)
 
-    Returns the same output, using a keyword from the description.
+    Returns a tuple, where the first element is a Series (vector) of 0 for years 1949 to 2013, and the second element
+    is the formula 'pib^2 - pib*pib'
     """
     if type(arg) is str:
         arg_string = arg
