@@ -8,7 +8,6 @@ Created on Tue Jul 21 13:57:18 2015
 import os
 import pkg_resources
 import pandas as pd
-import numpy as np
 
 from ipp_macro_series_parser.config import Config
 
@@ -161,10 +160,10 @@ prix_mensuel_carburants_13_15 = prix_mensuel_date_cleaner(prix_mensuel_carburant
 
 # Tidy datasets:
 
-prix_carburants_90_14 = pd.concat([prix_carburants_90_96, prix_carburants_97_06,
+prix_annuel_carburants_90_14 = pd.concat([prix_carburants_90_96, prix_carburants_97_06,
     prix_carburants_07_12, prix_carburants_13_14], axis = 0)
-carburants = list(prix_carburants_90_14)
-prix_carburants_90_14 = pd.melt(prix_carburants_90_14, id_vars = ['Date'], value_vars = carburants[1:],
+carburants = list(prix_annuel_carburants_90_14)
+prix_carburants_90_14 = pd.melt(prix_annuel_carburants_90_14, id_vars = ['Date'], value_vars = carburants[1:],
     value_name = 'prix', var_name = 'carburant')
 
 prix_carburants_90_14['Date'] = prix_carburants_90_14['Date'].astype(int)
