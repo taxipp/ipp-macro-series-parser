@@ -49,7 +49,7 @@ setup(
     version = '0.1.dev0',
 
     author = 'IPP',
-    author_email = 'taxipp@ipp.edu',
+    author_email = 'taxipp@ipp.eu',
     classifiers = [classifier for classifier in classifiers.split('\n') if classifier],
     description = doc_lines[0],
     keywords = 'macro aggregates parser',
@@ -58,9 +58,9 @@ setup(
     # url = 'https://github.com/ipp-aggregates-parser',
 
     install_requires = [
-        'glob',
+        'glob2',
         'pandas',
-        'pkg_resources',
+        'setuptools',
         'xlrd',
         'xlsxwriter',
         'xlwt',
