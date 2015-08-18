@@ -52,6 +52,7 @@ def tee_file_parser(excelfile_name):
     index_col = None
     parse_cols = "A:end"
 
+    assert os.path.exists(excelfile_name), 'Use cn_dowloader to load and uncompress the raw CN files'
     df_ea = pandas.read_excel(excelfile_name, sheetname = 1, header = header, skiprows = skiprows,
                               skip_footer = skip_footer, index_col = index_col, parse_cols = parse_cols,
                               names = col_names_actifs)

@@ -60,6 +60,7 @@ setup(
     install_requires = [
         'glob2',
         'pandas',
+        'py-expression-eval',
         'setuptools',
         'xlrd',
         'xlsxwriter',
