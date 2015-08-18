@@ -14,6 +14,7 @@ parser = Config(
     )
 cn_directory = parser.get('data', 'cn_directory')
 cn_hdf = parser.get('data', 'cn_hdf_directory')
+cn_xls = parser.get('data', 'cn_csv_directory')
 
 
 # inputs
@@ -25,14 +26,84 @@ entry_by_index_list = [{'code': None, 'institution': 'S1', 'ressources': False, 
              {'code': 'D121', 'institution': 'S11', 'ressources': False, 'description': None}]
 
 
-overall_dict = {'pib': {'code': None, 'institution': 'S1', 'ressources': False, 'description': 'PIB'},
-                'complicated_var': {'code': None, 'institution': 'S1', 'ressources': False, 'description': 'PIB0',
-                'formula': '2*pib - pib - pib + pib*pib - pib^2'},
-                'very_complicated_var': {'code': None, 'institution': 'S1', 'ressources': False, 'description': 'PIB0',
-                'formula': 'complicated_var^2'}
-                }
-
+overall_dict = {
+    'pib': {
+        'code': None,
+        'institution': 'S1',
+        'ressources': False,
+        'description': 'PIB'
+        },
+    'complicated_var': {
+        'code': None,
+        'institution': 'S1',
+        'ressources': False,
+        'description': 'PIB0',
+        'formula': '2*pib - pib - pib + pib*pib - pib^2'
+        },
+    'very_complicated_var': {
+        'code': None,
+        'institution': 'S1',
+        'ressources': False,
+        'description': 'PIB0',
+        'formula': 'complicated_var^2'
+        }
+    }
 arg = 'very_complicated_var'
+
+overall_dict_2 = {
+    'Interets_verses_par_rdm': {
+        'code': 'D41',
+        'institution': 'S2',
+        'ressources': False,
+        'description': ''
+        },
+    'Dividendes_verses_par_rdm_D42': {
+        'code': 'D42',
+        'institution': 'S2',
+        'ressources': False,
+        'description': ''
+        },
+    'Dividendes_verses_par_rdm_D43': {
+        'code': 'D43',
+        'institution': 'S2',
+        'ressources': False,
+        'description': ''},
+    'Revenus_propriete_verses_par_rdm': {
+        'code': 'D44',
+        'institution': 'S2',
+        'ressources': False,
+        'description': ''},
+    'Interets_verses_au_rdm': {
+        'code': 'D41',
+        'institution': 'S2',
+        'ressources': True,
+        'description': ''},
+    'Dividendes_verses_au_rdm_D42': {
+        'code': 'D42',
+        'institution': 'S2',
+        'ressources': True,
+        'description': ''
+        },
+    'Dividendes_verses_au_rdm_D43': {
+        'code': 'D43',
+        'institution': 'S2',
+        'ressources': True,
+        'description': ''
+        },
+    'Revenus_propriete_verses_au_rdm': {
+        'code': 'D44',
+        'institution': 'S2',
+        'ressources': True,
+        'description': ''
+        },
+    'Interets_dividendes_nets_verses_par_rdm': {
+        'code': None,
+        'institution': 'S2',
+        'ressources': False,
+        'description': 'Interets et dividendes verses par RDM, nets',
+        'formula': 'Interets_verses_par_rdm + Dividendes_verses_par_rdm_D42 + Dividendes_verses_par_rdm_D43 + Revenus_propriete_verses_par_rdm - Interets_verses_au_rdm - Dividendes_verses_au_rdm_D42 - Dividendes_verses_au_rdm_D43 - Revenus_propriete_verses_au_rdm'
+        }
+    }
 
 
 # outputs
@@ -43,13 +114,17 @@ df1 = look_many(df, entry_by_index_list)
 
 df2 = cn_output.reshape_to_long_for_output(df1)
 
-cn_output.df_long_to_csv(df2, 'IPP_test.csv')
+cn_output.df_long_to_csv(df2, 'IPP_test.txt')
 
 CN1 = cn_output.output_for_sheets(
     cn_sheets_lists.list_CN1, 2013,
-    os.path.join(cn_directory, 'output', u'Agrégats IPP - Comptabilité nationale.txt')
+    os.path.join(cn_directory, u'Agrégats IPP - Comptabilité nationale.txt')
     )
 
-value, form = get_or_construct_value(df, arg, overall_dict, years = range(1949, 2014))
-print 'the formula is: ' + arg + ' = ' + form
+value, formula = get_or_construct_value(df, arg, overall_dict, years = range(1949, 2014))
+print 'the formula is: ' + arg + ' = ' + formula
 print value
+
+df = df.drop_duplicates((u'code', u'institution', u'ressources', u'value', u'year'))
+value2, formula2 = get_or_construct_value(df, 'Interets_dividendes_nets_verses_par_rdm',
+                                          overall_dict_2, years = range(1949, 2014))
