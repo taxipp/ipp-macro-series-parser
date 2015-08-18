@@ -138,7 +138,7 @@ def df_long_to_csv(df, csv_file_name):
     (PIB or PIN)
     """
     df.to_csv(os.path.join(excel_output_directory, csv_file_name), tupleize_cols = False, index = None, na_rep = 'NaN',
-              sep='\t')
+              sep=';')
 
 
 def output_for_sheets(entry_by_index_list, version_year, csv_file_name):
@@ -161,7 +161,7 @@ def output_for_sheets(entry_by_index_list, version_year, csv_file_name):
     ...    os.path.join(cn_directory, u'Agrégats IPP - Comptabilité nationale.txt')
     ...    )
 
-    Returns None. Creates a csv file containing the values of all the variables need to construct sheet CN1, for all
+    Returns None. Creates a csv file containing the values of all the variables needed to construct sheet CN1, for all
     years. Each column is a variable, i.e. a tuple containing the agregates's code, the institution concerned,
     whether it is Ressources or Emplois, and the file from where the data was extracted.
 
