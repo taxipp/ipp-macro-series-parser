@@ -30,14 +30,15 @@ def look_up(df, entry_by_index):
     Returns a slice of cn_df_generator(2013) containing only the gross product (PIB) of the whole economy (S1),
     for all years.
     """
+    result = pandas.DataFrame()
     for key, value in entry_by_index.items():
         if value is None:
             continue
         if key != 'description' and key != 'formula':
-            df = df[df[key] == value]
+            result = df[df[key] == value].copy()
         if key == 'description':
-            df = df[df[key].str.contains(value) == True]
-    return df
+            result = df[df[key].str.contains(value) == True].copy()
+    return result
 
 
 def look_many(df, entry_by_index_list):
@@ -114,9 +115,9 @@ def get_or_construct_value(df, arg, overall_dict, years = range(1949, 2014)):
     else:
         arg_string = 'name_not_provided'
     entry_df = look_up(df, arg)
-    entry_df = entry_df.set_index('year')
     formula_final = arg_string
     if not entry_df.empty:
+        entry_df = entry_df.set_index('year')
         arg_value = entry_df[['value']]
     else:
         dico_value = dict()
