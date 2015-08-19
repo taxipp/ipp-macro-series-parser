@@ -135,3 +135,5 @@ def get_or_construct_value(df, arg, overall_dict, years = range(1949, 2014)):
         arg_value = eval(formula_modified, dico_value)  # could use a parser_formula.evaluate(formula, dico_value)
         arg_value.columns = [arg_string]
     return arg_value, formula_final
+
+# TODO: change example in docstring for a meaningful example (e.g. sum of two economic agregates)
