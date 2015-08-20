@@ -28,7 +28,7 @@ parser = Config(
     config_files_directory = os.path.join(pkg_resources.get_distribution('ipp-macro-series-parser').location)
     )
 cn_directory = parser.get('data', 'cn_directory')
-
+assert cn_directory != 'None', 'Set cn_directory in the data section of you config[_local].ini file to a valid directory'
 
 # Download a zip file from theurl and unzipp it in directory thedir
 def getunzipped(url = None, directory = None):
@@ -70,9 +70,11 @@ def cn_downloader(years = None):
     elif type(years) is int:
         years = [years]
     for year in years:
+        directory = os.path.join(cn_directory, 'comptes_annee_{}'.format(year))
+        assert os.path.exists(directory)
         getunzipped(
             url = 'http://www.insee.fr/fr/indicateurs/cnat_annu/archives/comptes_annee_{}.zip'.format(year),
-            directory = os.path.join(cn_directory, 'comptes_annee_{}'.format(year))
+            directory = directory
             )
 
 

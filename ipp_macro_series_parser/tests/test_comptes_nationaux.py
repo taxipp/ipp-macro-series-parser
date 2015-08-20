@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 
 
+import pandas
+
+
 from ipp_macro_series_parser.comptes_nationaux import cn_parser_tee
 from ipp_macro_series_parser.comptes_nationaux import cn_parser_non_tee
 from ipp_macro_series_parser.comptes_nationaux import cn_parser_main
+from ipp_macro_series_parser.comptes_nationaux.cn_extract_data import get_or_construct_value
 
 
 def test_duplicate_tee_df():
@@ -35,3 +39,38 @@ def test_cn_main2():
     df = cn_parser_main.cn_df_generator(2013)
     for element in df.duplicated():
         assert element == 0, "The final table of comptabilite nationale contains duplicates"
+
+
+def test_get_or_construct_value():
+
+    folder_year = 2013
+
+    overall_dict = {
+        'pib': {
+            'code': None,
+            'institution': 'S1',
+            'ressources': False,
+            'description': 'PIB'
+            },
+        'complicated_var': {
+            'code': None,
+            'institution': 'S1',
+            'ressources': False,
+            'description': 'PIB0',
+            'formula': '2*pib - pib - pib + pib*pib - pib^2'
+            },
+        'very_complicated_var': {
+            'code': None,
+            'institution': 'S1',
+            'ressources': False,
+            'description': 'PIB0',
+            'formula': 'complicated_var^2'
+            }
+        }
+    variable_name = 'very_complicated_var'
+    df = cn_parser_main.get_comptes_nationaux_data(folder_year)
+    serie, formula = get_or_construct_value(df, variable_name, overall_dict, years = range(1949, 2014))
+    assert isinstance(serie, pandas.Series)
+    assert serie.name == variable_name
+    assert all(serie == 0)
+

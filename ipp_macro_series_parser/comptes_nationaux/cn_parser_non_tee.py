@@ -7,12 +7,17 @@ Created on Thu Jul 02 10:09:56 2015
 
 
 import glob
+import logging
 import os
 import pandas
 import pkg_resources
 
+
 from ipp_macro_series_parser.config import Config
 from ipp_macro_series_parser.comptes_nationaux.cn_get_file_infos import file_infos
+
+
+log = logging.getLogger(__name__)
 
 
 # get the name of local folder for comptabilite national data
@@ -23,8 +28,8 @@ cn_directory = parser.get('data', 'cn_directory')
 
 
 def file_parser(excelfile_name):
+    log.info('Parsing {}'.format(excelfile_name))
     infos = file_infos(excelfile_name)
-
     if infos['tee_flag'] == 0:
         header = 1
         skiprows = 0
@@ -32,10 +37,8 @@ def file_parser(excelfile_name):
         index_col = None
         parse_cols = " A:end"
 
-    df = pandas.read_excel(excelfile_name, header = header,
-                       skiprows = skiprows, skip_footer = skip_footer,
-                       index_col = index_col, parse_cols = parse_cols)
-
+    df = pandas.read_excel(excelfile_name, header = header, skiprows = skiprows, skip_footer = skip_footer,
+       index_col = index_col, parse_cols = parse_cols)
     # rename first column, and trim content
     new_columns = df.columns.values
     new_columns[0] = 'code'
@@ -67,12 +70,12 @@ def file_parser(excelfile_name):
             else:
                 df.ix[ind, ['ressources']] = False
 
-    df['source'] = infos['source']
-    df['version'] = infos['version']
-    df['file_title'] = infos['title']
-    df['file_name'] = infos['filename']
-    df['link'] = infos['link']
-    df['institution'] = infos['agent']
+    df['source'] = infos['source'].copy()
+    df['version'] = infos['version'].copy()
+    df['file_title'] = infos['title'].copy()
+    df['file_name'] = infos['filename'].copy()
+    df['link'] = infos['link'].copy()
+    df['institution'] = infos['agent'].copy()
     return df
 
 
@@ -84,7 +87,7 @@ def df_cleaner(df):
     df = df[df.code != u' ']
     df = df[df.description != u' ']
     df = df[df.description != u'']
-    df = df[df['code'].str.contains('\+') == False]
+    df = df[not df['code'].str.contains('\+')]
     df = df.drop_duplicates()
     return df
 
@@ -92,18 +95,25 @@ def df_cleaner(df):
 def df_tidy(df, folder_year):
     version_year = folder_year  # df['version'][0] not working
     list_years = range(1949, version_year + 1, 1)
-    df = pandas.melt(df, id_vars=['code', 'ressources', 'description', 'source', 'link', 'file_name',
-                                  'file_title', 'version', 'institution'],
-                     value_vars = list_years, var_name='year')
+    df = pandas.melt(
+        df,
+        id_vars = ['code', 'ressources', 'description', 'source', 'link', 'file_name',
+            'file_title', 'version', 'institution'],
+        value_vars = list_years,
+        var_name = 'year'
+        )
     df = df.drop_duplicates()
     return df
 
 
 def non_tee_df_by_filename_generator(folder_year):
     non_tee_df_by_filename = dict()
-    path_to_dir = os.path.join(cn_directory, 'comptes_annee_{}'.format(folder_year), '*.xls')
-    list_of_files = glob.glob(path_to_dir)
+    directory_path = os.path.join(cn_directory, 'comptes_annee_{}'.format(folder_year))
+    assert os.path.exists(directory_path), '{} does not exist. Use cn_downloader to create it'.format(
+        directory_path)
+    list_of_files = glob.glob(os.path.join(directory_path, '*.xls'))
     for filename in list_of_files:
+        assert os .path.exists(filename)
         infos = file_infos(filename)
         if infos is False:
             continue
