@@ -30,14 +30,14 @@ def look_up(df, entry_by_index):
     Returns a slice of cn_df_generator(2013) containing only the gross product (PIB) of the whole economy (S1),
     for all years.
     """
-    result = pandas.DataFrame()
+    result = df.copy()
     for key, value in entry_by_index.items():
         if value is None:
             continue
         if key != 'description' and key != 'formula':
-            result = df[df[key] == value].copy()
-        if key == 'description':
-            result = df[df[key].str.contains(value) == True].copy()
+            result = result[df[key] == value].copy()
+        elif key == 'description':
+            result = result[df[key].str.contains(value)].copy()
     return result
 
 

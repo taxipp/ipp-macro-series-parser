@@ -20,7 +20,7 @@ hdf_directory = parser.get('data', 'cn_hdf_directory')
 
 
 
-def cn_df_generator(year, list_years = None):
+def cn_df_generator(year, list_years = None, drop_duplicates = True, subset = None):
     """
     Generates the table with all the data from Comptabilite Nationale.
 
@@ -51,7 +51,10 @@ def cn_df_generator(year, list_years = None):
         df_full = df_full.append(value, ignore_index = True)
 
     df_full[['year']] = df_full[['year']].astype(int)
-
+    if not subset:
+        subset = [u'code', u'institution', u'ressources', u'value', u'year']
+    if drop_duplicates:
+        df_full.drop_duplicates(subset = subset, inplace = True)
     return df_full
 
 
