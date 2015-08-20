@@ -81,7 +81,7 @@ def look_many(df, entry_by_index_list):
     return df_output
 
 
-def get_or_construct_value(df, arg, overall_dict, years = range(1949, 2014)):
+def get_or_construct_value(df, variable, overall_dict, years = range(1949, 2014)):
     """
     Returns the DateFrame (1 column) of the value of arg (arg is an economic variable) for years of interest.
     Years are set to the index of the DataFrame.
@@ -101,71 +101,67 @@ def get_or_construct_value(df, arg, overall_dict, years = range(1949, 2014)):
     Example
     --------
     >>> table_cn = cn_df_generator(2013)
-    >>> overall_dict = ['pib': {'code': 'B1g/PIB', 'institution': 'S1', 'ressources': False},
-        ...             'computed_variable': {'code': '', 'institution': 'S1', 'ressources': False,
-        ...                                 'formula': 'pib^2 - pib*pib'}]
-    >>> computed_variable_vector, computed_variable_formula = get_or_construct(df, 'computed_variable', overall_dict)
+    >>> overall_dict = {
+    ...    'Interets_verses_par_rdm': {
+    ...         'code': 'D41',
+    ...         'institution': 'S2',
+    ...         'ressources': False,
+    ...         'description': ''
+    ...     },
+    ...     'Dividendes_verses_par_rdm_D42': {
+    ...         'code': 'D42',
+    ...         'institution': 'S2',
+    ...         'ressources': False,
+    ...         'description': ''
+    ...     },
+    ...     'Dividendes_verses_par_rdm_D43': {
+    ...         'code': 'D43',
+    ...         'institution': 'S2',
+    ...         'ressources': False,
+    ...         'description': ''
+    ...     },
+    ...     'Revenus_propriete_verses_par_rdm': {
+    ...         'code': 'D44',
+    ...         'institution': 'S2',
+    ...         'ressources': False,
+    ...         'description': ''
+    ...     },
+    ...     'Interets_dividendes_verses_par_rdm': {
+    ...         'code': None,
+    ...         'institution': 'S2',
+    ...         'ressources': False,
+    ...         'description': 'Interets et dividendes verses par RDM, nets',
+    ...         'formula': 'Interets_verses_par_rdm + Dividendes_verses_par_rdm_D42 + Dividendes_verses_par_rdm_D43 + Revenus_propriete_verses_par_rdm'
+    ...     }
+    ... }
 
-    Returns a tuple, where the first element is a Series (vector) of 0 for years 1949 to 2013, and the second element
-    is the formula 'pib^2 - pib*pib'
+    >>> computed_variable_vector, computed_variable_formula =
+    ... get_or_construct(df, 'Interets_dividendes_nets_verses_par_rdm', overall_dict)
+
+    Returns a tuple, where the first element is a Series (vector) for years 1949 to 2013 of the value of the sum
+    of the four variables, and the second element is the formula 'Interets_verses_par_rdm + Dividendes_verses_par_rdm_D42 + Dividendes_verses_par_rdm_D43 + Revenus_propriete_verses_par_rdm'
     """
-    if type(arg) is str:
-        arg_string = arg
-        arg = overall_dict[arg]
-    else:
-        arg_string = 'name_not_provided'
-    entry_df = look_up(df, arg)
-    formula_final = arg_string
-    if not entry_df.empty:
-        entry_df = entry_df.set_index('year')
-        arg_value = entry_df[['value']]
-    else:
-        dico_value = dict()
-        formula = arg['formula']
-        formula_final = formula
-        parser_formula = Parser()
-        expr = parser_formula.parse(formula)
-        variables = expr.variables()  # variables is a list of strings
-        for variable in variables:
-            variable_value, form = get_or_construct_value(df, variable, overall_dict)
-            replacement = '(' + form + ')'  # needs to be edited for a nicer style of formula output
-            formula_final = formula.replace(variable, replacement)
-            dico_value[variable] = variable_value
-        formula_modified = formula.replace("^", "**")
-        arg_value = eval(formula_modified, dico_value)  # could use a parser_formula.evaluate(formula, dico_value)
-        arg_value.columns = [arg_string]
-    return arg_value, formula_final
-
-# TODO: change example in docstring for a meaningful example (e.g. sum of two economic agregates)
-
-
-def get_or_construct_value_new(df, arg, overall_dict, years = range(1949, 2014)):
-    """
-    """
-    arg_key = arg
-    arg = overall_dict[arg]
-    code = arg['code']
-    institution = arg['institution']
-    ressources = arg['ressources']
-    if type(arg_key) is str:
-        arg_name = '{} ({}, {}, {})'.format(arg_key, code, institution, ressources)
+    variable_key = variable
+    variable = overall_dict[variable]
+    code = variable['code']
+    institution = variable['institution']
+    ressources = variable['ressources']
+    if type(variable_key) is str:
+        arg_name = '{} ({}, {}, {})'.format(variable_key, code, institution, ressources)
     else:
         arg_name = 'name_not_provided ({}, {}, {})'.format(code, institution, ressources)  # 2LIGNES INUTILES?
-    entry_df = look_up(df, arg)
-    entry_df = entry_df.drop_duplicates((u'code', u'institution', u'ressources', u'value', u'year'))  # TODO: à passer ailleurs, dans une fonction à part
-#    formula_final = arg_string  # on veut plus ça : on veut que dans le dico des formules, y ait que les formules
 
-    # GET :
+    entry_df = look_up(df, variable)
+
     if not entry_df.empty:
         entry_df = entry_df.set_index('year')
         value_series = entry_df[['value']]
         value_series.columns = [arg_name]
         # value_series = value_series.drop_duplicates()
 
-    # CONSTRUCT :
     else:
         dico_value = dict()
-        formula = arg['formula']
+        formula = variable['formula']
         formula_string = formula
 
         parser_formula = Parser()

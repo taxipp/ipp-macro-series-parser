@@ -6,7 +6,7 @@ from ipp_macro_series_parser.config import Config
 
 from ipp_macro_series_parser.comptes_nationaux.cn_parser_main import cn_df_generator
 from ipp_macro_series_parser.comptes_nationaux.cn_extract_data import (
-    look_many, get_or_construct_value, get_or_construct_value_new
+    look_up, look_many, get_or_construct_value, get_or_construct_value_new
     )
 from ipp_macro_series_parser.comptes_nationaux import cn_output
 from ipp_macro_series_parser.comptes_nationaux import cn_sheets_lists
@@ -112,6 +112,8 @@ overall_dict_2 = {
 
 df = cn_df_generator(folder_year)
 
+df0 = look_up(df, {'code': 'D121', 'institution': 'S11', 'ressources': False, 'description': None})
+
 df1 = look_many(df, entry_by_index_list)
 
 df2 = cn_output.reshape_to_long_for_output(df1)  # TODO : problem duplicate entries
@@ -128,18 +130,4 @@ print 'the formula is: ' + arg + ' = ' + formula
 print value
 
 value2, formula2 = get_or_construct_value(df, 'Interets_dividendes_nets_verses_par_rdm',
-                                          overall_dict_2, years = range(1949, 2014))
-
-df_clean = df.drop_duplicates((u'code', u'institution', u'ressources', u'value', u'year'))
-value3, formula3 = get_or_construct_value(df_clean, 'Interets_dividendes_nets_verses_par_rdm',
-                                          overall_dict_2, years = range(1949, 2014))
-
-
-# avec get_or_construct_value_new (tests) :
-
-value_new, formula_new = get_or_construct_value_new(df, arg, overall_dict, years = range(1949, 2014))
-print 'the formula is: ' + arg + ' = ' + formula
-print value
-
-value2_new, formula2_new = get_or_construct_value_new(df, 'Interets_dividendes_nets_verses_par_rdm',
                                           overall_dict_2, years = range(1949, 2014))
