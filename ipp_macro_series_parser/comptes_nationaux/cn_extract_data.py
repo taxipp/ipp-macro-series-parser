@@ -152,13 +152,19 @@ def get_or_construct_value(df, variable, overall_dict, years = range(1949, 2014)
         arg_name = 'name_not_provided ({}, {}, {})'.format(code, institution, ressources)  # 2LIGNES INUTILES?
 
     entry_df = look_up(df, variable)
+    formula_string = variable_key
 
     if not entry_df.empty:
         entry_df = entry_df.set_index('year')
-        value_series = entry_df[['value']]
-        value_series.columns = [arg_name]
-        # value_series = value_series.drop_duplicates()
+        value_series = entry_df[['value']].copy()
 
+        assert len(value_series.columns) == 1
+        try:
+            value_series.columns = [arg_name]
+            # value_series = value_series.drop_duplicates()
+        except:
+            print value_series
+            boum
     else:
         dico_value = dict()
         formula = variable['formula']
@@ -176,6 +182,12 @@ def get_or_construct_value(df, variable, overall_dict, years = range(1949, 2014)
 
         formula_modified = formula.replace("^", "**")
         value_series = eval(formula_modified, dico_value)  # could use a parser_formula.evaluate(formula, dico_value)
-        value_series.columns = [arg_name]
+        try:
+            assert len(value_series.columns) == 1, '{} columns'.format(len(value_series.columns))
+            value_series.columns = [arg_name]
+            # value_series = value_series.drop_duplicates()
+        except:
+            print value_series
+            boum
 
     return value_series, formula_string

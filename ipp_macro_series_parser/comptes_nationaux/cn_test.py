@@ -5,9 +5,7 @@ import pkg_resources
 from ipp_macro_series_parser.config import Config
 
 from ipp_macro_series_parser.comptes_nationaux.cn_parser_main import cn_df_generator
-from ipp_macro_series_parser.comptes_nationaux.cn_extract_data import (
-    look_up, look_many, get_or_construct_value, get_or_construct_value_new
-    )
+from ipp_macro_series_parser.comptes_nationaux.cn_extract_data import (look_up, look_many, get_or_construct_value)
 from ipp_macro_series_parser.comptes_nationaux import cn_output
 from ipp_macro_series_parser.comptes_nationaux import cn_sheets_lists
 
@@ -114,9 +112,17 @@ df = cn_df_generator(folder_year)
 
 df0 = look_up(df, {'code': 'D121', 'institution': 'S11', 'ressources': False, 'description': None})
 
+null_entry_df = look_up(df, {
+                        'code': None,
+                        'institution': 'S2',
+                        'ressources': False,
+                        'description': 'Interets et dividendes verses par RDM, nets',
+                        'formula': 'Interets_verses_par_rdm + Dividendes_verses_par_rdm_D42 + Dividendes_verses_par_rdm_D43 + Revenus_propriete_verses_par_rdm - Interets_verses_au_rdm - Dividendes_verses_au_rdm_D42 - Dividendes_verses_au_rdm_D43 - Revenus_propriete_verses_au_rdm'
+                        })
+
 df1 = look_many(df, entry_by_index_list)
 
-df2 = cn_output.reshape_to_long_for_output(df1)  # TODO : problem duplicate entries
+df2 = cn_output.reshape_to_long_for_output(df1)
 
 cn_output.df_long_to_csv(df2, 'IPP_test.txt')
 
