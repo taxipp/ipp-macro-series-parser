@@ -137,3 +137,49 @@ def get_or_construct_value(df, arg, overall_dict, years = range(1949, 2014)):
     return arg_value, formula_final
 
 # TODO: change example in docstring for a meaningful example (e.g. sum of two economic agregates)
+
+
+def get_or_construct_value_new(df, arg, overall_dict, years = range(1949, 2014)):
+    """
+    """
+    arg_key = arg
+    arg = overall_dict[arg]
+    code = arg['code']
+    institution = arg['institution']
+    ressources = arg['ressources']
+    if type(arg_key) is str:
+        arg_name = '{} ({}, {}, {})'.format(arg_key, code, institution, ressources)
+    else:
+        arg_name = 'name_not_provided ({}, {}, {})'.format(code, institution, ressources)  # 2LIGNES INUTILES?
+    entry_df = look_up(df, arg)
+    entry_df = entry_df.drop_duplicates((u'code', u'institution', u'ressources', u'value', u'year'))  # TODO: à passer ailleurs, dans une fonction à part
+#    formula_final = arg_string  # on veut plus ça : on veut que dans le dico des formules, y ait que les formules
+
+    # GET :
+    if not entry_df.empty:
+        entry_df = entry_df.set_index('year')
+        value_series = entry_df[['value']]
+        value_series.columns = [arg_name]
+        # value_series = value_series.drop_duplicates()
+
+    # CONSTRUCT :
+    else:
+        dico_value = dict()
+        formula = arg['formula']
+        formula_string = formula
+
+        parser_formula = Parser()
+        expr = parser_formula.parse(formula)
+        variables = expr.variables()  # variables is a list of strings
+
+        for variable in variables:
+            variable_value, variable_form = get_or_construct_value(df, variable, overall_dict)
+            replacement = '(' + variable_form + ')'  # needs to be edited for a nicer style of formula output
+            formula_string = formula.replace(variable, replacement)
+            dico_value[variable] = variable_value
+
+        formula_modified = formula.replace("^", "**")
+        value_series = eval(formula_modified, dico_value)  # could use a parser_formula.evaluate(formula, dico_value)
+        value_series.columns = [arg_name]
+
+    return value_series, formula_string
