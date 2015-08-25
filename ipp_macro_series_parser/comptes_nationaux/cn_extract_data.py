@@ -17,6 +17,7 @@ def look_up(df, entry_by_index):
     """
     Get the data corresponding to the parameters (code, institution, ressources, year, description) defined in the
     dictionnary "entry_by_index", from the DataFrame df containing the stacked Comptabilité Nationale data.
+    Note that entering any entry_by_index containing a 'formula' key will give an empty Series.
 
     Parameters
     ----------
@@ -46,6 +47,7 @@ def look_up(df, entry_by_index):
                 raise
             if result.empty:
                 log.info('Variable {} is not available'.format(value))
+                result = pandas.Series()
         elif key == 'description':
             result = result[df[key].str.contains(value)].copy()
         else:
@@ -151,8 +153,8 @@ def get_or_construct_value(df, variable_name, index_by_variable, years = range(1
     ... get_or_construct(df, 'Interets_dividendes_nets_verses_par_rdm', index_by_variable)
 
     Returns a tuple, where the first element is a Series (vector) for years 1949 to 2013 of the value of the sum
-    of the four variables, and the second element is the formula
-    'Interets_verses_par_rdm + Dividendes_verses_par_rdm_D42 + Dividendes_verses_par_rdm_D43 + Revenus_propriete_verses_par_rdm'
+    of the four variables, and the second element is the formula 'Interets_verses_par_rdm +
+    Dividendes_verses_par_rdm_D42 + Dividendes_verses_par_rdm_D43 + Revenus_propriete_verses_par_rdm'
     """
     assert df is not None
     df = df.copy()
