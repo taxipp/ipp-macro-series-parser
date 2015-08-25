@@ -70,12 +70,12 @@ def file_parser(excelfile_name):
             else:
                 df.ix[ind, ['ressources']] = False
 
-    df['source'] = infos['source'].copy()
-    df['version'] = infos['version'].copy()
-    df['file_title'] = infos['title'].copy()
-    df['file_name'] = infos['filename'].copy()
-    df['link'] = infos['link'].copy()
-    df['institution'] = infos['agent'].copy()
+    df['source'] = infos['source']
+    df['version'] = infos['version']  # .copy()
+    df['file_title'] = infos['title']  # .copy()
+    df['file_name'] = infos['filename']  # .copy()
+    df['link'] = infos['link']  # .copy()
+    df['institution'] = infos['agent']  # .copy()
     return df
 
 
@@ -87,7 +87,7 @@ def df_cleaner(df):
     df = df[df.code != u' ']
     df = df[df.description != u' ']
     df = df[df.description != u'']
-    df = df[not df['code'].str.contains('\+')]
+    df = df[~df['code'].str.contains('\+')]
     df = df.drop_duplicates()
     return df
 
