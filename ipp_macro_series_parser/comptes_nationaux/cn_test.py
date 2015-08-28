@@ -6,7 +6,7 @@ from ipp_macro_series_parser.config import Config
 
 from ipp_macro_series_parser.comptes_nationaux.cn_parser_main import get_comptes_nationaux_data
 from ipp_macro_series_parser.comptes_nationaux.cn_extract_data import (
-    look_many, look_up, get_or_construct_value)
+    look_many, look_up, get_or_construct_value, get_or_construct_data)
 from ipp_macro_series_parser.comptes_nationaux.cn_output import reshape_to_long_for_output
 # from ipp_macro_series_parser.comptes_nationaux import cn_output
 # from ipp_macro_series_parser.comptes_nationaux import cn_sheets_lists
@@ -51,75 +51,62 @@ dict_with_squares = {
                       'formula': 'Just_a_sum_of_D41_and_D42^2'}
     }
 
-# overall_dict = {
-#    'pib': {
-#        'code': None,
-#        'institution': 'S1',
-#        'ressources': False,
-#        'description': 'PIB'
-#        },
-#    'complicated_var': {
-#        'code': None,
-#        'institution': 'S1',
-#        'ressources': False,
-#        'description': 'PIB0',
-#        'formula': '2*pib - pib - pib + pib*pib - pib^2'
-#        },
-#    'very_complicated_var': {
-#        'code': None,
-#        'institution': 'S1',
-#        'ressources': False,
-#        'description': 'PIB0',
-#        'formula': 'complicated_var^2'
-#        }
-#    }
-# variable_name = 'very_complicated_var'
-
-overall_dict_2 = {
+dict_RDM = {
     'Interets_verses_par_rdm': {
         'code': 'D41',
         'institution': 'S2',
         'ressources': False,
-        'description': ''
+        'description': '',
+        'drop': True,
         },
     'Dividendes_verses_par_rdm_D42': {
         'code': 'D42',
         'institution': 'S2',
         'ressources': False,
-        'description': ''
+        'description': '',
+        'drop': True,
         },
     'Dividendes_verses_par_rdm_D43': {
         'code': 'D43',
         'institution': 'S2',
         'ressources': False,
-        'description': ''},
+        'description': '',
+        'drop': True,
+        },
     'Revenus_propriete_verses_par_rdm': {
         'code': 'D44',
         'institution': 'S2',
         'ressources': False,
-        'description': ''},
+        'description': '',
+        'drop': True,
+        },
     'Interets_verses_au_rdm': {
         'code': 'D41',
         'institution': 'S2',
         'ressources': True,
-        'description': ''},
+        'description': '',
+        'drop': True,
+        },
     'Dividendes_verses_au_rdm_D42': {
         'code': 'D42',
         'institution': 'S2',
         'ressources': True,
-        'description': ''
+        'description': '',
+        'drop': True,
         },
     'Dividendes_verses_au_rdm_D43': {
         'code': 'D43',
         'institution': 'S2',
         'ressources': True,
-        'description': ''
+        'description': '',
+        'drop': True,
         },
     'Revenus_propriete_verses_au_rdm': {
         'code': 'D44',
         'institution': 'S2',
         'ressources': True,
-        'description': ''
+        'description': '',
+        'drop': True,
         },
     'Interets_dividendes_verses_par_rdm': {
         'code': None,
@@ -137,6 +124,20 @@ overall_dict_2 = {
         }
     }
 
+double_dict = {
+    'Interets verses par rdm': {'code': 'D41', 'institution': 'S2', 'ressources': False, 'description': ''},
+    'Dividendes verses par rdm D42': {'code': 'D42', 'institution': 'S2', 'ressources': False,
+                                     'description': ''}
+    }
+
+mult_dict_with_formula = {
+    'Interets_verses_par_rdm': {'code': 'D41', 'institution': 'S2', 'ressources': False, 'description': '',
+                                'drop': True},
+    'Dividendes_verses_par_rdm_D42': {'code': 'D42', 'institution': 'S2', 'ressources': False,
+                                     'description': '', 'drop': True},
+    'Just a sum of D41 and D42': {'code': '', 'institution': 'S2', 'ressources': False, 'description': '',
+                                  'formula': 'Interets_verses_par_rdm + Dividendes_verses_par_rdm_D42'}
+    }
 
 # outputs
 
@@ -171,10 +172,16 @@ df1 = look_many(df, entry_by_index_list)
 #    )
 
 # - tests get_or_construct_value
-value_empty, formula_of_empty = get_or_construct_value(df, 'notfound_arg', incomplete_overall_dict)
+#value_empty, formula_of_empty = get_or_construct_value(df, 'notfound_arg', incomplete_overall_dict)
 # should return KeyError because components of formula are not in dict
 value_simple_dict, formula_simple_dict = get_or_construct_value(df, 'Interets verses par rdm', simple_dict)
 value_div, formula_div = get_or_construct_value(df, 'Interets_verses_par_rdm / 100', dict_with_div)
-value_sum, formula_sum = get_or_construct_value(df, 'Interets_dividendes_verses_par_rdm', overall_dict_2)
-value_net, formula_net = get_or_construct_value(df, 'Interets_dividendes_nets_verses_par_rdm', overall_dict_2)
+value_sum, formula_sum = get_or_construct_value(df, 'Interets_dividendes_verses_par_rdm', dict_RDM)
+value_net, formula_net = get_or_construct_value(df, 'Interets_dividendes_nets_verses_par_rdm', dict_RDM)
 value_sq, formula_sq = get_or_construct_value(df, 'Square_of_sum', dict_with_squares)
+
+# - tests for get_or_construct_data
+values_double, formulas_double = get_or_construct_data(df, double_dict)
+values_double_w_formula, formulas_double_w_formula = get_or_construct_data(df, mult_dict_with_formula)
+values_complex, formulas_complex = get_or_construct_data(df, dict_with_squares)
+values_RDM, formulas_RDM = get_or_construct_data(df, dict_RDM)
