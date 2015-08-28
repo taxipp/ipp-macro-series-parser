@@ -169,6 +169,7 @@ def get_or_construct_value(df, variable_name, index_by_variable, years = range(1
     formula = variable.get('formula')
     dico_value = dict()
     entry_df = look_up(df, variable)
+    formula_string = variable_key
 
     if not entry_df.empty:
         entry_df = entry_df.set_index('year')

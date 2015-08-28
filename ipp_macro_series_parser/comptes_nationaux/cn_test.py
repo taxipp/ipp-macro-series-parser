@@ -11,6 +11,7 @@ from ipp_macro_series_parser.comptes_nationaux.cn_output import reshape_to_long_
 # from ipp_macro_series_parser.comptes_nationaux import cn_output
 # from ipp_macro_series_parser.comptes_nationaux import cn_sheets_lists
 
+
 parser = Config(
     config_files_directory = os.path.join(pkg_resources.get_distribution('ipp-macro-series-parser').location)
     )
