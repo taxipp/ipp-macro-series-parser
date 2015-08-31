@@ -16,8 +16,8 @@ formatting.
 # CN1
 
 input_CN1 = {
-        'Produit_interieur_brut_(PIB)': {'code': None, 'institution': 'S1', 'ressources': False, 'description': 'PIB'},
-        'Produit_interieur_net_(PIN)': {'code': None, 'institution': 'S1', 'ressources': False, 'description': 'PIN'},  # ou pas?
+        'Produit_interieur_brut_PIB': {'code': None, 'institution': 'S1', 'ressources': False, 'description': 'PIB'},
+        'Produit_interieur_net_PIN': {'code': None, 'institution': 'S1', 'ressources': False, 'description': 'PIN'},  # ou pas?
         'Revenu_national_brut': {'code': None, 'institution': 'S1', 'ressources': False, 'description': 'Revenu national brut en milliards d'},  # pas encore parmi données importées
     # Revenus versés par reste du monde
         'Salaires_verses_au_rdm': {'code': 'D11', 'institution': 'S2', 'ressources': True, 'description': '', 'drop': True},  # salaires reçus par RDM
@@ -40,8 +40,8 @@ input_CN1 = {
         'Salaires_verses_par_APU': {'code': 'D11', 'institution': 'S13', 'ressources': False, 'description': '', 'drop': True},
         'Salaires_verses_par_menages': {'code': 'D11', 'institution': 'S14', 'ressources': False, 'description': '', 'drop': True},
         'Salaires_verses_par_ISBLSM': {'code': 'D11', 'institution': 'S15', 'ressources': False, 'description': '', 'drop': True},
-        'Excedent_net_d_exploitation_(ENE)_des_menages': {'code': 'B2n', 'institution': 'S14', 'ressources': False, 'description': ''},  # ENE ménages (ie loyers reçus)
-        'Revenu_mixte_net_des_menages_(non-salaries)': {'code': 'B3n', 'institution': 'S1', 'ressources': False, 'description': ''},   # Revenu mixte / non-salariés
+        'Excedent_net_d_exploitation_ENE_des_menages': {'code': 'B2n', 'institution': 'S14', 'ressources': False, 'description': ''},  # ENE ménages (ie loyers reçus)
+        'Revenu_mixte_net_des_menages_non_salaries': {'code': 'B3n', 'institution': 'S1', 'ressources': False, 'description': ''},   # Revenu mixte / non-salariés
         'Cot_soc_effectives_employeurs_SNF': {'code': 'D121', 'institution': 'S11', 'ressources': False, 'description': '', 'drop': True},  # cotisations patronales effectives
         'Cot_soc_effectives_employeurs_SF': {'code': 'D121', 'institution': 'S12', 'ressources': False, 'description': '', 'drop': True},
         'Cot_soc_effectives_employeurs_APU': {'code': 'D121', 'institution': 'S13', 'ressources': False, 'description': '', 'drop': True},
@@ -52,17 +52,18 @@ input_CN1 = {
         'Cot_soc_imputees_employeurs_APU': {'code': 'D122', 'institution': 'S13', 'ressources': False, 'description': '', 'drop': True},
         'Cot_soc_imputees_employeurs_Menages': {'code': 'D122', 'institution': 'S14', 'ressources': False, 'description': '', 'drop': True},
         'Cot_soc_imputees_employeurs_ISBLSM': {'code': 'D122', 'institution': 'S15', 'ressources': False, 'description': '', 'drop': True},
-        'Excedent_net_d_exploitation_(ENE)_SNF': {'code': 'B2n', 'institution': 'S11', 'ressources': False, 'description': '', 'drop': True},  # ENE SNF
-        'Excedent_net_d_exploitation_(ENE)_SF': {'code': 'B2n', 'institution': 'S12', 'ressources': False, 'description': '', 'drop': True},  # ENE SF
-        'Impots_sur_les_produits_(ressources_APU)': {'code': 'D21', 'institution': 'S13', 'ressources': True, 'description': '', 'drop': True},  # impôts indirects : impôts nets sur les produits & impôts nets sur la production
-        'Subventions_sur_les_produits_(ressources_APU)': {'code': 'D31', 'institution': 'S13', 'ressources': True, 'description': '', 'drop': True},
-        'Autres_impots_sur_la_production_(ressources_APU)': {'code': 'D29', 'institution': 'S13', 'ressources': True, 'description': '', 'drop': True},
-        'Autres_subventions_sur_la_production_(ressources_APU)': {'code': 'D39', 'institution': 'S13', 'ressources': True, 'description': '', 'drop': True}  # NB : D39 est aussi dans un autre compte (le compte d'exploitation) pour les APUs, en emplois. donc bien renseigner ressources..
+# Excedent_net_d_exploitation_ENE_SNF
+        'ENE_SNF': {'code': 'B2n', 'institution': 'S11', 'ressources': False, 'description': '', 'drop': True},  # ENE SNF
+        'ENE_SF': {'code': 'B2n', 'institution': 'S12', 'ressources': False, 'description': '', 'drop': True},  # ENE SF
+        'Impots_sur_les_produits_ressources_APU': {'code': 'D21', 'institution': 'S13', 'ressources': True, 'description': '', 'drop': True},  # impôts indirects : impôts nets sur les produits & impôts nets sur la production
+        'Subventions_sur_les_produits_ressources_APU': {'code': 'D31', 'institution': 'S13', 'ressources': True, 'description': '', 'drop': True},
+        'Autres_impots_sur_la_production_ressources_APU': {'code': 'D29', 'institution': 'S13', 'ressources': True, 'description': '', 'drop': True},
+        'Autres_subventions_sur_la_production_ressources_APU': {'code': 'D39', 'institution': 'S13', 'ressources': True, 'description': '', 'drop': True}  # NB : D39 est aussi dans un autre compte (le compte d'exploitation) pour les APUs, en emplois. donc bien renseigner ressources..
         }
 
 formulas_CN1 = {
     'Profits_des_societes': {
-        'formula': 'Excedent_net_d_exploitation_(ENE)_SNF + Excedent_net_d_exploitation_(ENE)_SF',
+        'formula': 'ENE_SNF + ENE_SF',
         'drop': True},
     'Salaires_et_cot_soc_verses_par_les_societes': {
         'formula': 'Salaires_verses_par_SNF + Salaires_verses_par_SF + Cot_soc_effectives_employeurs_SNF + Cot_soc_effectives_employeurs_SF + Cot_soc_imputees_employeurs_SNF + Cot_soc_imputees_employeurs_SF',
@@ -70,11 +71,11 @@ formulas_CN1 = {
     'VA_Societes': {
         'formula': 'Profits_des_societes + Salaires_et_cot_soc_verses_par_les_societes',
         'drop': True},
-    'VA_Immobilier_(Loyers)': {
-        'formula': 'Excedent_net_d_exploitation_(ENE)_des_menages',
+    'VA_Immobilier_Loyers': {
+        'formula': 'Excedent_net_d_exploitation_ENE_des_menages',
         'drop': True},  # vérifier que ça passe bien.
     'Revenu_d_activite_des_non_salaries': {
-        'formula': 'Revenu_mixte_net_des_menages_(non-salaries)',
+        'formula': 'Revenu_mixte_net_des_menages_non_salaries',
         'drop': True},  # vérifier que ça passe bien.
     'Salaires_et_cot_soc_verses_par_les_non_salaries_et_les_menages': {
         'formula': 'Salaires_verses_par_menages + Cot_soc_effectives_employeurs_Menages + Cot_soc_imputees_employeurs_Menages',
@@ -83,21 +84,19 @@ formulas_CN1 = {
         'formula': 'Salaires_verses_par_APU + Salaires_verses_par_ISBLSM + Cot_soc_effectives_employeurs_APU + Cot_soc_effectives_employeurs_ISBLSM + Cot_soc_imputees_employeurs_APU + Cot_soc_imputees_employeurs_ISBLSM',
         'drop': True},
     'Impots_indirects': {
-        'formula': 'Impots_sur_les_produits_(ressources_APU) - Subventions_sur_les_produits_(ressources_APU) + Autres_impots_sur_la_production_(ressources_APU) - Autres_subventions_sur_la_production_(ressources_APU)',
+        'formula': 'Impots_sur_les_produits_ressources_APU - Subventions_sur_les_produits_ressources_APU + Autres_impots_sur_la_production_ressources_APU - Autres_subventions_sur_la_production_ressources_APU',
         'drop': True},
-    'Revenu_national_(Piketty)': {
-        'formula': 'VA_Societes + VA_Immobilier_(Loyers) + Revenu_d_activite_des_non_salaries + Salaires_et_cot_soc_verses_par_les_non_salaries_et_les_menages + VA_APU_et_ISBLSM + Impots_indirects + Revenus_verses_par_rdm_nets'},
     '%_Produit_interieur_net_/_Revenu_national': {
-        'formula': 'Produit_interieur_net_(PIN) / Revenu_national_brut'},
+        'formula': 'Produit_interieur_net_PIN / Revenu_national_brut'},
     '%_Revenus_reste_du_monde_/_Revenu_national': {
         'formula': 'Revenus_verses_par_rdm_nets / Revenu_national_brut'},
-    'Depreciation_du_capital_(CCF)': {
-        'formula': 'Consommation_de_capital_fixe _-_APU + Consommation_de_capital_fixe _-_ISBLSM + '},
-    '%_CCF_/_PIB': {
-        'formula': 'Consommation_de_capital_fixe _-_economie_nationale / Produit_interieur_brut_(PIB)'},  # voir si on utilise la CCF Piketty (à calculer)
+#    'Depreciation_du_capital_(CCF)': {
+#        'formula': 'Consommation_de_capital_fixe _-_APU + Consommation_de_capital_fixe _-_ISBLSM + '},
+    'CCF_/_PIB': {
+        'formula': 'Consommation_de_capital_fixe_-_economie_nationale / Produit_interieur_brut_PIB'},  # voir si on utilise la CCF Piketty (à calculer)
 # 'Taux_de_croissance_du_PIB_entre_l_annee_N-2_et_l_annee_N-1'
     '%_Revenu_national_/_PIB': {
-        'formula': 'Revenu_national_brut / Produit_interieur_brut_(PIB)'},  # voir si on prend plutôt le RNB Piketty
+        'formula': 'Revenu_national_brut / Produit_interieur_brut_PIB'},  # voir si on prend plutôt le RNB Piketty
     'Salaires_verses_par_rdm_nets': {
         'code': None,
         'institution': 'S2',
@@ -108,13 +107,15 @@ formulas_CN1 = {
         'code': None,
         'institution': 'S2',
         'ressources': False,
-        'formula': 'Interets_verses_par_rdm + Dividendes_verses_par_rdm_D42 + Dividendes_verses_par_rdm_D43 + Revenus_propriete_verses_par_rdm - Interets_verses_au_rdm - Dividendes_verses_au_rdm_D42 - Dividendes_verses_au_rdm_D43 - Revenus_propriete_verses_au_rdm',
+        'formula': 'Interets_verses_par_rdm + Dividendes_verses_par_rdm_D42 + Dividendes_verses_par_rdm_D43 + Revenus_de_la_propriete_verses_par_rdm - Interets_verses_au_rdm - Dividendes_verses_au_rdm_D42 - Dividendes_verses_au_rdm_D43 - Revenus_de_la_propriete_verses_au_rdm',
         'drop': True},
     'Revenus_verses_par_rdm_nets': {
         'code': None,
         'institution': 'S2',
         'ressources': False,
         'formula': 'Salaires_verses_par_rdm_nets + Interets_et_dividendes_verses_par_rdm_nets',},
+    'Revenu_national_Piketty': {
+        'formula': 'VA_Societes + VA_Immobilier_Loyers + Revenu_d_activite_des_non_salaries + Salaires_et_cot_soc_verses_par_les_non_salaries_et_les_menages + VA_APU_et_ISBLSM + Impots_indirects + Revenus_verses_par_rdm_nets'},
     }
 
 variables_CN1 = input_CN1.copy()
