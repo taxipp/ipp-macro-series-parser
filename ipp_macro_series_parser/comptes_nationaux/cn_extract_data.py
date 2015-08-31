@@ -169,7 +169,7 @@ def get_or_construct_value(df, variable_name, index_by_variable, years = range(1
     formula = variable.get('formula')
     dico_value = dict()
     entry_df = look_up(df, variable)
-    formula_string = variable_key
+#    formula_string = variable_key
 
     if not entry_df.empty:
         entry_df = entry_df.set_index('year')
@@ -183,6 +183,7 @@ def get_or_construct_value(df, variable_name, index_by_variable, years = range(1
         final_formula = ''
 
     else:
+        print formula
         parser_formula = Parser()
         expr = parser_formula.parse(formula)
         variables = expr.variables()
@@ -315,6 +316,7 @@ def get_or_construct_data(df, variable_dictionary, years = range(1949, 2014)):
     formulas = dict()
 
     for variable in variable_dictionary:
+        print variable
         variable_values, variable_formula = get_or_construct_value(df, variable, variable_dictionary, years)
         variable_name = variable.replace('_', ' ')
 
