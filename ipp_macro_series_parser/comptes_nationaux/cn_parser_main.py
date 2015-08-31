@@ -108,4 +108,5 @@ def import_hdf_to_df(hdf_file_name, key):
     print('Importing {} form {}'.format(key, file_path))
     store = pandas.HDFStore(file_path)
     df = store[key]
+    store.close()
     return df
