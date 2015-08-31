@@ -9,7 +9,7 @@ from ipp_macro_series_parser.comptes_nationaux.cn_extract_data import (
     look_many, look_up, get_or_construct_value, get_or_construct_data)
 from ipp_macro_series_parser.comptes_nationaux.cn_output import reshape_to_long_for_output
 # from ipp_macro_series_parser.comptes_nationaux import cn_output
-# from ipp_macro_series_parser.comptes_nationaux import cn_sheets_lists
+from ipp_macro_series_parser.comptes_nationaux import cn_sheets_lists
 
 
 parser = Config(
@@ -186,3 +186,17 @@ values_double, formulas_double = get_or_construct_data(df, double_dict)
 values_double_w_formula, formulas_double_w_formula = get_or_construct_data(df, mult_dict_with_formula)
 values_complex, formulas_complex = get_or_construct_data(df, dict_with_squares)
 values_RDM, formulas_RDM = get_or_construct_data(df, dict_RDM)
+
+# tests with CN1
+#values_CN1, formulas_CN1 = get_or_construct_data(df, cn_sheets_lists.variables_CN1)
+dict_profits = {
+    'ENE_SNF': {'code': 'B2n', 'institution': 'S11', 'ressources': False, 'description': '', 'drop': True},  # ENE SNF
+    'ENE_SF': {'code': 'B2n', 'institution': 'S12', 'ressources': False, 'description': '', 'drop': True},  # ENE SF
+    'Profits_des_societes': {'formula': 'ENE_SNF + ENE_SF'}
+    }
+values_profits, formulas_profits = get_or_construct_data(df, dict_profits)
+dict_ENE = {
+    {'code': 'B2n', 'institution': 'S11', 'ressources': False, 'description': '', 'drop': True},  # ENE SNF
+    {'code': 'B2n', 'institution': 'S12', 'ressources': False, 'description': '', 'drop': True},  # ENE SF
+    }
+ENE = look_many(df, dict_profits)
