@@ -72,7 +72,7 @@ formula_by_variable_name = dict(
     interest_imposes_au_bareme = 'f2ts + f2go + f2tr',
     assurences_vie_imposes_au_bareme = 'f2ch',
     dividendes_imposes_au_prelevement_liberatoire = 'f2da',
-    interest_imposes_au_prelevement_liberatoire = 'f2ee',
+    interets_imposes_au_prelevement_liberatoire = 'f2ee',
     assurences_vie_imposes_au_prelevement_liberatoire = 'f2dh',
     plus_values_mobilieres = 'f3vg + f3vf + f3vi + f3va',  # PV mobilières (régime normal), PV stock options 1, PV stock options 2, PV retraite dirigeant analysis:ignore
     plus_values_professionnelles_regime_normal = 'f5hz + f5iz + f5jz',  # TODO: ceci n'est valable qu'avant 2010
@@ -89,11 +89,8 @@ level_2_formula_by_variable_name = dict(
     plus_values = 'plus_values_mobilieres + plus_values_professionnelles',
     plus_values_professionnelles = 'plus_values_professionnelles_regime_normal + plus_values_professionnelles_retraite_dirigeant',  # analysis:ignore
     revenus_imposes_au_bareme = 'dividendes_imposes_au_bareme + interest_imposes_au_bareme + assurences_vie_imposes_au_bareme',  # analysis:ignore
-    revenus_imposes_au_prelevement_liberatoire = 'dividendes_imposes_au_prelevement_liberatoire + interest_imposes_au_prelevement_liberatoire + assurences_vie_imposes_au_prelevement_liberatoire',  #analysis:ignore
+    revenus_imposes_au_prelevement_liberatoire = 'dividendes_imposes_au_prelevement_liberatoire + interets_imposes_au_prelevement_liberatoire + assurences_vie_imposes_au_prelevement_liberatoire',  #analysis:ignore
     )
-
-
-
 
 df = denombrements_fiscaux_df_generator(year)
 

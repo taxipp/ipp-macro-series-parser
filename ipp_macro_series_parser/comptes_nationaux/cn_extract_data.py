@@ -169,7 +169,6 @@ def get_or_construct_value(df, variable_name, index_by_variable, years = range(1
     formula = variable.get('formula')
     dico_value = dict()
     entry_df = look_up(df, variable)
-#    formula_string = variable_key
 
     if not entry_df.empty:
         entry_df = entry_df.set_index('year')
@@ -178,19 +177,19 @@ def get_or_construct_value(df, variable_name, index_by_variable, years = range(1
         serie.columns = [variable_name]
         final_formula = variable_name
 
-    elif not formula and entry_df.empty:  # Pour les formules qui n'en sont pas vraiment et qui se réduisent à une autre variable
+    # For formulas that are not real formulas but taht are actually a mapping
+    elif not formula and entry_df.empty:
         serie = pandas.DataFrame()
         final_formula = ''
 
     else:
-        print formula
         parser_formula = Parser()
         expr = parser_formula.parse(formula)
         variables = expr.variables()
 
         for component in variables:
             variable_value, variable_formula = get_or_construct_value(df, component, index_by_variable)
-            formula_with_parenthesis = '(' + variable_formula + ')'  # needs to be edited for a nicer style of formula output
+            formula_with_parenthesis = '(' + variable_formula + ')'  # needs to be edited for a nicer formula output
             final_formula = formula.replace(component, formula_with_parenthesis)
             dico_value[component] = variable_value.values.squeeze()
             index = variable_value.index
@@ -198,14 +197,10 @@ def get_or_construct_value(df, variable_name, index_by_variable, years = range(1
         formula_modified = formula.replace("^", "**")
 
         data = eval(formula_modified, dico_value)
-#        print variable_name
-#        print index
         assert data is not None
-
         serie = pandas.DataFrame(
-            data = data,
+            data = {variable_name: data},
             index = index,
-            columns = [variable_name]
             )
 
     serie.columns = serie.columns.str.replace('_', ' ')
@@ -324,7 +319,7 @@ def get_or_construct_data(df, variable_dictionary, years = range(1949, 2014)):
             formulas[variable_name] = variable_formula
 
         drop = variable_dictionary[variable].get('drop')
-        if drop is not True:
+        if not drop:
             result = pandas.concat((result, variable_values), axis=1)
         else:
             continue
