@@ -47,6 +47,7 @@ def denombrements_fiscaux_df_generator(year = None, years = None):
         years = [year]
     df = df_by_year_generator()
     df[['year']] = df[['year']].astype(int)
+    print years
     return df.loc[df.year.isin(years)].copy() if years is not None else df.copy()
 
 

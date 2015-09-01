@@ -208,6 +208,9 @@ def get_or_construct_value(df, variable_name, index_by_variable, years = range(1
             print len(dico_value[component])
         data = eval(formula_modified, dico_value)
         assert data is not None
+        print variable_name
+        print data
+        print index
         serie = pandas.DataFrame(
             data = {variable_name: data},
             index = index,

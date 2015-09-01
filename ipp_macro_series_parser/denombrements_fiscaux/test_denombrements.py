@@ -11,7 +11,7 @@ from ipp_macro_series_parser.config import Config
 
 from ipp_macro_series_parser.denombrements_fiscaux.denombrements_fiscaux_parser import (
     denombrements_fiscaux_df_generator)
-from ipp_macro_series_parser.comptes_nationaux.cn_extract_data import look_many, get_or_construct_value
+from ipp_macro_series_parser.comptes_nationaux.cn_extract_data import get_or_construct_value
 
 config_parser = Config(
     config_files_directory = os.path.join(pkg_resources.get_distribution('ipp-macro-series-parser').location)
@@ -19,7 +19,7 @@ config_parser = Config(
 
 
 # inputs
-year = 2008
+years = [2007, 2008]
 
 
 def create_index_by_variable_name(formula_by_variable_name, level_2_formula_by_variable_name = None):
@@ -55,7 +55,7 @@ def build_aggregates(df, formula_by_variable_name, level_2_formula_by_variable_n
     index_by_variable_name = create_index_by_variable_name(formula_by_variable_name, level_2_formula_by_variable_name)
     for variable_name in formula_by_variable_name.keys() + level_2_formula_by_variable_name.keys():
         # df1 = look_many(df, index_by_variable_name.values())
-        serie, formula = get_or_construct_value(df, variable_name, index_by_variable_name, years = [year])
+        serie, formula = get_or_construct_value(df, variable_name, index_by_variable_name, years = years)
         if result_data_frame is None:
             result_data_frame = serie
         else:
@@ -113,7 +113,7 @@ level_2_formula_by_variable_name = dict(
     revenus_imposes_au_prelevement_liberatoire = 'dividendes_imposes_au_prelevement_liberatoire + interets_imposes_au_prelevement_liberatoire + assurences_vie_imposees_au_prelevement_liberatoire',  #analysis:ignore
     )
 
-df = denombrements_fiscaux_df_generator(year)
+df = denombrements_fiscaux_df_generator(years = years)
 
 
 result_data_frame = build_aggregates(df, formula_by_variable_name, level_2_formula_by_variable_name)
@@ -121,7 +121,7 @@ result_data_frame = build_aggregates(df, formula_by_variable_name, level_2_formu
 print result_data_frame
 
 # 1. Tableau IRPP1: Les revenus figurant dans les déclarations de revenus
-irrp_1 = result_data_frame[[
+irpp_1 = result_data_frame[[
     'salaires',
     # TODO
     #    'revenus_d_activite_non_salariee'
@@ -141,7 +141,7 @@ irrp_1 = result_data_frame[[
 # 2. Tableau IRPP2: Détails des revenus financiers (intérêts, dividendes, plus-values) figurant dans les
 # déclations de revenus (imposition au barème, imposition au prélèvement forfaitaire libératoire (PL), et plus-values)
 
-irrp_2 = result_data_frame[[
+irpp_2 = result_data_frame[[
     'revenus_imposes_au_bareme',
     'dividendes_imposes_au_bareme',
     'interest_imposes_au_bareme',
@@ -190,4 +190,3 @@ irrp_5_ba = result_data_frame[[
     'benefices_agricoles_reels_sans_cga_imposables',
     'benefices_agricoles_reels_sans_cga_deficits',
     ]]
-boum2

@@ -2,7 +2,7 @@
 
 
 # TaxIPP -- A french microsimulation model
-# By: IPP <taxipp@oipp.eu>
+# By: IPP <taxipp@ipp.eu>
 #
 # Copyright (C) 2012, 2013, 2014, 2015 IPP
 # https://github.com/taxipp
