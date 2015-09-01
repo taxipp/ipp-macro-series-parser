@@ -43,7 +43,6 @@ parser = Config(
 hdf_directory = parser.get('data', 'cn_hdf_directory')
 
 
-
 def cn_df_generator(year, list_years = None, drop_duplicates = True, subset = None):
     """
     Generates the table with all the data from Comptabilite Nationale.

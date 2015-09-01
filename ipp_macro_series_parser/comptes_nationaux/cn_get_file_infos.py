@@ -41,7 +41,7 @@ def file_infos(excelfile_name):
             title = 'Compte des societes financieres'
         elif filename == 't_7301':
             agent = 'S13'  # (administrations publiques)
-            title = 'Compte des administrations puliques'
+            title = 'Compte des administrations publiques'
         elif filename == 't_7401':
             agent = 'S14'  # (menages)
             title = 'Compte des menages'
@@ -51,6 +51,9 @@ def file_infos(excelfile_name):
         elif filename == 't_7601':
             agent = 'S2'  # (reste du monde)
             title = 'Operations avec le reste du monde'
+        elif filename == 't_1115':
+            agent = 'S1'
+            title = 'Produit intérieur brut et revenu national brut par habitant'
 
         # to be completed for all the files of interest in the folder
         # elif filename == 't_3101':

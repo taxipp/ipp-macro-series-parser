@@ -39,13 +39,17 @@ def file_parser(excelfile_name):
 
     df = pandas.read_excel(excelfile_name, header = header, skiprows = skiprows, skip_footer = skip_footer,
        index_col = index_col, parse_cols = parse_cols)
+    print df[:10]
     # rename first column, and trim content
     new_columns = df.columns.values
+    print new_columns
     new_columns[0] = 'code'
     new_columns[1] = 'description'
     df.columns = new_columns
-
+    print df.code.dtype
+    df['code'] = df['code'].astype('str')
     df['description'] = df['description'].str.lower()
+    print df[:10]
 
     ressource_dummy = 0
     df['ressources'] = False
@@ -70,6 +74,10 @@ def file_parser(excelfile_name):
             else:
                 df.ix[ind, ['ressources']] = False
 
+    if infos['filename'] == 't_1115':
+        for ind in df.index:
+            df.ix[ind]['code'] == u'no code'
+
     df['source'] = infos['source']
     df['version'] = infos['version']  # .copy()
     df['file_title'] = infos['title']  # .copy()
@@ -81,6 +89,10 @@ def file_parser(excelfile_name):
 
 def df_cleaner(df):
     # drop useless lines
+#    import pdb
+#    pdb.set_trace()
+    assert not df.empty
+    assert len(df) > 0
     df = df[pandas.notnull(df.code)]
     df = df[pandas.notnull(df.description)]
     df = df[df.code != u'']
@@ -113,7 +125,7 @@ def non_tee_df_by_filename_generator(folder_year):
         directory_path)
     list_of_files = glob.glob(os.path.join(directory_path, '*.xls'))
     for filename in list_of_files:
-        assert os .path.exists(filename)
+        assert os.path.exists(filename)
         infos = file_infos(filename)
         if infos is False:
             continue

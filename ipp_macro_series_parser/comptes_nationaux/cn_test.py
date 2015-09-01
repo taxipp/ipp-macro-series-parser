@@ -188,15 +188,59 @@ values_complex, formulas_complex = get_or_construct_data(df, dict_with_squares)
 values_RDM, formulas_RDM = get_or_construct_data(df, dict_RDM)
 
 # tests with CN1
-#values_CN1, formulas_CN1 = get_or_construct_data(df, cn_sheets_lists.variables_CN1)
-dict_profits = {
-    'ENE_SNF': {'code': 'B2n', 'institution': 'S11', 'ressources': False, 'description': '', 'drop': True},  # ENE SNF
-    'ENE_SF': {'code': 'B2n', 'institution': 'S12', 'ressources': False, 'description': '', 'drop': True},  # ENE SF
-    'Profits_des_societes': {'formula': 'ENE_SNF + ENE_SF'}
+
+what_size_lookup = look_up(df, {'code': 'D11', 'institution': 'S11', 'ressources': False, 'description': '', 'drop': True},
+                           range(1978, 2014))
+what_size, formula = get_or_construct_value(df,
+                                   'Sal_verses_SNF',
+                                   {'Sal_verses_SNF': {'code': 'D11', 'institution': 'S11', 'ressources': False, 'description': '', 'drop': True}},
+                                   range(1978, 2014))
+
+rnb = look_up(df, {#'code': None,
+                   #'institution': 'S1',
+                   'description': 'Revenu national brut en milliards'},
+                   range(1978, 2014))
+
+pib = look_up(df, {'description': 'Produit intérieur brut'})
+
+values_CN1, formulas_CN1 = get_or_construct_data(df, cn_sheets_lists.variables_CN1, range(1978, 2014))
+
+#list_ENE = [
+#    {'code': 'B2n', 'institution': 'S11', 'ressources': False, 'description': ''},  # ENE SNF
+#    {'code': 'B2n', 'institution': 'S12', 'ressources': False, 'description': ''}  # ENE SF
+#    ]
+#ene = look_many(df, list_ENE)
+#ene_snf = look_up(df, {'code': 'B2n', 'institution': 'S11', 'ressources': False, 'description': ''})
+#dict_profits = {
+#    'ene_snf': {'code': 'B2n', 'institution': 'S11', 'ressources': False, 'description': '', 'drop': True},  # ENE SNF
+#    'ene_sf': {'code': 'B2n', 'institution': 'S12', 'ressources': False, 'description': '', 'drop': True},  # ENE SF
+#    'Profits_des_societes': {'formula': 'ene_snf + ene_sf'}
+#    }
+#values_profits, formulas_profits = get_or_construct_value(df, 'Profits_des_societes', dict_profits)
+#values_profits_societes, formulas_profits_societes = get_or_construct_data(df, dict_profits)
+
+dict_sal_cot_soc = {
+        'cs_eff_empl_SNF': {'code': 'D121', 'institution': 'S11', 'ressources': False, 'description': '', 'drop': True},  # cotisations patronales effectives
+        'cs_eff_empl_SF': {'code': 'D121', 'institution': 'S12', 'ressources': False, 'description': '', 'drop': True},
+        'cs_eff_empl_APU': {'code': 'D121', 'institution': 'S13', 'ressources': False, 'description': '', 'drop': True},
+        'cs_eff_empl_Menages': {'code': 'D121', 'institution': 'S14', 'ressources': False, 'description': '', 'drop': True},
+        'cs_eff_empl_ISBLSM': {'code': 'D121', 'institution': 'S15', 'ressources': False, 'description': '', 'drop': True},
+        'cs_imput_empl_SNF': {'code': 'D122', 'institution': 'S11', 'ressources': False, 'description': '', 'drop': True},  # cotisations patronales imputées
+        'cs_imput_empl_SF': {'code': 'D122', 'institution': 'S12', 'ressources': False, 'description': '', 'drop': True},
+        'cs_imput_empl_APU': {'code': 'D122', 'institution': 'S13', 'ressources': False, 'description': '', 'drop': True},
+        'cs_imput_empl_Menages': {'code': 'D122', 'institution': 'S14', 'ressources': False, 'description': '', 'drop': True},
+        'cs_imput_empl_ISBLSM': {'code': 'D122', 'institution': 'S15', 'ressources': False, 'description': '', 'drop': True},
+        'Sal_verses_SNF': {'code': 'D11', 'institution': 'S11', 'ressources': False, 'description': '', 'drop': True},  # salaires versés. il nous les faut pour à peu près toutes les institutions
+        'Sal_verses_SF': {'code': 'D11', 'institution': 'S12', 'ressources': False, 'description': '', 'drop': True},
+        'Sal_cs_verses_societes': {
+            'formula': 'Sal_verses_SNF + Sal_verses_SF + cs_eff_empl_SNF + cs_eff_empl_SF + cs_imput_empl_SNF + cs_imput_empl_SF'},
     }
-values_profits, formulas_profits = get_or_construct_data(df, dict_profits)
-dict_ENE = {
-    {'code': 'B2n', 'institution': 'S11', 'ressources': False, 'description': '', 'drop': True},  # ENE SNF
-    {'code': 'B2n', 'institution': 'S12', 'ressources': False, 'description': '', 'drop': True},  # ENE SF
-    }
-ENE = look_many(df, dict_profits)
+value_sal_cs, formula_sal_cs = get_or_construct_value(df, 'Sal_cs_verses_societes', dict_sal_cot_soc, years = range(1978, 2014))
+values_sal_cs, formulas_sal_cs = get_or_construct_data(df, dict_sal_cot_soc, years = range(1978, 2014))
+
+what_size, formula = get_or_construct_value(df,
+                                   'Sal_verses_SNF',
+                                   {'Sal_verses_SNF': {'code': 'D11', 'institution': 'S11', 'ressources': False, 'description': '', 'drop': True}},
+                                   range(1978, 2014))
+what_size_lookup = look_up(df, {'code': 'D11', 'institution': 'S11', 'ressources': False, 'description': '', 'drop': True},
+                           range(1978, 2014))

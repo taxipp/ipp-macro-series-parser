@@ -13,7 +13,7 @@ from py_expression_eval import Parser
 log = logging.getLogger(__name__)
 
 
-def look_up(df, entry_by_index):
+def look_up(df, entry_by_index, years = range(1949, 2014)):
     """
     Get the data corresponding to the parameters (code, institution, ressources, year, description) defined in the
     dictionnary "entry_by_index", from the DataFrame df containing the stacked Comptabilité Nationale data.
@@ -37,6 +37,7 @@ def look_up(df, entry_by_index):
     (S1), for all years.
     """
     result = df.copy()
+    result = result[df['year'].isin(years)].copy()
     for key, value in entry_by_index.items():
         if value is None:
             continue
@@ -169,7 +170,8 @@ def get_or_construct_value(df, variable_name, index_by_variable, years = range(1
     variable = index_by_variable[variable_name]
     formula = variable.get('formula')
     dico_value = dict()
-    entry_df = look_up(df, variable)
+
+    entry_df = look_up(df, variable, years)
 
     if not entry_df.empty:
         entry_df = entry_df.set_index('year')
@@ -184,19 +186,26 @@ def get_or_construct_value(df, variable_name, index_by_variable, years = range(1
         final_formula = ''
 
     else:
+        print variable_name
         parser_formula = Parser()
         expr = parser_formula.parse(formula)
         variables = expr.variables()
 
         for component in variables:
-            variable_value, variable_formula = get_or_construct_value(df, component, index_by_variable)
-            formula_with_parenthesis = '(' + variable_formula + ')'  # needs to be edited for a nicer formula output
+            print component
+            print 'years', years
+            variable_value, variable_formula = get_or_construct_value(df, component, index_by_variable, years)
+            print 'for', component, ': length of variable_value', len(variable_value)
+            formula_with_parenthesis = '(' + variable_formula + ')'  # needs to be edited for a nicer style of formula output
             final_formula = formula.replace(component, formula_with_parenthesis)
             dico_value[component] = variable_value.values.squeeze()
             index = variable_value.index
 
         formula_modified = formula.replace("^", "**")
 
+        print formula
+        for component in variables:
+            print len(dico_value[component])
         data = eval(formula_modified, dico_value)
         assert data is not None
         serie = pandas.DataFrame(
@@ -308,11 +317,13 @@ def get_or_construct_data(df, variable_dictionary, years = range(1949, 2014)):
     dividends paid to France by the rest of the world, both gross and net of interests and dividends paid by France to
     the rest of the world ; and the second element is the dictionary of formulas, indexed by the calculated variables.
     """
+    print 'years', years
     result = pandas.DataFrame()
     formulas = dict()
 
     for variable in variable_dictionary:
         print variable
+        print 'years', years
         variable_values, variable_formula = get_or_construct_value(df, variable, variable_dictionary, years)
         variable_name = variable.replace('_', ' ')
 
