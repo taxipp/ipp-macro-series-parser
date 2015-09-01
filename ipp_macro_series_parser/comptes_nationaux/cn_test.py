@@ -5,7 +5,7 @@ import pkg_resources
 from ipp_macro_series_parser.config import Config
 
 from ipp_macro_series_parser.comptes_nationaux.cn_parser_main import get_comptes_nationaux_data
-from ipp_macro_series_parser.comptes_nationaux.cn_extract_data import (
+from ipp_macro_series_parser.data_extraction import (
     look_many, look_up, get_or_construct_value, get_or_construct_data)
 from ipp_macro_series_parser.comptes_nationaux import cn_sheets_lists
 

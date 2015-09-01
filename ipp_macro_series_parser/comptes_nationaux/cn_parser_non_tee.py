@@ -39,17 +39,13 @@ def file_parser(excelfile_name):
 
     df = pandas.read_excel(excelfile_name, header = header, skiprows = skiprows, skip_footer = skip_footer,
        index_col = index_col, parse_cols = parse_cols)
-    print df[:10]
     # rename first column, and trim content
     new_columns = df.columns.values
-    print new_columns
     new_columns[0] = 'code'
     new_columns[1] = 'description'
     df.columns = new_columns
-    print df.code.dtype
     df['code'] = df['code'].astype('str')
     df['description'] = df['description'].str.lower()
-    print df[:10]
 
     ressource_dummy = 0
     df['ressources'] = False

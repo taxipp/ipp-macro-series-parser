@@ -1,9 +1,27 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Wed Jul 22 18:00:33 2015
 
-@author: sophie.cottet
-"""
+
+# TAXIPP -- A French microsimulation model
+# By: IPP <taxipp@ipp.eu>
+#
+# Copyright (C) 2012, 2013, 2014, 2015 IPP
+# https://github.com/taxipp
+#
+# This file is part of TAXIPP.
+#
+# TAXIPP is free software; you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# TAXIPP is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 
 import logging
 import pandas
@@ -186,39 +204,25 @@ def get_or_construct_value(df, variable_name, index_by_variable, years = range(1
         final_formula = ''
 
     else:
-        print variable_name
         parser_formula = Parser()
         expr = parser_formula.parse(formula)
         variables = expr.variables()
 
         for component in variables:
-            print component
-            print 'years', years
             variable_value, variable_formula = get_or_construct_value(df, component, index_by_variable, years)
-            print 'for', component, ': length of variable_value', len(variable_value)
-            formula_with_parenthesis = '(' + variable_formula + ')'  # needs to be edited for a nicer style of formula output
+            formula_with_parenthesis = '(' + variable_formula + ')'  # needs a nicer formula output
             final_formula = formula.replace(component, formula_with_parenthesis)
             dico_value[component] = variable_value.values.squeeze()
             index = variable_value.index
 
         formula_modified = formula.replace("^", "**")
 
-        print formula
-        for component in variables:
-            print len(dico_value[component])
         data = eval(formula_modified, dico_value)
         assert data is not None
-        print variable_name
-        print data
-        print index
         serie = pandas.DataFrame(
             data = {variable_name: data},
             index = index,
             )
-
-#    serie.columns = serie.columns.str.replace('_', ' ')
-#    final_formula = final_formula.replace('_', ' ')
-
     return serie, final_formula
 
 
@@ -304,14 +308,14 @@ def get_or_construct_data(df, variable_dictionary, years = range(1949, 2014)):
     ...         'institution': 'S2',
     ...         'ressources': False,
     ...         'description': 'Interets et dividendes verses par RDM',
-    ...         'formula': 'Interets_verses_par_rdm + Dividendes_verses_par_rdm_D42 + Dividendes_verses_par_rdm_D43 + Revenus_propriete_verses_par_rdm'
+    ...         'formula': 'Interets_verses_par_rdm + Dividendes_verses_par_rdm_D42 + Dividendes_verses_par_rdm_D43 + Revenus_propriete_verses_par_rdm' #analysis:ignore
     ...    },
     ...    'Interets_dividendes_nets_verses_par_rdm': {
     ...         'code': None,
     ...         'institution': 'S2',
     ...         'ressources': False,
     ...         'description': 'Interets et dividendes verses par RDM, nets',
-    ...         'formula': 'Interets_verses_par_rdm + Dividendes_verses_par_rdm_D42 + Dividendes_verses_par_rdm_D43 + Revenus_propriete_verses_par_rdm - Interets_verses_au_rdm - Dividendes_verses_au_rdm_D42 - Dividendes_verses_au_rdm_D43 - Revenus_propriete_verses_au_rdm'
+    ...         'formula': 'Interets_verses_par_rdm + Dividendes_verses_par_rdm_D42 + Dividendes_verses_par_rdm_D43 + Revenus_propriete_verses_par_rdm - Interets_verses_au_rdm - Dividendes_verses_au_rdm_D42 - Dividendes_verses_au_rdm_D43 - Revenus_propriete_verses_au_rdm'  #analysis:ignore
     ...    }
     ... }
     >>> values_RDM, formulas_RDM = get_or_construct_data(df, dict_RDM)
@@ -320,13 +324,10 @@ def get_or_construct_data(df, variable_dictionary, years = range(1949, 2014)):
     dividends paid to France by the rest of the world, both gross and net of interests and dividends paid by France to
     the rest of the world ; and the second element is the dictionary of formulas, indexed by the calculated variables.
     """
-    print 'years', years
     result = pandas.DataFrame()
     formulas = dict()
 
     for variable in variable_dictionary:
-        print variable
-        print 'years', years
         variable_values, variable_formula = get_or_construct_value(df, variable, variable_dictionary, years)
         variable_name = variable.replace('_', ' ')
 

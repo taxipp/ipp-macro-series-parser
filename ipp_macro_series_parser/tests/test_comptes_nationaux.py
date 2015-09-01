@@ -7,7 +7,7 @@ import pandas
 from ipp_macro_series_parser.comptes_nationaux import cn_parser_tee
 from ipp_macro_series_parser.comptes_nationaux import cn_parser_non_tee
 from ipp_macro_series_parser.comptes_nationaux import cn_parser_main
-from ipp_macro_series_parser.comptes_nationaux.cn_extract_data import get_or_construct_value
+from ipp_macro_series_parser.data_extraction import get_or_construct_value
 
 
 def test_duplicate_tee_df():

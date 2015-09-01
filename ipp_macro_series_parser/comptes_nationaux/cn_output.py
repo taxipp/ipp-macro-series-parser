@@ -11,7 +11,7 @@ import pkg_resources
 
 from ipp_macro_series_parser.config import Config
 from ipp_macro_series_parser.comptes_nationaux.cn_parser_main import get_comptes_nationaux_data
-from ipp_macro_series_parser.comptes_nationaux.cn_extract_data import look_many
+from ipp_macro_series_parser.data_extraction import look_many
 
 
 parser = Config(
@@ -32,7 +32,7 @@ def reshape_to_long_for_output(df):
     Example
     --------
     >>> from ipp_macro_series_parser.comptes_nationaux.cn_parser_main import get_comptes_nationaux_data
-    >>> from ipp_macro_series_parser.comptes_nationaux.cn_extract_data import look_many
+    >>> from ipp_macro_series_parser.data_extraction import look_many
     >>> table2013 = get_comptes_nationaux_data(2013)
     >>> my_selection = [{'code': None, 'institution': 'S1', 'ressources': False,
     ...             'description': 'PIB'},
@@ -74,7 +74,7 @@ def reshape_to_wide_for_output(df):
     Example
     --------
     >>> from ipp_macro_series_parser.comptes_nationaux.cn_parser_main import get_comptes_nationaux_data
-    >>> from ipp_macro_series_parser.comptes_nationaux.cn_extract_data import look_many
+    >>> from ipp_macro_series_parser.data_extraction import look_many
     >>> table2013 = get_comptes_nationaux_data(2013)
     >>> my_selection = [{'code': None, 'institution': 'S1', 'ressources': False,
     ...             'description': 'PIB'},
@@ -121,7 +121,7 @@ def df_long_to_csv(df, csv_file_name):
     >>> config_files_directory = os.path.join(pkg_resources.get_distribution('ipp-macro-series-parser').location)
     ... )
     >>> from ipp_macro_series_parser.comptes_nationaux.cn_main import get_comptes_nationaux_data
-    >>> from ipp_macro_series_parser.comptes_nationaux.cn_extract_data import look_many
+    >>> from ipp_macro_series_parser.data_extraction import look_many
     >>> cn_directory = parser.get('data', 'cn_directory')
     >>> table2013 = get_comptes_nationaux_data(2013)
     >>> my_selection = [{'code': None, 'institution': 'S1', 'ressources': False,
