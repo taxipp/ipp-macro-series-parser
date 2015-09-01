@@ -8,7 +8,6 @@ Created on Tue Jul 21 13:57:18 2015
 import os
 import pkg_resources
 import pandas as pd
-import numpy as np
 
 from ipp_macro_series_parser.config import Config
 
@@ -43,7 +42,7 @@ prix_annuel_carburants = prix_carburants_parser(prix_annuel_carburants)
 
 
 def prix_carburants_cleaner_90_96(data_frame):
-    data_frame = data_frame[data_frame['Date'] != 'Date']
+    data_frame = data_frame[data_frame['Date'] != 'Date'].copy()
     data_frame.rename(columns = {'Unnamed: 9': 'ident_year'}, inplace = True)
     data_frame['ident_year'] = data_frame['Date'].str[-4:]
     data_frame['ident_year'] = data_frame['ident_year'].astype(float)
@@ -57,7 +56,7 @@ prix_carburants_90_96 = prix_carburants_cleaner_90_96(prix_annuel_carburants)
 
 
 def prix_carburants_cleaner_97_06(data_frame):
-    data_frame = data_frame[data_frame['Unnamed: 9'] != '   ']
+    data_frame = data_frame[data_frame['Unnamed: 9'] != '   '].copy()
     data_frame.loc[data_frame['Date'] == 'Date', 'super_plombe_ht'] = 'super_plombe_ht'
     data_frame.loc[data_frame['Date'] == 'Date', 'diesel_ht'] = 'diesel_ht'
     data_frame.loc[data_frame['Date'] == 'Date', 'super_95_ht'] = 'super_95_ht'
@@ -83,7 +82,7 @@ prix_carburants_97_06 = prix_carburants_cleaner_97_06(prix_annuel_carburants)
 
 
 def prix_carburants_cleaner_07_12(data_frame):
-    data_frame = data_frame[data_frame['Unnamed: 9'] == '   ']
+    data_frame = data_frame[data_frame['Unnamed: 9'] == '   '].copy()
     data_frame = data_frame[data_frame['super_plombe_ht'] != 'Super carburant']
     data_frame.rename(columns = {'Unnamed: 9': 'ident_year'}, inplace = True)
     data_frame['ident_year'] = data_frame['Date'].str[-4:-2]
@@ -98,7 +97,7 @@ def prix_carburants_cleaner_07_12(data_frame):
     data_frame.loc[data_frame['Date'] == 'Date', 'super_98_ttc'] = 'gplc_ttc'
 
     data_frame.columns = data_frame.iloc[0]
-    data_frame = data_frame[data_frame['Date'] != 'Date']
+    data_frame = data_frame[data_frame['Date'] != 'Date'].copy()
     del data_frame['Da']
     del data_frame['   ']
     return data_frame
@@ -161,10 +160,10 @@ prix_mensuel_carburants_13_15 = prix_mensuel_date_cleaner(prix_mensuel_carburant
 
 # Tidy datasets:
 
-prix_carburants_90_14 = pd.concat([prix_carburants_90_96, prix_carburants_97_06,
+prix_annuel_carburants_90_14 = pd.concat([prix_carburants_90_96, prix_carburants_97_06,
     prix_carburants_07_12, prix_carburants_13_14], axis = 0)
-carburants = list(prix_carburants_90_14)
-prix_carburants_90_14 = pd.melt(prix_carburants_90_14, id_vars = ['Date'], value_vars = carburants[1:],
+carburants = list(prix_annuel_carburants_90_14)
+prix_carburants_90_14 = pd.melt(prix_annuel_carburants_90_14, id_vars = ['Date'], value_vars = carburants[1:],
     value_name = 'prix', var_name = 'carburant')
 
 prix_carburants_90_14['Date'] = prix_carburants_90_14['Date'].astype(int)
