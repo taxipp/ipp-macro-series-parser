@@ -70,7 +70,6 @@ def test_get_or_construct_value():
     variable_name = 'very_complicated_var'
     df = cn_parser_main.get_comptes_nationaux_data(folder_year)
     serie, formula = get_or_construct_value(df, variable_name, overall_dict, years = range(1949, 2014))
-    assert isinstance(serie, pandas.Series)
-    assert serie.name == variable_name
-    assert all(serie == 0)
-
+    assert isinstance(serie, pandas.DataFrame)
+    assert serie.columns == [variable_name]
+    assert all(serie[variable_name] == 0)

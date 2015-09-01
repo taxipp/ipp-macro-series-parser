@@ -203,8 +203,8 @@ def get_or_construct_value(df, variable_name, index_by_variable, years = range(1
             index = index,
             )
 
-    serie.columns = serie.columns.str.replace('_', ' ')
-    final_formula = final_formula.replace('_', ' ')
+#    serie.columns = serie.columns.str.replace('_', ' ')
+#    final_formula = final_formula.replace('_', ' ')
 
     return serie, final_formula
 
