@@ -17,9 +17,9 @@ formatting.
 
 input_CN1 = {
         'Produit_interieur_brut_PIB': {'code': None, 'institution': 'S1', 'ressources': False, 'description': 'PIB'},
-        'Produit_interieur_net_PIN': {'code': None, 'institution': 'S1', 'ressources': False, 'description': 'PIN'},  # ou pas?
-        'Revenu_national_brut': {#'code': None, 'institution': 'S1', 'ressources': False,
-                                 'description': 'Revenu national brut en milliards'},  # pas encore parmi données importées
+        'Produit_interieur_net_PIN': {'code': None, 'institution': 'S1', 'ressources': False, 'description': 'PIN'},
+        'Revenu_national_brut': {'code': None, 'institution': 'S1', 'ressources': False,
+                                 'description': 'revenu national brut en milliards d'},
     # Revenus versés par reste du monde
         'Salaires_verses_au_rdm': {'code': 'D11', 'institution': 'S2', 'ressources': True, 'description': '', 'drop': True},  # salaires reçus par RDM
         'Salaires_verses_par_rdm': {'code': 'D11', 'institution': 'S2', 'ressources': False, 'description': '', 'drop': True},  # salaires versés par RDM
