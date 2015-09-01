@@ -28,6 +28,7 @@ def look_up(df, entry_by_index):
 
     Example
     --------
+    >>> from ipp_macro_series_parser.comptes_nationaux.cn_parser_main import get_comptes_nationaux_data
     >>> table2013 = get_comptes_nationaux_data(2013)
     >>> dico = {'code': 'B1g/PIB', 'institution': 'S1', 'ressources': False, 'year': None, 'description': 'PIB'}
     >>> df0 = look_up(table2013, dico)
@@ -49,11 +50,11 @@ def look_up(df, entry_by_index):
                 raise
             if result.empty:
                 log.info('Variable {} is not available'.format(value))
-                result = pandas.Series()
+                result = pandas.DataFrame()
         elif key == 'description':
             result = result[df[key].str.contains(value)].copy()
         else:
-            result = pandas.Series()
+            result = pandas.DataFrame()
     return result
 
 
