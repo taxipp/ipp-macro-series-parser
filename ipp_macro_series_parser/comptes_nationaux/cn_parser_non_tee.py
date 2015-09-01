@@ -76,7 +76,7 @@ def file_parser(excelfile_name):
 
     if infos['filename'] == 't_1115':
         for ind in df.index:
-            df.ix[ind]['code'] == u'no code'
+            df.ix[ind, ['code']] = u'no code'
 
     df['source'] = infos['source']
     df['version'] = infos['version']  # .copy()
@@ -89,8 +89,6 @@ def file_parser(excelfile_name):
 
 def df_cleaner(df):
     # drop useless lines
-#    import pdb
-#    pdb.set_trace()
     assert not df.empty
     assert len(df) > 0
     df = df[pandas.notnull(df.code)]
@@ -101,6 +99,9 @@ def df_cleaner(df):
     df = df[df.description != u'']
     df = df[~df['code'].str.contains('\+')]
     df = df.drop_duplicates()
+    df = df[df['code'] != 'nan']
+    is_useless = df['value'].isnull() & df['code'].isin(['nan', 'no code'])
+    df = df[~is_useless]
     return df
 
 
@@ -133,7 +134,7 @@ def non_tee_df_by_filename_generator(folder_year):
             continue
 
         df = file_parser(filename)
-        df = df_cleaner(df)
         df = df_tidy(df, int(infos['version']))
+        df = df_cleaner(df)
         non_tee_df_by_filename[infos['filename']] = df
     return non_tee_df_by_filename
