@@ -24,6 +24,7 @@
 
 
 import logging
+import numpy
 import pandas
 from py_expression_eval import Parser
 
@@ -64,9 +65,9 @@ def look_up(df, entry_by_index, years = range(1949, 2014)):
         if key != 'description' and key != 'formula':
             try:
                 result = result[df[key] == value].copy()
-            except KeyError:
-                log.info('{} {} is not available'.format(key, value))
-                raise
+            except KeyError, e:
+                log.info('{} for {} is not available'.format(value, key))
+                raise(e)
             if result.empty:
                 log.info('Variable {} is not available'.format(value))
                 result = pandas.DataFrame()
@@ -117,7 +118,7 @@ def look_many(df, entry_by_index_list):
     return df_output
 
 
-def get_or_construct_value(df, variable_name, index_by_variable, years = range(1949, 2014)):
+def get_or_construct_value(df, variable_name, index_by_variable, years = None, fill_value = numpy.NaN):
     """
     Returns the DateFrame (1 column) of the value of economic variable(s) for years of interest.
     Years are set to the index of the DataFrame.
@@ -179,6 +180,7 @@ def get_or_construct_value(df, variable_name, index_by_variable, years = range(1
     Dividendes_verses_par_rdm_D42 + Dividendes_verses_par_rdm_D43 + Revenus_propriete_verses_par_rdm'
     """
     assert df is not None
+    assert years is not None
     df = df.copy()
     assert variable_name is not None
     if index_by_variable is None:
@@ -190,40 +192,56 @@ def get_or_construct_value(df, variable_name, index_by_variable, years = range(1
     dico_value = dict()
 
     entry_df = look_up(df, variable, years)
+    index = None
 
     if not entry_df.empty:
         entry_df = entry_df.set_index('year')
-        serie = entry_df[['value']].copy()
-        assert len(serie.columns) == 1
-        serie.columns = [variable_name]
+        result_data_frame = entry_df[['value']].copy()
+        assert len(result_data_frame.columns) == 1
+        result_data_frame.columns = [variable_name]
         final_formula = variable_name
 
-    # For formulas that are not real formulas but taht are actually a mapping
+    # For formulas that are not real formulas but that are actually a mapping
     elif not formula and entry_df.empty:
-        serie = pandas.DataFrame()
+        result_data_frame = pandas.DataFrame()
         final_formula = ''
 
     else:
         parser_formula = Parser()
         expr = parser_formula.parse(formula)
         variables = expr.variables()
-
         for component in variables:
-            variable_value, variable_formula = get_or_construct_value(df, component, index_by_variable, years)
+            variable_value, variable_formula = get_or_construct_value(
+                df, component, index_by_variable, years, fill_value = fill_value)
+            if index is None:
+                index = variable_value.index
+            else:
+                try:
+                    reindexing_condition = not(index == variable_value.index)
+                except ValueError:
+                    reindexing_condition = not(index == variable_value.index).all()
+                if reindexing_condition:
+                    log.info('index differs {} vs {} after getting {}'.format(
+                        index, variable_value.index, component))
+                    index = index.union(variable_value.index)
+                    log.info('Will be using union index {}'.format(index))
+
             formula_with_parenthesis = '(' + variable_formula + ')'  # needs a nicer formula output
             final_formula = formula.replace(component, formula_with_parenthesis)
-            dico_value[component] = variable_value.values.squeeze()
-            index = variable_value.index
+            dico_value[component] = variable_value
 
         formula_modified = formula.replace("^", "**")
 
+        for component, variable_value in dico_value.iteritems():
+            dico_value[component] = variable_value.reindex(index = index, fill_value = fill_value).values.squeeze()
+
         data = eval(formula_modified, dico_value)
         assert data is not None
-        serie = pandas.DataFrame(
+        result_data_frame = pandas.DataFrame(
             data = {variable_name: data},
             index = index,
             )
-    return serie, final_formula
+    return result_data_frame, final_formula
 
 
 def get_or_construct_data(df, variable_dictionary, years = range(1949, 2014)):
