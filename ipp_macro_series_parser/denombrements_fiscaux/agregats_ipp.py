@@ -69,7 +69,9 @@ def create_index_by_variable_name(formula_by_variable_name, level_2_formula_by_v
     return index_by_variable_name
 
 
-def build_aggregates(raw_data, formula_by_variable_name, level_2_formula_by_variable_name = None, fill_value = 0):
+def build_aggregates(raw_data, formula_by_variable_name, level_2_formula_by_variable_name = None, years = None,
+        fill_value = 0):
+    assert years is not None
     aggregates = None
     index_by_variable_name = create_index_by_variable_name(formula_by_variable_name, level_2_formula_by_variable_name)
     for variable_name in formula_by_variable_name.keys() + level_2_formula_by_variable_name.keys():
@@ -134,10 +136,13 @@ level_2_formula_by_variable_name = dict(
     )
 
 
-
-def build_ipp_tables(years = [2006, 2007, 2008]):
+def build_ipp_tables(years = [2007, 2008]):
     raw_data = denombrements_fiscaux_df_generator(years = years)
-    aggregates = build_aggregates(raw_data, formula_by_variable_name, level_2_formula_by_variable_name)
+    aggregates = build_aggregates(
+        raw_data,
+        formula_by_variable_name,
+        level_2_formula_by_variable_name = level_2_formula_by_variable_name,
+        years = years)
     data_frame_by_ipp_table_name = collections.OrderedDict([
         # 1. Tableau IRPP1: Les revenus figurant dans les déclarations de revenus
         ('irpp_1', aggregates[[

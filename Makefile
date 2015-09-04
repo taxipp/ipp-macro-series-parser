@@ -1,5 +1,6 @@
 IGNORE_OPT=--ignore-files='()'
 TESTS_DIR=ipp_macro_series_parser/tests
+DOCTESTS_DIR=ipp_macro_series_parser/comptes_nationaux
 
 all: flake8 test
 
@@ -20,10 +21,13 @@ flake8: clean-pyc
 
 test: check-syntax-errors
 	nosetests $(TESTS_DIR) --exe --stop --with-doctest
+	nosetests $(DOCTESTS_DIR) --exe --stop --with-doctest
 
-# Unused
-# test-ci: check-syntax-errors
-# 	nosetests $(TESTS_DIR) $(IGNORE_OPT) --exe --with-doctest
+
+test-ci: check-syntax-errors
+	nosetests $(TESTS_DIR) --exe --with-doctest
+	nosetests $(DOCTESTS_DIR) --exe --with-doctest
+
 #
 # test-with-coverage:
 # 	nosetests $(TESTS_DIR) $(IGNORE_OPT) --exe --stop --with-coverage --cover-package=openfisca_france --cover-erase --cover-branches --cover-html

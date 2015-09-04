@@ -29,7 +29,7 @@ import pkg_resources
 
 
 from ipp_macro_series_parser.config import Config
-from ipp_macro_series_parser.denombrements_fiscaux.test_denombrements import data_frame_by_ipp_table_name
+from ipp_macro_series_parser.denombrements_fiscaux.agregats_ipp import build_ipp_tables
 
 config_parser = Config(
     config_files_directory = os.path.join(pkg_resources.get_distribution('ipp-macro-series-parser').location)
@@ -37,6 +37,7 @@ config_parser = Config(
 xls_directory = config_parser.get('data', 'denombrements_fiscaux_xls')
 file_path = os.path.join(xls_directory, u"Agrégats IPP - Données fiscales.xls")
 sheetname = 'calculs calage'
+
 
 def error_msg(ipp_table_name, variable, year, target, actual):
     msg = '''
@@ -167,7 +168,7 @@ def build_original_irpp_tables():
     return original_data_frame_by_ipp_table_name
 
 
-
+data_frame_by_ipp_table_name = build_ipp_tables()
 original_data_frame_by_ipp_table_name = build_original_irpp_tables()
 
 messages = list()

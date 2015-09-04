@@ -32,7 +32,7 @@ from py_expression_eval import Parser
 log = logging.getLogger(__name__)
 
 
-def look_up(df, entry_by_index, years = range(1949, 2014)):
+def look_up(df, entry_by_index, years = None):
     """
     Get the data corresponding to the parameters (code, institution, ressources, year, description) defined in the
     dictionnary "entry_by_index", from the DataFrame df containing the stacked Comptabilité Nationale data.
@@ -55,6 +55,7 @@ def look_up(df, entry_by_index, years = range(1949, 2014)):
     Returns a slice of get_comptes_nationaux_data(2013) containing only the gross product (PIB) of the whole economy
     (S1), for all years.
     """
+    assert years is not None
     result = df.copy()
     result = result[df['year'].isin(years)].copy()
     for key, value in entry_by_index.items():
@@ -78,7 +79,7 @@ def look_up(df, entry_by_index, years = range(1949, 2014)):
     return result
 
 
-def look_many(df, entry_by_index_list):
+def look_many(df, entry_by_index_list, years = None):
     """
     Get the multiple data corresponding to the parameters (the tuples (code, institution, ressources, year,
     description)) defined in the list of dictionnaries "entry_by_index_list", from the DataFrame df containing the
@@ -110,9 +111,10 @@ def look_many(df, entry_by_index_list):
 
     Returns the same output, using a keyword from the description.
     """
+    assert years is not None
     df_output = pandas.DataFrame()
     for entity in entry_by_index_list:
-        df_inter = look_up(df, entity)
+        df_inter = look_up(df, entity, years = years)
         df_output = pandas.concat([df_output, df_inter], axis = 0, ignore_index=False, verify_integrity=False)
     df_output = df_output.drop_duplicates()
     return df_output
@@ -232,10 +234,17 @@ def get_or_construct_value(df, variable_name, index_by_variable, years = None, f
 
         formula_modified = formula.replace("^", "**")
 
-        for component, variable_value in dico_value.iteritems():
+        for component, variable_value in dico_value.iteritems():  # Reindexing
+            if variable_value.empty:  # Dealing with completely absent variable
+                variable_value = pandas.DataFrame({component: [fill_value]}, index = index)
             dico_value[component] = variable_value.reindex(index = index, fill_value = fill_value).values.squeeze()
 
-        data = eval(formula_modified, dico_value)
+        try:
+            data = eval(formula_modified, dico_value)
+        except:
+            import pdb
+            pdb.set_trace()
+
         assert data is not None
         result_data_frame = pandas.DataFrame(
             data = {variable_name: data},

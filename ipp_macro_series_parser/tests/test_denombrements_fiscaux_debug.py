@@ -22,7 +22,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from ipp_macro_series_parser.denombrements_fiscaux.test_denombrements import (
+from ipp_macro_series_parser.denombrements_fiscaux.agregats_ipp import (
     create_index_by_variable_name,
     formula_by_variable_name,
     level_2_formula_by_variable_name
