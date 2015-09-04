@@ -156,11 +156,11 @@ ene_societes = look_many(df, list_ENE)
 # - tests get_or_construct_value
 #value_empty, formula_of_empty = get_or_construct_value(df, 'notfound_arg', incomplete_overall_dict)
 # should return KeyError because components of formula are not in dict
-value_simple_dict, formula_simple_dict = get_or_construct_value(df, 'Interets verses par rdm', simple_dict)
-value_div, formula_div = get_or_construct_value(df, 'Interets_verses_par_rdm / 100', dict_with_div)
-value_sq, formula_sq = get_or_construct_value(df, 'Square_of_sum', dict_with_squares)
-value_rdm_net, formula_rdm_net = get_or_construct_value(df, 'Interets_et_dividendes_verses_par_rdm_nets', dict_revenus_rdm)
-values_profits, formulas_profits = get_or_construct_value(df, 'Profits_des_societes', dict_profits)
+value_simple_dict, formula_simple_dict = get_or_construct_value(df, 'Interets verses par rdm', simple_dict, years = range(1949, 2014))
+value_div, formula_div = get_or_construct_value(df, 'Interets_verses_par_rdm / 100', dict_with_div, years = range(1949, 2014))
+value_sq, formula_sq = get_or_construct_value(df, 'Square_of_sum', dict_with_squares, years = range(1949, 2014))
+value_rdm_net, formula_rdm_net = get_or_construct_value(df, 'Interets_et_dividendes_verses_par_rdm_nets', dict_revenus_rdm, years = range(1949, 2014))
+values_profits, formulas_profits = get_or_construct_value(df, 'Profits_des_societes', dict_profits, years = range(1949, 2014))
 value_sal_cs, formula_sal_cs = get_or_construct_value(df, 'Sal_cs_verses_societes', dict_sal_cot_soc, years = range(1978, 2014))
 
 # - tests for get_or_construct_data
