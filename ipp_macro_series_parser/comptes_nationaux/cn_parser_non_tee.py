@@ -75,11 +75,11 @@ def file_parser(excelfile_name):
             df.ix[ind, ['code']] = u'no code'
 
     df['source'] = infos['source']
-    df['version'] = infos['version']  # .copy()
-    df['file_title'] = infos['title']  # .copy()
-    df['file_name'] = infos['filename']  # .copy()
-    df['link'] = infos['link']  # .copy()
-    df['institution'] = infos['agent']  # .copy()
+    df['version'] = infos['version']
+    df['file_title'] = infos['title']
+    df['file_name'] = infos['filename']
+    df['link'] = infos['link']
+    df['institution'] = infos['agent']
     return df
 
 

@@ -3,7 +3,6 @@
 
 import pandas
 
-
 from ipp_macro_series_parser.comptes_nationaux import cn_parser_tee
 from ipp_macro_series_parser.comptes_nationaux import cn_parser_non_tee
 from ipp_macro_series_parser.comptes_nationaux import cn_parser_main
