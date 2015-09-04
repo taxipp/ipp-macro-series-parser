@@ -4,6 +4,10 @@ config_local.ini
 # Spyder config file
 .spyderproject
 
+# 
+.idea/
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

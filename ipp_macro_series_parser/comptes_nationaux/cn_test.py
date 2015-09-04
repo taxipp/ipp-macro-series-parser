@@ -15,7 +15,8 @@ parser = Config(
     )
 cn_directory = parser.get('data', 'cn_directory')
 cn_hdf = parser.get('data', 'cn_hdf_directory')
-cn_xls = parser.get('data', 'cn_csv_directory')
+cn_csv = parser.get('data', 'cn_csv_directory')
+tests_directory = parser.get('data', 'tests_directory')
 
 
 # inputs
@@ -172,3 +173,10 @@ values_sal_cs, formulas_sal_cs = get_or_construct_data(df, dict_sal_cot_soc, yea
 
 # tests with CN1
 values_CN1, formulas_CN1 = get_or_construct_data(df, cn_sheets_lists.variables_CN1, range(1978, 2014))
+values_CN1.to_csv(os.path.join(cn_csv, 'values_CN1.csv'), tupleize_cols = False, index = True, na_rep = 'NaN',
+              sep=';')
+tests_data = os.path.join(
+    pkg_resources.get_distribution('ipp-macro-series-parser').location,
+    'ipp_macro_series_parser/tests/data')
+values_CN1.to_csv(os.path.join(tests_data, 'values_CN1.csv'), tupleize_cols = False, index = True, na_rep = 'NaN',
+              sep=';')
