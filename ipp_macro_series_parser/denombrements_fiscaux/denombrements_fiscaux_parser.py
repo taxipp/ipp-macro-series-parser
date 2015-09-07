@@ -545,6 +545,7 @@ def parse_ipp_denombrements():
         reductions_credits_impot,
         autres_imputations,
         options,
+        salaires_exoneres,
         plus_values_complementaire,
         revenus_fonciers_complementaire,
         prime_emploi_complementaire,

@@ -86,7 +86,9 @@ def build_aggregates(raw_data, formula_by_variable_name, level_2_formula_by_vari
 
 
 formula_by_variable_name = dict(
+    ## Salaires
     salaires = 'f1aj + f1bj + f1cj + f1dj + f1ej + f1au + f1bu + f1cu + f1du',
+    ## Bénéfices agricoles
     benefices_agricoles_forfait_exoneres = 'f5hn + f5in + f5jn',  # frag_exon
     benefices_agricoles_forfait_imposables = 'f5ho + f5io + f5jo',  # frag_impo
     benefices_agricoles_reels_exoneres = 'f5hb + f5ib + f5jb',  # arag_exon
@@ -96,7 +98,36 @@ formula_by_variable_name = dict(
     benefices_agricoles_reels_sans_cga_imposables = 'f5hi + f5ii + f5ji + f5hj + f5ij + f5jj',  # nrag_impg TODO: check last values in openfisca
     # TODO voir années antérieurs à 2006
     benefices_agricoles_reels_sans_cga_deficits = 'f5hl + f5il + f5jl',  # nrag_defi
-    # benefices_agricoles_  = 'f5hm + f5im + f5jm',  # nrag_ajag
+    # TODO: benefices_agricoles_  = 'f5hm + f5im + f5jm',  # nrag_ajag
+    ## Bénéfices industriels et commerciaux professionels (déclaration complémentaire, cadres 5B)
+    benefices_industriels_commerciaux_professionels_micro_entreprise_vente = 'f5ko + f5lo + f5mo'
+    benefices_industriels_commerciaux_professionels_micro_entreprise_services = 'f5kp + f5lp + f5mp'
+    benefices_industriels_commerciaux_professionels_reels_exoneres = 'f5kb + f5lb + f5mb'
+    benefices_industriels_commerciaux_professionels_reels_imposables_normal = 'f5kc + f5lc + f5mc'
+    benefices_industriels_commerciaux_professionels_reels_imposables_simplifie = 'f5kd + f5ld + f5md'
+    benefices_industriels_commerciaux_professionels_reels_exoneres_sans_cga = 'f5kh + f5lh + f5mh'
+    benefices_industriels_commerciaux_professionels_reels_imposables_normal_sans_cga = 'f5ki + f5li + f5mi'
+    benefices_industriels_commerciaux_professionels_reels_imposables_simplifie_sans_cga = 'f5kj + f5lj + f5mj'
+    deficits_industriels_commerciaux_professionels_normal = 'f5kf + f5lf + f5mf'
+    deficits_industriels_commerciaux_professionels_simplifie = 'f5kg + f5lg + f5mg'
+    deficits_industriels_commerciaux_professionels_sans_cga = 'f5kl + f5ll + f5ml'
+    # TODO: Locations déjà soumises aux prélèvements sociaux sans CGA (régime du bénéfice réel)
+
+    ## Bénéfices industriels et commerciaux professionels (déclaration complémentaire, cadres 5B)
+    benefices_industriels_commerciaux_non_professionnels_micro_entreprise_exoneres = 'f5nn + f5on + f5pn'
+    benefices_industriels_commerciaux_non_professionnels_micro_entreprise_vente = 'f5no + f5oo + f5po
+    benefices_industriels_commerciaux_non_professionnels_micro_entreprise_services = 'f5np + f5op + f5op'
+    benefices_industriels_commerciaux_non_professionnels_reels_exoneres = 'f5nb + f5ob + f5pb'
+    benefices_industriels_commerciaux_non_professionnels_reels_imposables_normal = 'f5nc + f5nc + f5nc'
+    benefices_industriels_commerciaux_non_professionnels_reels_imposables_simplifie = 'f5nd + f5nd + f5nd'  # TODO: ceci avant 2010 mais après locations meublées pro
+    benefices_industriels_commerciaux_non_professionnels_reels_exoneres_sans_cga = 'f5nh + f5oh + f5ph'
+    benefices_industriels_commerciaux_non_professionnels_reels_imposables_normal_sans_cga = 'f5ni + f5ni + f5ni'
+    benefices_industriels_commerciaux_non_professionnels_reels_imposables_simplifie_sans_cga = 'f5nj + f5nj + f5nj'  # TODO: ceci avant 2012 mais après locations déjà soumises aux prélèvements sociaux
+    deficits_industriels_commerciaux_professionels_normal = 'f5nf + f5of + f5pf'
+    deficits_industriels_commerciaux_professionels_simplifie = 'f5og + f5og + f5pg'
+    deficits_industriels_commerciaux_professionels_sans_cga = 'f5nl + f5ol + f5pl'
+# TODO: Locations déjà soumises aux prélèvements sociaux sans CGA (régime du bénéfice réel)
+
     revenus_fonciers_regime_normal = 'f4ba',
     revenus_fonciers_micro_foncier = 'f4be',
     allocations_chomage = 'f1ap + f1bp + f1cp + f1dp + f1ep + f1fp',
@@ -124,6 +155,22 @@ level_2_formula_by_variable_name = dict(
     benefices_agricoles = 'benefices_agricoles_bruts - 0.5 * deficits_agricoles',
     benefices_agricoles_bruts = 'benefices_agricoles_forfait_imposables + benefices_agricoles_reels_imposables + 1.25 * benefices_agricoles_reels_sans_cga_imposables',  # TODO get parameters form openfisca legislation
     deficits_agricoles = 'benefices_agricoles_reels_deficits + benefices_agricoles_reels_sans_cga_deficits',
+    ## Bénéfices industriels et commerciaux professionels (déclaration complémentaire, cadres 5B)
+    benefices_industriels_commerciaux_professionels = 'benefices_industriels_commerciaux_professionels_bruts  - .5 * deficits_industriels_commerciaux_professionels'
+    benefices_industriels_commerciaux_professionels_bruts = 'benefices_industriels_commerciaux_professionels_micro_entreprise'
+    benefices_industriels_commerciaux_professionels_micro_entreprise = '(1 - .71) * benefices_industriels_commerciaux_professionels_micro_entreprise_vente + (1 - .5) * benefices_industriels_commerciaux_professionels_micro_entreprise_services'  # TODO check and use legislation parameters
+    benefices_industriels_commerciaux_professionels_reels = 'benefices_industriels_commerciaux_professionels_reels_avec_cga + benefices_industriels_commerciaux_professionels_reels_sans_cga'
+    benefices_industriels_commerciaux_professionels_reels_avec_cga = 'benefices_industriels_commerciaux_professionels_reels_imposables_normal + benefices_industriels_commerciaux_professionels_reels_imposables_simplifie'
+    benefices_industriels_commerciaux_professionels_reels_sans_cga = '1.25 * (benefices_industriels_commerciaux_professionels_reels_imposables_normal_sans_cga + benefices_industriels_commerciaux_professionels_reels_imposables_simplifie_sans_cga)' # TODO check and use legislation
+    ## Bénéfices industriels et commerciaux non professionels (déclaration complémentaire, cadres 5C)
+    benefices_industriels_commerciaux_non_professionnels = 'benefices_industriels_commerciaux_non_professionnels_bruts  - .5 * deficits_industriels_commerciaux_non_professionnels'
+    benefices_industriels_commerciaux_non_professionnels_bruts = 'benefices_industriels_commerciaux_non_professionnels_micro_entreprise'
+    benefices_industriels_commerciaux_non_professionnels_micro_entreprise = '(1 - .71) * benefices_industriels_commerciaux_non_professionnels_micro_entreprise_vente + (1 - .5) * benefices_industriels_commerciaux_non_professionnels_micro_entreprise_services'  # TODO check and use legislation parameters
+    benefices_industriels_commerciaux_non_professionnels_reels = 'benefices_industriels_commerciaux_non_professionnels_reels_avec_cga + benefices_industriels_commerciaux_non_professionnels_reels_sans_cga'
+    benefices_industriels_commerciaux_non_professionnels_reels_avec_cga = 'benefices_industriels_commerciaux_non_professionnels_reels_imposables_normal + benefices_industriels_commerciaux_non_professionnels_reels_imposables_simplifie'
+    benefices_industriels_commerciaux_non_professionnels_reels_sans_cga = '1.25 * (benefices_industriels_commerciaux_non_professionnels_reels_imposables_normal_sans_cga + benefices_industriels_commerciaux_non_professionnels_reels_imposables_simplifie_sans_cga)' # TODO check and use legislation
+
+
     revenus_fonciers = 'revenus_fonciers_regime_normal + revenus_fonciers_micro_foncier',
     revenus_de_remplacement = 'pensions_de_retraite + allocations_chomage',
     revenus_financiers_hors_plus_values = 'revenus_imposes_au_bareme + revenus_imposes_au_prelevement_liberatoire',
@@ -197,6 +244,18 @@ def build_ipp_tables(years = [2007, 2008]):
             #    'bnc',
             #    'revenus_activite_non_salariee_exoneres',
             ]]),
+        ('irpp_5_ba', aggregates[[
+            'benefices_agricoles',
+            'benefices_agricoles_forfait_exoneres',
+            'benefices_agricoles_forfait_imposables',
+            'benefices_agricoles_reels_exoneres',
+            'benefices_agricoles_reels_imposables',
+            'benefices_agricoles_reels_deficits',
+            'benefices_agricoles_reels_sans_cga_exoneres',
+            'benefices_agricoles_reels_sans_cga_imposables',
+            'benefices_agricoles_reels_sans_cga_deficits',
+            ]])
+        ])
         ('irpp_5_ba', aggregates[[
             'benefices_agricoles',
             'benefices_agricoles_forfait_exoneres',
