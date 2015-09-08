@@ -22,6 +22,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+
 from ipp_macro_series_parser.denombrements_fiscaux.agregats_ipp import (
     create_index_by_variable_name,
     formula_by_variable_name,
@@ -46,3 +47,15 @@ def test_run_through():
     get_or_construct_value(df, variable_name, index_by_variable_name, years = years)
     variable_name = 'f2da'
     get_or_construct_value(df, variable_name, index_by_variable_name, years = years)
+
+
+    # Correction of f5io in 2008 in Agrégats IPP
+    variable_name = 'benefices_agricoles_forfait_imposables'
+    assert all(
+        get_or_construct_value(df, variable_name, index_by_variable_name, years = years)[0].loc[2008] == 883970587
+        )
+
+    variable_name = 'benefices_agricoles_reels_imposables'
+    assert all(
+        get_or_construct_value(df, variable_name, index_by_variable_name, years = years)[0].loc[2008] == 6515953706
+        )

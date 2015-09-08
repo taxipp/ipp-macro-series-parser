@@ -131,14 +131,14 @@ def build_original_irpp_tables():
     slugified_name_by_long_name.update({
         u"Revenus d'activité non salariée": 'revenus_d_activite_non_salariee',
         u'BA': 'benefices_agricoles',
-        #        u'BIC',
+        u'BIC': 'benefices_industriels_commerciaux',
         #        u'BNC',
         #        u'Nonsal exo',
         u'BA brut': 'benefices_agricoles_bruts',
-        #        u'BIC brut',
+        u'BIC brut': 'benefices_industriels_commerciaux_bruts',
         #        u'BNC brut',
         u'BA def': 'deficits_agricoles',
-        #        u'BIC def',
+        u'BIC def': 'deficits_industriels_commerciaux',
         #        u'BNC def',
         #        u'txabt_micro',
         #        u'txabt_micro_service',
@@ -190,5 +190,3 @@ for ipp_table_name, data_frame in data_frame_by_ipp_table_name.iteritems():
 
 for message in messages:
     print message
-
-

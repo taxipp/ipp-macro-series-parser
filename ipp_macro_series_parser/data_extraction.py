@@ -189,10 +189,10 @@ def get_or_construct_value(df, variable_name, index_by_variable, years = None, f
         index_by_variable = {
             variable_name: {'code': variable_name}
             }
-    variable = index_by_variable[variable_name]
+    variable = index_by_variable.get(variable_name)
     formula = variable.get('formula')
-    dico_value = dict()
 
+    dico_value = dict()
     entry_df = look_up(df, variable, years)
     index = None
 
@@ -209,8 +209,25 @@ def get_or_construct_value(df, variable_name, index_by_variable, years = None, f
         final_formula = ''
 
     else:
+
+        if isinstance(formula, list):
+            result_data_frame = pandas.DataFrame()
+
+            for individual_formula in formula:
+                assert individual_formula['start'] and individual_formula['end']
+                start = individual_formula['start']
+                end = individual_formula['end']
+                actual_index_by_variable = index_by_variable.copy()
+                actual_index_by_variable[variable_name]['formula'] = individual_formula['formula']
+                years = range(start, end)
+                variable_values, final_formula = get_or_construct_value(
+                    df, variable_name, actual_index_by_variable, years, fill_value = fill_value)
+                result_data_frame = pandas.concat((result_data_frame, variable_values), axis=1)
+            return result_data_frame, 'formula changes accross time'
+
         parser_formula = Parser()
         expr = parser_formula.parse(formula)
+
         variables = expr.variables()
         for component in variables:
             variable_value, variable_formula = get_or_construct_value(
@@ -239,12 +256,7 @@ def get_or_construct_value(df, variable_name, index_by_variable, years = None, f
                 variable_value = pandas.DataFrame({component: [fill_value]}, index = index)
             dico_value[component] = variable_value.reindex(index = index, fill_value = fill_value).values.squeeze()
 
-        try:
-            data = eval(formula_modified, dico_value)
-        except:
-            import pdb
-            pdb.set_trace()
-
+        data = eval(formula_modified, dico_value)
         assert data is not None
         result_data_frame = pandas.DataFrame(
             data = {variable_name: data},
