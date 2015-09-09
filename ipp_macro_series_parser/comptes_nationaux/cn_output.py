@@ -120,7 +120,7 @@ def df_long_to_csv(df, csv_file_name):
     >>> from ipp_macro_series_parser.config import Config
     >>> config_files_directory = os.path.join(pkg_resources.get_distribution('ipp-macro-series-parser').location)
     ... )
-    >>> from ipp_macro_series_parser.comptes_nationaux.cn_main import get_comptes_nationaux_data
+    >>> from ipp_macro_series_parser.comptes_nationaux.cn_parser_main import get_comptes_nationaux_data
     >>> from ipp_macro_series_parser.data_extraction import look_many
     >>> cn_directory = parser.get('data', 'cn_directory')
     >>> table2013 = get_comptes_nationaux_data(2013)
@@ -128,7 +128,7 @@ def df_long_to_csv(df, csv_file_name):
     ...             'description': 'PIB'},
     ...             {'code': None, 'institution': 'S1', 'ressources': False,
     ...             'description': 'PIN'}]
-    >>> df = look_many(table2013, my_selection)
+    >>> df = look_many(table2013, my_selection, years = range(1990, 2014))
     >>> df_reshaped = reshape_to_long_for_output(df)
     >>> df_long_to_csv(df_reshaped, os.path.join(cn_directory, 'output', '2013.txt'))
 

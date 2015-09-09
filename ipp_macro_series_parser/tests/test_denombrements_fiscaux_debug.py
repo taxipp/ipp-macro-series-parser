@@ -48,14 +48,14 @@ def test_run_through():
     variable_name = 'f2da'
     get_or_construct_value(df, variable_name, index_by_variable_name, years = years)
 
-
     # Correction of f5io in 2008 in Agrégats IPP
     variable_name = 'benefices_agricoles_forfait_imposables'
-    assert all(
-        get_or_construct_value(df, variable_name, index_by_variable_name, years = years)[0].loc[2008] == 883970587
-        )
+    value = get_or_construct_value(df, variable_name, index_by_variable_name, years = years)[0].loc[2008]
+    target = 883970587
+    assert all(value == target), "{} for 2008: got {} instead of {}".format(variable_name, value, target)
 
     variable_name = 'benefices_agricoles_reels_imposables'
-    assert all(
-        get_or_construct_value(df, variable_name, index_by_variable_name, years = years)[0].loc[2008] == 6515953706
-        )
+    value = get_or_construct_value(df, variable_name, index_by_variable_name, years = years, fill_value = 0)[0].loc[2008]
+    print value
+    target = 6515953706
+    assert all(value == target), "{} for 2008: got {} instead of {}".format(variable_name, value, target)

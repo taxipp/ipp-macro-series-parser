@@ -107,7 +107,7 @@ def look_many(df, entry_by_index_list, years = None):
     ...             'description': 'PIB'},
     ...             {'code': None, 'institution': 'S1', 'ressources': False,
     ...             'description': 'PIN'}]
-    >>> df2 = look_many(table2013, my_list_2)
+    >>> df2 = look_many(table2013, my_list_2, years = range(1990, 2014))
 
     Returns the same output, using a keyword from the description.
     """
@@ -209,20 +209,21 @@ def get_or_construct_value(df, variable_name, index_by_variable, years = None, f
         final_formula = ''
 
     else:
-
         if isinstance(formula, list):
             result_data_frame = pandas.DataFrame()
-
             for individual_formula in formula:
                 assert individual_formula['start'] and individual_formula['end']
                 start = individual_formula['start']
                 end = individual_formula['end']
-                actual_index_by_variable = index_by_variable.copy()
-                actual_index_by_variable[variable_name]['formula'] = individual_formula['formula']
-                years = range(start, end)
-                variable_values, final_formula = get_or_construct_value(
-                    df, variable_name, actual_index_by_variable, years, fill_value = fill_value)
-                result_data_frame = pandas.concat((result_data_frame, variable_values), axis=1)
+                index_by_variable[variable_name]['formula'] = individual_formula['formula']
+                actual_years = range(start, end + 1)
+                variable_value, final_formula = get_or_construct_value(
+                    df, variable_name, index_by_variable, actual_years, fill_value = fill_value)
+                if variable_value.empty:
+                    variable_value = pandas.DataFrame({variable_name: [fill_value]}, index = actual_years)
+                    variable_value.index.name = 'year'
+                result_data_frame = pandas.concat((result_data_frame, variable_value))
+
             return result_data_frame, 'formula changes accross time'
 
         parser_formula = Parser()
@@ -258,6 +259,7 @@ def get_or_construct_value(df, variable_name, index_by_variable, years = None, f
 
         data = eval(formula_modified, dico_value)
         assert data is not None
+        assert index is not None
         result_data_frame = pandas.DataFrame(
             data = {variable_name: data},
             index = index,

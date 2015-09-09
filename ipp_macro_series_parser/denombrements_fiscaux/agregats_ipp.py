@@ -66,7 +66,6 @@ def create_index_by_variable_name(formula_by_variable_name, level_2_formula_by_v
                 index_by_variable_name = update_index_by_variable_name_using_formula(
                     index_by_variable_name, single_formula['formula'])
         else:
-            print formula
             index_by_variable_name = update_index_by_variable_name_using_formula(index_by_variable_name, formula)
 
     if level_2_formula_by_variable_name is not None:
@@ -105,11 +104,11 @@ formula_by_variable_name = dict(
     benefices_agricoles_reels_imposables = [
         dict(
             start = 1990,
-            end = 2006,
+            end = 2005,
             formula = 'f5hc + f5ic + f5jc + f5hd + f5id + f5jd'
             ),
         dict(
-            start = 2007,
+            start = 2006,
             end = 2015,
             formula = 'f5hc + f5ic + f5jc'
             ),
@@ -211,7 +210,7 @@ level_2_formula_by_variable_name = dict(
     )
 
 
-def build_ipp_tables(years = [2007, 2008]):
+def build_ipp_tables(years = [2006, 2007, 2008]):
     raw_data = denombrements_fiscaux_df_generator(years = years)
     aggregates = build_aggregates(
         raw_data,

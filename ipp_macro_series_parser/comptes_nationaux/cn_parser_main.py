@@ -58,7 +58,7 @@ def cn_df_generator(year, list_years = None, drop_duplicates = True, subset = No
     --------
     >>> year = 2013
     >>> list_years = None
-    >>> table2013 = cn_df_generator(2013)
+    >>> table2013 = cn_df_generator(2013, list_years = range(1949, 2014))
 
     Returns the main table of comptabilite nationale data for all years from 1949 to 2013.
     """
@@ -97,14 +97,14 @@ def get_comptes_nationaux_data(year, list_years = None, drop_duplicates = True, 
 def save_df_to_hdf(df, hdf_file_name, key):
     file_path = os.path.join(hdf_directory, hdf_file_name)
     if not os.path.exists(hdf_directory):
-        print('Directory {} does not exist. Creating it.'.format(hdf_directory))
+        log.info('Directory {} does not exist. Creating it.'.format(hdf_directory))
         os.mkdir(hdf_directory)
     df.to_hdf(file_path, key)
 
 
 def import_hdf_to_df(hdf_file_name, key):
     file_path = os.path.join(hdf_directory, hdf_file_name)
-    print('Importing {} form {}'.format(key, file_path))
+    log.info('Importing {} form {}'.format(key, file_path))
     store = pandas.HDFStore(file_path)
     df = store[key]
     store.close()
