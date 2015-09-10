@@ -28,7 +28,9 @@ from ipp_macro_series_parser.denombrements_fiscaux.agregats_ipp import (
     formula_by_variable_name,
     level_2_formula_by_variable_name
     )
-from ipp_macro_series_parser.denombrements_fiscaux.denombrements_fiscaux_parser import denombrements_fiscaux_df_generator
+from ipp_macro_series_parser.denombrements_fiscaux.denombrements_fiscaux_parser import (
+    denombrements_fiscaux_df_generator
+    )
 from ipp_macro_series_parser.data_extraction import get_or_construct_value
 
 
@@ -59,3 +61,7 @@ def test_run_through():
     print value
     target = 6515953706
     assert all(value == target), "{} for 2008: got {} instead of {}".format(variable_name, value, target)
+
+
+
+

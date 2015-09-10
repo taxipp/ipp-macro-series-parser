@@ -321,10 +321,6 @@ def parse_ipp_denombrements():
     # TODO: *Avant 2007, les cases HE, IE, JE étaient séparé en deux (cases HE et HK,…,JE et JK) en fonction de
     # l'appartenance ou non à un CGA
 
-    name, df = parse_bloc(**revenus_agricoles_deficits)
-    print df.dtypes
-    df.year
-
     # Revenus industriels et commerciaux professionnels
 
     bic_pro_micro_entreprise = dict(
@@ -573,18 +569,54 @@ def parse_ipp_denombrements():
     return dict(parse_bloc(**bloc) for bloc in blocs)
 
 
-def show_errors():
-    data_frame_by_bloc_name = parse_ipp_denombrements()
+def correct_errors(data_frame_by_bloc_name, show_only = False):
     import re
     pattern = re.compile("^f[1-8][a-z][a-z]$")
+    note_pattern = re.compile("^f[1-8][a-z][a-z][1-4]$")
 
+    corrected_columns = set()
+    problematic_columns = set()
     for bloc_name, data_frame in data_frame_by_bloc_name.items():
+
         print bloc_name
+        correct_name_by_wrong_name = dict()
+        drop_columns = list()
+
+
         for column in data_frame.columns:
             if column == 'year':
+                assert numpy.issubdtype(data_frame[column].dtype, numpy.integer)
+                assert data_frame[column].isin(range(1990, 2015)).all()
                 continue
             if not pattern.match(column):
-                print '- ' + str(column)
+                # print '- ' + str(column)
+                # remove trailing spaces
+                problematic_columns.add(column)
+                if column != column.strip():
+                    correct_name_by_wrong_name[column] = column.strip()
+                # remove *
+                if column.endswith('*') and pattern.match(column[:-1]):
+                    correct_name_by_wrong_name[column] = column[:-1]
+                # remove unnamed
+                if "unnamed" in column or "-" in column or 'total' in column:
+                    drop_columns.append(column)
+                # remove trailing 1, 2, 3, 4 (notes in excel file)
+                if note_pattern.match(column):
+                    correct_name_by_wrong_name[column] = column[:-1]
+
+        print correct_name_by_wrong_name
+        print drop_columns
+
+        corrected_columns = corrected_columns.union(set(correct_name_by_wrong_name.keys()))
+        corrected_columns = corrected_columns.union(set(drop_columns))
+
+        if not show_only:
+            data_frame.drop(labels = drop_columns, axis = 1, inplace = True)
+            data_frame.rename(columns = correct_name_by_wrong_name, inplace = True)
+
+    print corrected_columns
+    print '---'
+    print problematic_columns.difference(corrected_columns)
 
 
 def denombrements_fiscaux_df_generator(year = None, years = None):
@@ -627,3 +659,21 @@ def import_hdf_to_df(hdf_file_name, key):
     store = pandas.HDFStore(file_path)
     df = store[key]
     return df
+
+
+
+if __name__ == '__main__':
+
+    data_frame_by_bloc_name = parse_ipp_denombrements()
+    correct_errors(data_frame_by_bloc_name, show_only = False)
+    correct_errors(data_frame_by_bloc_name, show_only = True)
+
+    aggregate_data_frame = pandas.DataFrame()
+    for data_frame in data_frame_by_bloc_name.values():
+        aggregate_data_frame = pandas.concat((
+            aggregate_data_frame,
+            pandas.melt(data_frame, id_vars=['year'], var_name = 'code')
+            ))
+    aggregate_data_frame.dropna(inplace = True)
+    df2 = denombrements_fiscaux_df_generator(years = range(2000, 2010))
+    

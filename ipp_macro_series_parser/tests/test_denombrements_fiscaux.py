@@ -155,15 +155,12 @@ def build_original_irpp_tables():
     irpp_4.rename(columns = slugified_name_by_long_name, inplace = True)
     irpp_4.index.name = 'year'
 
-
     original_data_frame_by_ipp_table_name = dict(
         irpp_1 = irpp_1,
         irpp_2 = irpp_2,
         irpp_3 = irpp_3,
         irpp_4 = irpp_4,
         )
-
-
 
     return original_data_frame_by_ipp_table_name
 

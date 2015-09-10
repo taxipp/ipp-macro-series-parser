@@ -23,6 +23,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+import copy
 import logging
 import numpy
 import pandas
@@ -182,14 +183,18 @@ def get_or_construct_value(df, variable_name, index_by_variable, years = None, f
     Dividendes_verses_par_rdm_D42 + Dividendes_verses_par_rdm_D43 + Revenus_propriete_verses_par_rdm'
     """
     assert df is not None
-    assert years is not None
     df = df.copy()
+
+    assert years is not None
+
     assert variable_name is not None
     if index_by_variable is None:
         index_by_variable = {
             variable_name: {'code': variable_name}
             }
-    variable = index_by_variable.get(variable_name)
+    variable = index_by_variable.get(variable_name, None)
+    assert variable is not None, "{} not found".format(variable_name)
+
     formula = variable.get('formula')
 
     dico_value = dict()
@@ -209,16 +214,18 @@ def get_or_construct_value(df, variable_name, index_by_variable, years = None, f
         final_formula = ''
 
     else:
+        # When formula is a list of dictionnaries with start and end years
         if isinstance(formula, list):
             result_data_frame = pandas.DataFrame()
             for individual_formula in formula:
                 assert individual_formula['start'] and individual_formula['end']
                 start = individual_formula['start']
                 end = individual_formula['end']
-                index_by_variable[variable_name]['formula'] = individual_formula['formula']
-                actual_years = range(start, end + 1)
+                local_index_by_variable = copy.deepcopy(index_by_variable)
+                local_index_by_variable[variable_name]['formula'] = individual_formula['formula']
+                actual_years = list(set(range(start, end + 1)).intersection(years))
                 variable_value, final_formula = get_or_construct_value(
-                    df, variable_name, index_by_variable, actual_years, fill_value = fill_value)
+                    df, variable_name, local_index_by_variable, actual_years, fill_value = fill_value)
                 if variable_value.empty:
                     variable_value = pandas.DataFrame({variable_name: [fill_value]}, index = actual_years)
                     variable_value.index.name = 'year'
