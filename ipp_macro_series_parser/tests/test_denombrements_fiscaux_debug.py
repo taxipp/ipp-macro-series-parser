@@ -29,14 +29,14 @@ from ipp_macro_series_parser.denombrements_fiscaux.agregats_ipp import (
     level_2_formula_by_variable_name
     )
 from ipp_macro_series_parser.denombrements_fiscaux.denombrements_fiscaux_parser import (
-    denombrements_fiscaux_df_generator
+    create_denombrements_fiscaux_data_frame
     )
 from ipp_macro_series_parser.data_extraction import get_or_construct_value
 
 
 def test_run_through():
     years = [2006, 2007, 2008]
-    df = denombrements_fiscaux_df_generator(years = years)
+    df = create_denombrements_fiscaux_data_frame(years = years)
     index_by_variable_name = create_index_by_variable_name(formula_by_variable_name, level_2_formula_by_variable_name)
 
     variable_name = 'interets_imposes_au_prelevement_liberatoire'
@@ -58,7 +58,6 @@ def test_run_through():
 
     variable_name = 'benefices_agricoles_reels_imposables'
     value = get_or_construct_value(df, variable_name, index_by_variable_name, years = years, fill_value = 0)[0].loc[2008]
-    print value
     target = 6515953706
     assert all(value == target), "{} for 2008: got {} instead of {}".format(variable_name, value, target)
 

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
+import logging
 import numpy
 import os
 import pandas
@@ -12,6 +13,9 @@ config_parser = Config(
     )
 xls_directory = config_parser.get('data', 'denombrements_fiscaux_xls')
 # hdf_directory = config_parser.get('data', 'denombrements_fiscaux_hdf')
+
+
+log = logging.getLogger(__name__)
 
 
 def parse_ipp_denombrements():
@@ -566,7 +570,18 @@ def parse_ipp_denombrements():
         autres_imputations_complementaire
         ]
 
-    return dict(parse_bloc(**bloc) for bloc in blocs)
+    data_frame_by_bloc_name = dict(parse_bloc(**bloc) for bloc in blocs)
+
+    correct_errors(data_frame_by_bloc_name, show_only = False)
+
+    ipp_denombrements = pandas.DataFrame()
+    for data_frame in data_frame_by_bloc_name.values():
+        ipp_denombrements = pandas.concat((
+            ipp_denombrements,
+            pandas.melt(data_frame, id_vars=['year'], var_name = 'code')
+            ))
+    ipp_denombrements.dropna(inplace = True)
+    return ipp_denombrements
 
 
 def correct_errors(data_frame_by_bloc_name, show_only = False):
@@ -578,10 +593,8 @@ def correct_errors(data_frame_by_bloc_name, show_only = False):
     problematic_columns = set()
     for bloc_name, data_frame in data_frame_by_bloc_name.items():
 
-        print bloc_name
         correct_name_by_wrong_name = dict()
         drop_columns = list()
-
 
         for column in data_frame.columns:
             if column == 'year':
@@ -604,9 +617,6 @@ def correct_errors(data_frame_by_bloc_name, show_only = False):
                 if note_pattern.match(column):
                     correct_name_by_wrong_name[column] = column[:-1]
 
-        print correct_name_by_wrong_name
-        print drop_columns
-
         corrected_columns = corrected_columns.union(set(correct_name_by_wrong_name.keys()))
         corrected_columns = corrected_columns.union(set(drop_columns))
 
@@ -614,12 +624,20 @@ def correct_errors(data_frame_by_bloc_name, show_only = False):
             data_frame.drop(labels = drop_columns, axis = 1, inplace = True)
             data_frame.rename(columns = correct_name_by_wrong_name, inplace = True)
 
-    print corrected_columns
-    print '---'
+    print 'Remaining problematic columns'
     print problematic_columns.difference(corrected_columns)
 
 
-def denombrements_fiscaux_df_generator(year = None, years = None):
+def parse_openfisca_denombrements():
+    openfisca_denombrements = pandas.read_excel(os.path.join(xls_directory, '2042_national.xls'), sheetname = 'montant')
+    assert openfisca_denombrements.dtypes.apply(lambda x: numpy.issubdtype(x, numpy.float)).all(), df.dtypes
+    openfisca_denombrements = openfisca_denombrements.stack().reset_index()
+    openfisca_denombrements.rename(columns = {'level_0': 'code', 'level_1': 'year', 0: 'value'}, inplace = True)
+    openfisca_denombrements[['year']] = openfisca_denombrements[['year']].astype(int)
+    return openfisca_denombrements
+
+
+def create_denombrements_fiscaux_data_frame(year = None, years = None):
     """
     Generates the table with all the data from Dénombrements Fiscaux .
 
@@ -639,12 +657,27 @@ def denombrements_fiscaux_df_generator(year = None, years = None):
     if year is not None and years is None:
         years = [year]
 
-    df = pandas.read_excel(os.path.join(xls_directory, '2042_national.xls'), sheetname = 'montant')
-    assert df.dtypes.apply(lambda x: numpy.issubdtype(x, numpy.float)).all(), df.dtypes
-    df = df.stack()
-    df = df.reset_index()
-    df.rename(columns = {'level_0': 'code', 'level_1': 'year', 0: 'value'}, inplace = True)
-    df[['year']] = df[['year']].astype(int)
+    # Data coming for openfisca xls file
+    openfisca_denombrements = parse_openfisca_denombrements()
+
+    # Data coming from IPP
+    ipp_denombrements = parse_ipp_denombrements()
+    ipp_denombrements['origin'] = 'IPP'
+    openfisca_denombrements['origin'] = 'OF'
+    df = pandas.concat([ipp_denombrements, openfisca_denombrements])
+    # Drop real duplicates
+    df = df.drop_duplicates(subset = ['year', 'code', 'value'])
+    df = df.reset_index(drop=True)
+
+    # Problematic duplicates
+    dups = df.duplicated(['year', 'code']) | df.duplicated(['year', 'code'], take_last = True)
+    z = df.loc[dups].copy()
+    # sum of two columns iin IPP for year < 2007
+    wrong_before_2007 = ['f5ne', 'f5oe', 'f5rd', 'f5ke', 'f5le', 'f5he', 'f5ie', 'f5qd']
+    df = df.loc[~(df.code.isin(wrong_before_2007) & (df.year < 2007))]
+    log.info('Remaining problematic duplicates \n {}'.format(
+        z.loc[~(z.code.isin(wrong_before_2007) & (z.year < 2007))]
+        ))
     return df.loc[df.year.isin(years)].copy() if years is not None else df.copy()
 
 
@@ -662,18 +695,3 @@ def import_hdf_to_df(hdf_file_name, key):
 
 
 
-if __name__ == '__main__':
-
-    data_frame_by_bloc_name = parse_ipp_denombrements()
-    correct_errors(data_frame_by_bloc_name, show_only = False)
-    correct_errors(data_frame_by_bloc_name, show_only = True)
-
-    aggregate_data_frame = pandas.DataFrame()
-    for data_frame in data_frame_by_bloc_name.values():
-        aggregate_data_frame = pandas.concat((
-            aggregate_data_frame,
-            pandas.melt(data_frame, id_vars=['year'], var_name = 'code')
-            ))
-    aggregate_data_frame.dropna(inplace = True)
-    df2 = denombrements_fiscaux_df_generator(years = range(2000, 2010))
-    

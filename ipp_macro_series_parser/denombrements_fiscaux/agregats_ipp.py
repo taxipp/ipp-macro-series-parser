@@ -33,7 +33,7 @@ from py_expression_eval import Parser
 
 from ipp_macro_series_parser.config import Config
 from ipp_macro_series_parser.denombrements_fiscaux.denombrements_fiscaux_parser import (
-    denombrements_fiscaux_df_generator)
+    create_denombrements_fiscaux_data_frame)
 from ipp_macro_series_parser.data_extraction import get_or_construct_value
 
 config_parser = Config(
@@ -182,8 +182,40 @@ formula_by_variable_name = dict(
 
     revenus_fonciers_regime_normal = 'f4ba',
     revenus_fonciers_micro_foncier = 'f4be',
-    allocations_chomage = 'f1ap + f1bp + f1cp + f1dp + f1ep',  #  TODO other years + f1fp',
-    pensions_de_retraite = 'f1as + f1bs + f1cs + f1ds + f1es', #  TODO other years + f1fs',
+    allocations_chomage = [
+        dict(
+            start = 2007,
+            end = 2009,
+            formula = 'f1ap + f1bp + f1cp + f1dp',
+            ),
+        dict(
+            start = 2005,
+            end = 2006,
+            formula = 'f1ap + f1bp + f1cp + f1dp + f1ep',
+            ),
+        dict(
+            start = 2000,
+            end = 2004,
+            formula = 'f1ap + f1bp + f1cp + f1dp + f1ep + f1fp',
+            ),
+        ],
+    pensions_de_retraite = [
+        dict(
+            start = 2007,
+            end = 2009,
+            formula = 'f1as + f1bs + f1cs + f1ds',
+            ),
+        dict(
+            start = 2005,
+            end = 2006,
+            formula = 'f1as + f1bs + f1cs + f1ds + f1es',
+            ),
+        dict(
+            start = 2000,
+            end = 2004,
+            formula = 'f1as + f1bs + f1cs + f1ds + f1es + f1fs',
+            ),
+        ],
     dividendes_imposes_au_bareme = 'f2dc + f2fu',
     interet_imposes_au_bareme = 'f2ts + f2go + f2tr',
     assurances_vie_imposees_au_bareme = 'f2ch',
@@ -259,7 +291,7 @@ level_2_formula_by_variable_name = dict(
 
 
 def build_ipp_tables(years = [2006, 2007, 2008, 2009]):
-    raw_data = denombrements_fiscaux_df_generator(years = years)
+    raw_data = create_denombrements_fiscaux_data_frame(years = years)
     aggregates = build_aggregates(
         raw_data,
         formula_by_variable_name,

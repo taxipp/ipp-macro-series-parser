@@ -23,7 +23,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import copy
 import logging
 import pandas
 import re
@@ -36,13 +35,12 @@ from openfisca_france_data.input_data_builders.build_openfisca_survey_data.base 
 from openfisca_survey_manager.survey_collections import SurveyCollection
 
 from ipp_macro_series_parser.denombrements_fiscaux.agregats_ipp import (
-    build_ipp_tables,
     create_index_by_variable_name,
     formula_by_variable_name,
     level_2_formula_by_variable_name
     )
 from ipp_macro_series_parser.denombrements_fiscaux.denombrements_fiscaux_parser import (
-    denombrements_fiscaux_df_generator
+    create_denombrements_fiscaux_data_frame
     )
 from ipp_macro_series_parser.data_extraction import get_or_construct_value
 
@@ -72,7 +70,7 @@ def test(year = None):
     foyer = foyer.merge(erf_individus, on = 'noindiv')
 
     years = [year]
-    df = denombrements_fiscaux_df_generator(years = years)
+    df = create_denombrements_fiscaux_data_frame(years = years)
     index_by_variable_name = create_index_by_variable_name(formula_by_variable_name, level_2_formula_by_variable_name)
 
     result = pandas.DataFrame()
