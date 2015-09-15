@@ -11,6 +11,16 @@ from ipp_macro_series_parser.comptes_nationaux import cn_parser_non_tee
 from ipp_macro_series_parser.comptes_nationaux import cn_parser_main
 from ipp_macro_series_parser.data_extraction import get_or_construct_value, get_or_construct_data
 from ipp_macro_series_parser.comptes_nationaux.cn_sheets_lists import variables_CN1
+from ipp_macro_series_parser.comptes_nationaux.cn_test import read_CN1, read_profits_societes, create_dict_profits
+
+from ipp_macro_series_parser.config import Config
+parser = Config(
+    config_files_directory = os.path.join(pkg_resources.get_distribution('ipp-macro-series-parser').location)
+    )
+cn_csv = parser.get('data', 'cn_csv_directory')
+tests_data = os.path.join(
+    pkg_resources.get_distribution('ipp-macro-series-parser').location,
+    'ipp_macro_series_parser/tests/data')
 
 
 def test_duplicate_tee_df():
@@ -44,7 +54,7 @@ def test_cn_parser_main_2():
         assert element == 0, "The final table of comptabilite nationale contains duplicates"
 
 
-def test_get_or_construct_value():
+def test_get_or_construct_value1():
     folder_year = 2013
     overall_dict = {
         'pib': {
@@ -76,11 +86,18 @@ def test_get_or_construct_value():
     assert all(serie[variable_name] == 0)
 
 
-def test_get_or_construct_data_CN1():
+def test_get_or_construct_data_profits():  # copied on the one in cn_test
     df = cn_parser_main.get_comptes_nationaux_data(2013)
-    tests_data = os.path.join(
-        pkg_resources.get_distribution('ipp-macro-series-parser').location,
-        'ipp_macro_series_parser/tests/data')
-    values_CN1_test, formulas_CN1_test = get_or_construct_data(df, variables_CN1, range(1978, 2014))
-    values_CN1_true = pandas.read_csv(os.path.join(tests_data, 'values_CN1.csv'), )
-    assert_frame_equal(values_CN1_test, values_CN1_true)
+
+    values_profits_societes_target = read_profits_societes()
+    dict_profits = create_dict_profits()
+    values_profits_societes = get_or_construct_data(df, dict_profits)[0]
+
+    assert_frame_equal(values_profits_societes, values_profits_societes_target)
+
+
+def test_get_or_construct_data_CN1():  # copied on the one in cn_test
+    df = cn_parser_main.get_comptes_nationaux_data(2013)
+    values_CN1_target = read_CN1()
+    values_CN1, formulas_CN1 = get_or_construct_data(df, variables_CN1, range(1978, 2014))
+    assert_frame_equal(values_CN1, values_CN1_target)
