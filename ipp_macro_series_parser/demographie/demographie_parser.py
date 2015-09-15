@@ -37,10 +37,8 @@ xls_directory = os.path.join(config_parser.get('data', 'demographie_directory'),
 log = logging.getLogger(__name__)
 
 
-def parse_demographie():
-
+def create_demographie_data_frame():
     data_frame = pandas.DataFrame()
-
     for year in range(1999, 2015 + 1):
         file_path = os.path.join(xls_directory, u'pyramide-des-ages-{}.xls'.format(year))
         skiprows = 5 - (year == 1999)
@@ -83,5 +81,4 @@ def parse_demographie():
                 print year
                 print sheetname
                 raise(e)
-
-        data_frame = pandas.melt(data_frame, id_vars = ['year', 'champ', u'Âge révolu', u'Année de naissance'])
+    return pandas.melt(data_frame, id_vars = ['year', 'champ', u'Âge révolu', u'Année de naissance'])
