@@ -53,7 +53,7 @@ input_CN1 = {
         'cs_imput_empl_APU': {'code': 'D122', 'institution': 'S13', 'ressources': False, 'description': '', 'drop': True},
         'cs_imput_empl_Menages': {'code': 'D122', 'institution': 'S14', 'ressources': False, 'description': '', 'drop': True},
         'cs_imput_empl_ISBLSM': {'code': 'D122', 'institution': 'S15', 'ressources': False, 'description': '', 'drop': True},
-# Excedent_net_d_exploitation_ENE_SNF
+    # Excedent_net_d_exploitation_ENE_SNF
         'ene_snf': {'code': 'B2n', 'institution': 'S11', 'ressources': False, 'description': '', 'drop': True},  # ENE SNF
         'ene_sf': {'code': 'B2n', 'institution': 'S12', 'ressources': False, 'description': '', 'drop': True},  # ENE SF
         'Impots_sur_les_produits_ressources_APU': {'code': 'D21', 'institution': 'S13', 'ressources': True, 'description': '', 'drop': True},  # impôts indirects : impôts nets sur les produits & impôts nets sur la production
@@ -61,6 +61,7 @@ input_CN1 = {
         'Autres_impots_sur_la_production_ressources_APU': {'code': 'D29', 'institution': 'S13', 'ressources': True, 'description': '', 'drop': True},
         'Autres_subventions_sur_la_production_ressources_APU': {'code': 'D39', 'institution': 'S13', 'ressources': True, 'description': '', 'drop': True}  # NB : D39 est aussi dans un autre compte (le compte d'exploitation) pour les APUs, en emplois. donc bien renseigner ressources..
         }
+
 
 formulas_CN1 = {
     'Profits_des_societes': {
@@ -71,22 +72,28 @@ formulas_CN1 = {
         'drop': True},
     'VA_Societes': {
         'formula': 'Profits_des_societes + Sal_cs_verses_societes',
-        'drop': True},
+        'drop': True
+        },
     'VA_Immobilier_Loyers': {
         'formula': 'ene_menages',
-        'drop': True},  # vérifier que ça passe bien.
+        'drop': True
+        },  # vérifier que ça passe bien.
     'Revenu_d_activite_des_non_salaries': {
         'formula': 'Revenu_mixte_net_des_menages_non_salaries',
-        'drop': True},  # vérifier que ça passe bien.
+        'drop': True
+        },  # vérifier que ça passe bien.
     'Salaires_et_cot_soc_verses_par_les_non_salaries_et_les_menages': {
         'formula': 'Sal_verses_par_menages + cs_eff_empl_Menages + cs_imput_empl_Menages',
-        'drop': True},
+        'drop': True
+        },
     'VA_APU_et_ISBLSM': {
         'formula': 'Sal_verses_par_APU + Sal_verses_par_ISBLSM + cs_eff_empl_APU + cs_eff_empl_ISBLSM + cs_imput_empl_APU + cs_imput_empl_ISBLSM',
-        'drop': True},
+        'drop': True
+        },
     'Impots_indirects': {
         'formula': 'Impots_sur_les_produits_ressources_APU - Subventions_sur_les_produits_ressources_APU + Autres_impots_sur_la_production_ressources_APU - Autres_subventions_sur_la_production_ressources_APU',
-        'drop': True},
+        'drop': True
+        },
     '%_Produit_interieur_net_/_Revenu_national': {
         'formula': 'Produit_interieur_net_PIN / Revenu_national_brut'},
     '%_Revenus_reste_du_monde_/_Revenu_national': {
@@ -121,6 +128,7 @@ formulas_CN1 = {
 
 variables_CN1 = input_CN1.copy()
 variables_CN1.update(formulas_CN1)
+
 
 # CN2
 
