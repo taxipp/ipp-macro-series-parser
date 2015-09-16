@@ -43,7 +43,7 @@ def error_msg(ipp_table_name, variable, year, target, actual):
     msg = '''
 In table {} on year {}, error on variable {}:
 should be {} instead of {}
-'''.format(ipp_table_name, variable, year, target, actual)
+'''.format(ipp_table_name, year, variable, target, actual)
     return msg
 
 fill_value = 0
@@ -172,6 +172,8 @@ messages = list()
 for ipp_table_name, data_frame in data_frame_by_ipp_table_name.iteritems():
     for year in data_frame.index:
         for variable in data_frame.columns:
+            if year >= 2009:
+                continue
             try:
                 target = (
                     original_data_frame_by_ipp_table_name[ipp_table_name].loc[year, variable]

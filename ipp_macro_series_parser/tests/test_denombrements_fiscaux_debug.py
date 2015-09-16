@@ -58,18 +58,31 @@ def test_corrections():
     test_by_variable = dict(
         # Correction of f5io in 2008 in Agrégats IPP
         benefices_agricoles_forfait_imposables = [
-            {'year': 2008, 'target': 883970587}
+            {'year': 2006, 'target': 896512850},
+            {'year': 2008, 'target': 883970587},
             ],
         benefices_agricoles_reels_imposables = [
-            {'year': 2008, 'target': 6515953706}
-            ]
+            {'year': 2006, 'target': 5150417953},
+            {'year': 2008, 'target': 6515953706},
+            ],
+        benefices_agricoles_reels_sans_cga_imposables = [
+            {'year': 2006, 'target': 165830038},
+            ],
+        benefices_agricoles_reels_deficits = [
+            {'year': 2006, 'target': 519217942},
+            ],
+        benefices_agricoles_reels_sans_cga_deficits = [
+            {'year': 2006, 'target': 208934263},
+            ],
+        # deficits_industriels_commerciaux
+
         )
 
     def assert_value_construction(variable_name, test):
         year = test['year']
         target = test['target']
         value = get_or_construct_value(df, variable_name, index_by_variable_name, years = years)[0].loc[year]
-        assert all(value == target), "{} for {}: got {} instead of {}".format(variable_name, year, value, target)
+        assert all(value == target), "{} for {}: got {} instead of {}".format(variable_name, year, value.values, target)
 
     for variable_name, tests in test_by_variable.iteritems():
         for test in tests:

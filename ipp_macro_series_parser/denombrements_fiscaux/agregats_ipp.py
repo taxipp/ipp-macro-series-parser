@@ -133,7 +133,18 @@ formula_by_variable_name = dict(
         ],  # arag_impg TODO: check last values in openfisca
     benefices_agricoles_reels_deficits = 'f5hf + f5if + f5jf',  # arag_defi
     benefices_agricoles_reels_sans_cga_exoneres = 'f5hh + f5ih + f5jh',  # nrag_exon
-    benefices_agricoles_reels_sans_cga_imposables = 'f5hi + f5ii + f5ji + f5hj + f5ij + f5jj',  # nrag_impg TODO: check last values in openfisca
+    benefices_agricoles_reels_sans_cga_imposables = [
+        dict(
+            start = 1990,
+            end = 2005,
+            formula = 'f5hi + f5ii + f5ji + f5hj + f5ij + f5jj',
+            ),
+        dict(
+            start = 2006,
+            end = 2015,
+            formula = 'f5hi + f5ii + f5ji',
+            ),
+        ],  # nrag_impg TODO: check last values in openfisca
     # TODO voir années antérieurs à 2006
     benefices_agricoles_reels_sans_cga_deficits = 'f5hl + f5il + f5jl',  # nrag_defi
     # TODO: benefices_agricoles_  = 'f5hm + f5im + f5jm',  # nrag_ajag
