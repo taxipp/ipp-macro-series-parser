@@ -33,7 +33,7 @@ from py_expression_eval import Parser
 
 
 from ipp_macro_series_parser.config import Config
-from ipp_macro_series_parser.denombrements_fiscaux.denombrements_fiscaux_parser import (
+from ipp_macro_series_parser.denombrements_fiscaux.parser import (
     create_denombrements_fiscaux_data_frame)
 from ipp_macro_series_parser.data_extraction import get_or_construct_value
 
@@ -160,8 +160,13 @@ formula_by_variable_name = dict(
     deficits_industriels_commerciaux_professionnels_normal = 'f5kf + f5lf + f5mf',
     deficits_industriels_commerciaux_professionnels_simplifie = 'f5kg + f5lg + f5mg',
     deficits_industriels_commerciaux_professionnels_sans_cga = 'f5kl + f5ll + f5ml',
-    # TODO: Locations déjà soumises aux prélèvements sociaux sans CGA (régime du bénéfice réel)
-
+    deficits_industriels_commerciaux_professionnels_locations = [
+        dict(
+            start = 1990,
+            end = 2008,
+            formula = 'f5km + f5lm + f5mm',
+            ),
+        ],
     ## Bénéfices industriels et commerciaux non professionnels (déclaration complémentaire, cadres 5C)
     benefices_industriels_commerciaux_non_professionnels_micro_entreprise_exoneres = 'f5nn + f5on + f5pn',
     benefices_industriels_commerciaux_non_professionnels_micro_entreprise_vente = 'f5no + f5oo + f5po',
@@ -263,7 +268,7 @@ level_2_formula_by_variable_name = dict(
     benefices_industriels_commerciaux_professionnels_reels = 'benefices_industriels_commerciaux_professionnels_reels_avec_cga + benefices_industriels_commerciaux_professionnels_reels_sans_cga',
     benefices_industriels_commerciaux_professionnels_reels_avec_cga = 'benefices_industriels_commerciaux_professionnels_reels_imposables_normal + benefices_industriels_commerciaux_professionnels_reels_imposables_simplifie',
     benefices_industriels_commerciaux_professionnels_reels_sans_cga = '1.25 * (benefices_industriels_commerciaux_professionnels_reels_imposables_normal_sans_cga + benefices_industriels_commerciaux_professionnels_reels_imposables_simplifie_sans_cga)', # TODO check and use legislation
-    deficits_industriels_commerciaux_professionnels = 'deficits_industriels_commerciaux_professionnels_normal + deficits_industriels_commerciaux_professionnels_simplifie + deficits_industriels_commerciaux_professionnels_sans_cga',
+    deficits_industriels_commerciaux_professionnels = 'deficits_industriels_commerciaux_professionnels_normal + deficits_industriels_commerciaux_professionnels_simplifie + deficits_industriels_commerciaux_professionnels_sans_cga + deficits_industriels_commerciaux_professionnels_locations',
 
     # - Bénéfices industriels et commerciaux non professionnels (déclaration complémentaire, cadres 5C)
     benefices_industriels_commerciaux_non_professionnels = 'benefices_industriels_commerciaux_non_professionnels_bruts  - 0.5 * deficits_industriels_commerciaux_non_professionnels',

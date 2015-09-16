@@ -39,7 +39,7 @@ from ipp_macro_series_parser.denombrements_fiscaux.agregats_ipp import (
     formula_by_variable_name,
     level_2_formula_by_variable_name
     )
-from ipp_macro_series_parser.denombrements_fiscaux.denombrements_fiscaux_parser import (
+from ipp_macro_series_parser.denombrements_fiscaux.parser import (
     create_denombrements_fiscaux_data_frame
     )
 from ipp_macro_series_parser.data_extraction import get_or_construct_value

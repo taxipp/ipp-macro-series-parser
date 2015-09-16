@@ -41,8 +41,13 @@ def create_list_dicts_for_look_many():
 
 
 def create_dict_for_test_get_value_empty():
-    dict_var = dict(notfound_arg = {'code': '', 'institution': 'S2', 'ressources': False,
-                'description': '', 'formula': 'Interets_verses_par_rdm + Dividendes_verses_par_rdm_D42'})
+    dict_var = dict(notfound_arg = {
+        'code': '',
+        'institution': 'S2',
+        'ressources': False,
+        'description': '',
+        'formula': 'Interets_verses_par_rdm + Dividendes_verses_par_rdm_D42'
+        })
     return dict_var
 
 

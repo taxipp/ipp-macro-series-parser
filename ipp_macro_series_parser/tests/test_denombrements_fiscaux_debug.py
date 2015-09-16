@@ -28,7 +28,7 @@ from ipp_macro_series_parser.denombrements_fiscaux.agregats_ipp import (
     formula_by_variable_name,
     level_2_formula_by_variable_name
     )
-from ipp_macro_series_parser.denombrements_fiscaux.denombrements_fiscaux_parser import (
+from ipp_macro_series_parser.denombrements_fiscaux.parser import (
     create_denombrements_fiscaux_data_frame
     )
 from ipp_macro_series_parser.data_extraction import get_or_construct_value
@@ -74,8 +74,12 @@ def test_corrections():
         benefices_agricoles_reels_sans_cga_deficits = [
             {'year': 2006, 'target': 208934263},
             ],
-        # deficits_industriels_commerciaux
-
+        deficits_industriels_commerciaux_professionnels = [
+            {'year': 2006, 'target': 1427052021},
+            ],
+        deficits_industriels_commerciaux_non_professionnels = [
+            {'year': 2006, 'target': 301194784},
+            ],
         )
 
     def assert_value_construction(variable_name, test):
