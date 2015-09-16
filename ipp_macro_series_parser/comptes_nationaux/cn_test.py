@@ -6,11 +6,10 @@ import pkg_resources
 from ipp_macro_series_parser.config import Config
 from pandas.util.testing import assert_frame_equal
 
-from ipp_macro_series_parser.comptes_nationaux.cn_parser_main import get_comptes_nationaux_data
+from ipp_macro_series_parser.comptes_nationaux.parser_main import get_comptes_nationaux_data
 from ipp_macro_series_parser.data_extraction import (
     look_many, look_up, get_or_construct_value, get_or_construct_data)
-from ipp_macro_series_parser.comptes_nationaux import cn_sheets_lists
-
+from ipp_macro_series_parser.comptes_nationaux.sheets_lists import variables_CN1, variables_CN2
 
 parser = Config(
     config_files_directory = os.path.join(pkg_resources.get_distribution('ipp-macro-series-parser').location)
@@ -31,9 +30,9 @@ folder_year = 2013
 
 
 def create_list_dicts_for_look_many():
-#    entry_by_index_list = [{'code': None, 'institution': 'S1', 'ressources': False, 'description': 'PIB'},
-#        {'code': None, 'institution': 'S1', 'ressources': False, 'description': 'PIN'},
-#        {'code': 'D121', 'institution': 'S11', 'ressources': False, 'description': None}]
+    # entry_by_index_list = [{'code': None, 'institution': 'S1', 'ressources': False, 'description': 'PIB'},
+        # {'code': None, 'institution': 'S1', 'ressources': False, 'description': 'PIN'},
+        # {'code': 'D121', 'institution': 'S11', 'ressources': False, 'description': None}]
     list_var = [
         {'code': 'B2n', 'institution': 'S11', 'ressources': False, 'description': ''},
         {'code': 'B2n', 'institution': 'S12', 'ressources': False, 'description': ''}
@@ -293,9 +292,9 @@ def tests_get_or_construct_data():
     values_complex, formulas_complex = get_or_construct_data(df, dict_with_squares)
     values_profits_societes, formulas_profits_societes = get_or_construct_data(df, dict_profits)
     values_revenus_reste_du_monde, formulas_revenus_reste_du_monde = get_or_construct_data(
-        df, dict_revenus_rdm, range(1996, 2014)
+        df, dict_revenus_rdm, range(1949, 2014)
         )
-    values_sal_cs, formulas_sal_cs = get_or_construct_data(df, dict_sal_cot_soc, years = range(1978, 2014))
+    values_sal_cs, formulas_sal_cs = get_or_construct_data(df, dict_sal_cot_soc, years = range(1949, 2014))
 
     return (
         values_double, values_double_w_formula, values_complex, values_profits_societes, values_revenus_reste_du_monde
@@ -314,7 +313,7 @@ def create_and_save_dfs_get_or_construct_data():
 
 
 def create_and_save_CN1():
-    values_CN1, formulas_CN1 = get_or_construct_data(df, cn_sheets_lists.variables_CN1, range(1978, 2014))
+    values_CN1, formulas_CN1 = get_or_construct_data(df, variables_CN1, range(1949, 2014))
     values_CN1.to_hdf(os.path.join(tests_data, 'values_CN1.h5'), 'CN1')
 
 
@@ -338,21 +337,24 @@ def test_profits_societes():
 
 def test_CN1():
     values_CN1_target = read_CN1()
-    values_CN1, formulas_CN1 = get_or_construct_data(df, cn_sheets_lists.variables_CN1, range(1978, 2014))
+    values_CN1, formulas_CN1 = get_or_construct_data(df, variables_CN1, range(1949, 2014))
 
     assert_frame_equal(values_CN1, values_CN1_target)
 
 # LE RUN
 if __name__ == '__main__':
 
-#    create_and_save_CN1()
-#    values_CN1_target = read_CN1()  # to see df
+    # create_and_save_CN1()
+    # values_CN1_target = read_CN1()  # to see df
 
-#    test_CN1()
+    # test_CN1()
 
-#    create_and_save_dfs_get_or_construct_data()
-#    values_profits_target = read_profits_societes()  # to see df
-#    dict_profits = create_dict_profits()
-#    values_profits_societes = get_or_construct_data(df, dict_profits)[0]
+    # create_and_save_dfs_get_or_construct_data()
+    # values_profits_target = read_profits_societes()  # to see df
+    # dict_profits = create_dict_profits()
+    # values_profits_societes = get_or_construct_data(df, dict_profits)[0]
 
     test_profits_societes()
+
+    # values_CN1, formulas_CN1 = get_or_construct_data(df, variables_CN1, range(1949, 2014))
+    # values_CN2, formulas_CN2 = get_or_construct_data(df, variables_CN2, range(1949, 2014))
