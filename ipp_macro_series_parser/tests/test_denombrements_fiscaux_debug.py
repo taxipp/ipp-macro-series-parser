@@ -35,10 +35,9 @@ from ipp_macro_series_parser.data_extraction import get_or_construct_value
 
 
 def test_run_through():
-    years = [2006, 2007, 2008]
+    years = [2006, 2007, 2008, 2009]
     df = create_denombrements_fiscaux_data_frame(years = years)
     index_by_variable_name = create_index_by_variable_name(formula_by_variable_name, level_2_formula_by_variable_name)
-
     variable_name = 'interets_imposes_au_prelevement_liberatoire'
     get_or_construct_value(df, variable_name, index_by_variable_name, years = years)
     variable_name = 'dividendes_imposes_au_prelevement_liberatoire'
@@ -50,17 +49,28 @@ def test_run_through():
     variable_name = 'f2da'
     get_or_construct_value(df, variable_name, index_by_variable_name, years = years)
 
-    # Correction of f5io in 2008 in Agrégats IPP
-    variable_name = 'benefices_agricoles_forfait_imposables'
-    value = get_or_construct_value(df, variable_name, index_by_variable_name, years = years)[0].loc[2008]
-    target = 883970587
-    assert all(value == target), "{} for 2008: got {} instead of {}".format(variable_name, value, target)
 
-    variable_name = 'benefices_agricoles_reels_imposables'
-    value = get_or_construct_value(df, variable_name, index_by_variable_name, years = years, fill_value = 0)[0].loc[2008]
-    target = 6515953706
-    assert all(value == target), "{} for 2008: got {} instead of {}".format(variable_name, value, target)
+def test_corrections():
+    years = [2006, 2007, 2008, 2009]
+    df = create_denombrements_fiscaux_data_frame(years = years)
+    index_by_variable_name = create_index_by_variable_name(formula_by_variable_name, level_2_formula_by_variable_name)
 
+    test_by_variable = dict(
+        # Correction of f5io in 2008 in Agrégats IPP
+        benefices_agricoles_forfait_imposables = [
+            {'year': 2008, 'target': 883970587}
+            ],
+        benefices_agricoles_reels_imposables = [
+            {'year': 2008, 'target': 6515953706}
+            ]
+        )
 
+    def assert_value_construction(variable_name, test):
+        year = test['year']
+        target = test['target']
+        value = get_or_construct_value(df, variable_name, index_by_variable_name, years = years)[0].loc[year]
+        assert all(value == target), "{} for {}: got {} instead of {}".format(variable_name, year, value, target)
 
-
+    for variable_name, tests in test_by_variable.iteritems():
+        for test in tests:
+            yield assert_value_construction, variable_name, test
