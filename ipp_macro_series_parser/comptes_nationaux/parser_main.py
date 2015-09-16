@@ -30,8 +30,8 @@ import pkg_resources
 
 
 from ipp_macro_series_parser.config import Config
-from ipp_macro_series_parser.comptes_nationaux.cn_parser_tee import tee_df_by_year_generator
-from ipp_macro_series_parser.comptes_nationaux.cn_parser_non_tee import non_tee_df_by_filename_generator
+from ipp_macro_series_parser.comptes_nationaux.parser_tee import tee_df_by_year_generator
+from ipp_macro_series_parser.comptes_nationaux.parser_non_tee import non_tee_df_by_filename_generator
 
 
 log = logging.getLogger(__name__)

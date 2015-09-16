@@ -10,7 +10,7 @@ import os
 import pkg_resources
 
 from ipp_macro_series_parser.config import Config
-from ipp_macro_series_parser.comptes_nationaux.cn_parser_main import get_comptes_nationaux_data
+from ipp_macro_series_parser.comptes_nationaux.parser_main import get_comptes_nationaux_data
 from ipp_macro_series_parser.data_extraction import look_many
 
 

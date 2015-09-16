@@ -25,7 +25,7 @@ import pandas
 import pkg_resources
 
 from ipp_macro_series_parser.config import Config
-from ipp_macro_series_parser.comptes_nationaux.cn_get_file_infos import file_infos
+from ipp_macro_series_parser.comptes_nationaux.get_file_infos import file_infos
 
 
 log = logging.getLogger(__name__)
