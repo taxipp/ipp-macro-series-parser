@@ -37,21 +37,19 @@ import sys
 import urllib
 import zipfile
 
-
 from ipp_macro_series_parser.config import Config
-
 
 app_name = os.path.splitext(os.path.basename(__file__))[0]
 log = logging.getLogger(app_name)
-
 
 parser = Config(
     config_files_directory = os.path.join(pkg_resources.get_distribution('ipp-macro-series-parser').location)
     )
 cn_directory = parser.get('data', 'cn_directory')
-assert cn_directory != 'None', 'Set cn_directory in the data section of you config[_local].ini file to a valid directory'
+assert cn_directory != 'None', 'Set cn_directory in the data section of your config_local.ini file to a valid directory'
 
-# Download a zip file from theurl and unzipp it in directory thedir
+
+# Download a zip file from theurl and unzip it in directory thedir
 def getunzipped(url = None, directory = None):
     assert url and directory
     name = os.path.join(directory, 'source_insee.zip')
@@ -92,18 +90,17 @@ def cn_downloader(years = None):
         years = [years]
     for year in years:
         directory = os.path.join(cn_directory, 'comptes_annee_{}'.format(year))
-        assert os.path.exists(directory)
         getunzipped(
             url = 'http://www.insee.fr/fr/indicateurs/cnat_annu/archives/comptes_annee_{}.zip'.format(year),
             directory = directory
             )
+        assert os.path.exists(directory), 'comptes_annee_{} was not downloaded'.format(year)
 
 
-# TOOD: should test wthether the downloaded folder exist / is not empty? does the program first delete the files?
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-e', '--end', default = 2013, help = 'ending year to be downloaded')
-    parser.add_argument('-s', '--start', default = 2013, help = 'starting year to be downloaded')
+    parser.add_argument('-e', '--end', default = 2013, type = int, help = 'ending year to be downloaded')
+    parser.add_argument('-s', '--start', default = 2013, type = int, help = 'starting year to be downloaded')
     parser.add_argument('-t', '--target', default = cn_directory, help = 'path where to store downloaded files')
     parser.add_argument('-v', '--verbose', action = 'store_true', default = False, help = "increase output verbosity")
     args = parser.parse_args()
