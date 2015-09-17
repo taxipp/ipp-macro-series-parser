@@ -78,6 +78,27 @@ input_CN1 = {
                                                             'drop': True}
     }
 
+input_code_by_year_CN1 = dict(
+    Consommation_de_capital_fixe_economie_nationale = dict(
+        code = {
+            'base_2000_2005': dict(
+                start = 2004,
+                end = 2012,
+                code = 'K1'
+                ),
+            'base_2010': dict(
+                start = 2012,
+                # end = 2015,
+                code = 'P51c'
+                ),
+            },
+        institution = 'S1',
+        ressources = False,
+        # drop = False
+        )
+    # and potentially other variables whose codes change throughout time
+    )
+
 
 formulas_CN1 = {
     'Profits_des_societes': {
@@ -153,6 +174,7 @@ formulas_CN1 = {
     }
 
 variables_CN1 = input_CN1.copy()
+# variables_CN1.update(theindexwhichwillbecreatedonthebasisof'input_code_by_year_CN1')  # TODO: this line of code.
 variables_CN1.update(formulas_CN1)
 
 

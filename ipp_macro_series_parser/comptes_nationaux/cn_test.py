@@ -24,9 +24,12 @@ tests_data = os.path.join(
     'ipp_macro_series_parser/tests/data')
 
 
-# INPUTS
+def get_tidy_data(year):
+    df = get_comptes_nationaux_data(year)
+    return df
 
-folder_year = 2013
+
+# INPUTS
 
 
 def create_list_dicts_for_look_many():
@@ -191,10 +194,11 @@ def create_mult_dict_formula():
 
 # OUTPUTS
 
-df = get_comptes_nationaux_data(folder_year)
+
 
 
 def tests_look_up():
+    df = get_tidy_data(2013)
 
     data_precise = look_up(df, {'code': 'D121', 'institution': 'S11', 'ressources': False, 'description': None})
     # should be DataFrame of size 65x11
@@ -217,6 +221,7 @@ def tests_look_up():
 
 # - test look_many
 def test_look_many():
+    df = get_tidy_data(2013)
     list_ENE = create_list_dicts_for_look_many()
     ene_societes = look_many(df, list_ENE)
     return ene_societes
@@ -240,6 +245,7 @@ def test_look_many():
 
 
 def test_get_or_construct_value_empty():
+    df = get_tidy_data(2013)
     incomplete_overall_dict = create_dict_for_test_get_value_empty()
     value_empty, formula_of_empty = get_or_construct_value(df, 'notfound_arg', incomplete_overall_dict)
 # should return KeyError because components of formula are not in dict
@@ -248,6 +254,8 @@ def test_get_or_construct_value_empty():
 
 
 def test_get_or_construct_value_working():
+    df = get_tidy_data(2013)
+
     simple_dict = {'Interets verses par rdm': {'code': 'D41', 'institution': 'S2', 'ressources': False}}
     dict_with_div = {
         'Interets_verses_par_rdm': {
@@ -285,6 +293,8 @@ def test_get_or_construct_value_working():
 
 
 def tests_get_or_construct_data():
+    df = get_tidy_data(2013)
+
     double_dict = create_double_dict()
     dict_revenus_rdm = create_dict_revenus_rdm()
     dict_with_squares = create_dict_w_squares()
@@ -318,6 +328,7 @@ def create_and_save_dfs_get_or_construct_data():
 
 
 def create_and_save_CN1():
+    df = get_tidy_data(2013)
     values_CN1, formulas_CN1 = get_or_construct_data(df, variables_CN1, range(1949, 2014))
     values_CN1.to_hdf(os.path.join(tests_data, 'values_CN1.h5'), 'CN1')
 
@@ -333,6 +344,7 @@ def read_CN1():
 
 
 def test_profits_societes():
+    df = get_tidy_data(2013)
     values_profits_societes_target = read_profits_societes()
     dict_profits = create_dict_profits()
     values_profits_societes = get_or_construct_data(df, dict_profits)[0]
@@ -341,13 +353,25 @@ def test_profits_societes():
 
 
 def test_CN1():
+    df = get_tidy_data(2013)
     values_CN1_target = read_CN1()
     values_CN1, formulas_CN1 = get_or_construct_data(df, variables_CN1, range(1949, 2014))
 
     assert_frame_equal(values_CN1, values_CN1_target)
 
+
+# WIP
+def test_compare_sheets_to_IPP():
+    df = get_tidy_data(2012)
+    values_CN1_2012, formulas_CN1 = get_or_construct_data(df, variables_CN1, range(1949, 2013))
+    values_CN2_2012, formulas_CN2 = get_or_construct_data(df, variables_CN2, range(1949, 2013))
+    return values_CN1_2012, values_CN2_2012
+
+
 # LE RUN
 if __name__ == '__main__':
+
+    # get_tidy_data(2013)
 
     # create_and_save_CN1()
     # values_CN1_target = read_CN1()  # to see df
@@ -359,7 +383,14 @@ if __name__ == '__main__':
     # dict_profits = create_dict_profits()
     # values_profits_societes = get_or_construct_data(df, dict_profits)[0]
 
-    test_profits_societes()
+    # test_profits_societes()
 
+    # df = get_tidy_data(2013)
     # values_CN1, formulas_CN1 = get_or_construct_data(df, variables_CN1, range(1949, 2014))
     # values_CN2, formulas_CN2 = get_or_construct_data(df, variables_CN2, range(1949, 2014))
+
+    df = get_tidy_data(2009)
+    values_CN1_2009 = get_or_construct_data(df, variables_CN1, range(1949, 2010))[0]
+
+#    values_CN1_2012 = test_compare_sheets_to_IPP()[0]
+#    values_CN2_2012 = test_compare_sheets_to_IPP()[1]

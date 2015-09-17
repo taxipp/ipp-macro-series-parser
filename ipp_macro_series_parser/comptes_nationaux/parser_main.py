@@ -83,7 +83,7 @@ def cn_df_generator(year, list_years = None, drop_duplicates = True, subset = No
 
 def get_comptes_nationaux_data(year, list_years = None, drop_duplicates = True, subset = None, force_recompute = False):
     # TODO: tests that all years are included in list_years
-    hdf_file_name = 'comptes_nationaux.h5'
+    hdf_file_name = 'comptes_nationaux_{}.h5'.format(year)
     key = 'test'
     file_path = os.path.join(hdf_directory, hdf_file_name)
     if force_recompute or not os.path.exists(file_path):
