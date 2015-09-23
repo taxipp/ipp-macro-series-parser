@@ -9,7 +9,7 @@ from pandas.util.testing import assert_frame_equal
 from ipp_macro_series_parser.comptes_nationaux.parser_main import get_comptes_nationaux_data
 from ipp_macro_series_parser.data_extraction import (
     look_many, look_up, get_or_construct_value, get_or_construct_data)
-from ipp_macro_series_parser.comptes_nationaux.sheets_lists import variables_CN1, variables_CN2
+from ipp_macro_series_parser.comptes_nationaux.sheets_lists import generate_CN1_variables, generate_CN2_variables
 
 parser = Config(
     config_files_directory = os.path.join(pkg_resources.get_distribution('ipp-macro-series-parser').location)
@@ -195,8 +195,6 @@ def create_mult_dict_formula():
 # OUTPUTS
 
 
-
-
 def tests_look_up():
     df = get_tidy_data(2013)
 
@@ -327,10 +325,13 @@ def create_and_save_dfs_get_or_construct_data():
     values_profits_societes.to_hdf(os.path.join(tests_data, 'values_profits_societes.h5'), 'profits_societes')
 
 
-def create_and_save_CN1():
-    df = get_tidy_data(2013)
-    values_CN1, formulas_CN1 = get_or_construct_data(df, variables_CN1, range(1949, 2014))
-    values_CN1.to_hdf(os.path.join(tests_data, 'values_CN1.h5'), 'CN1')
+def create_and_save_CN1(year):  # should no longer be executed - already saved
+    file_path = (os.path.join(tests_data, 'values_CN1_{}.h5'.format(year)))
+    assert not os.path.exists(file_path), 'CN1 sheet with {} data already generated and saved'.format(year)
+    df = get_tidy_data(year)
+    variables_CN1 = generate_CN1_variables(year)
+    values_CN1, formulas_CN1 = get_or_construct_data(df, variables_CN1, range(1949, year + 1))
+    values_CN1.to_hdf(file_path, 'CN1')
 
 
 def read_profits_societes():
@@ -338,8 +339,8 @@ def read_profits_societes():
     return profits_societes
 
 
-def read_CN1():
-    values_CN1 = pandas.read_hdf(os.path.join(tests_data, 'values_CN1.h5'), 'CN1')
+def read_CN1(year):
+    values_CN1 = pandas.read_hdf(os.path.join(tests_data, 'values_CN1_{}.h5'.format(year)), 'CN1')
     return values_CN1
 
 
@@ -352,20 +353,24 @@ def test_profits_societes():
     assert_frame_equal(values_profits_societes, values_profits_societes_target)
 
 
-def test_CN1():
-    df = get_tidy_data(2013)
-    values_CN1_target = read_CN1()
-    values_CN1, formulas_CN1 = get_or_construct_data(df, variables_CN1, range(1949, 2014))
+def test_CN1(year):
+    df = get_tidy_data(year)
+    values_CN1_target = read_CN1(year)
+    variables_CN1 = generate_CN1_variables(year)
+    values_CN1, formulas_CN1 = get_or_construct_data(df, variables_CN1, range(1949, year + 1))
 
     assert_frame_equal(values_CN1, values_CN1_target)
 
 
 # WIP
-def test_compare_sheets_to_IPP():
+def test_compare_sheets_to_IPP():  # WIP. for now it only generates the first two sheets, to be compared to Agrégats IPP
     df = get_tidy_data(2012)
+    variables_CN1 = generate_CN1_variables(2012)
+    variables_CN2 = generate_CN2_variables(2012)
     values_CN1_2012, formulas_CN1 = get_or_construct_data(df, variables_CN1, range(1949, 2013))
     values_CN2_2012, formulas_CN2 = get_or_construct_data(df, variables_CN2, range(1949, 2013))
     return values_CN1_2012, values_CN2_2012
+# TODO: parse the corresponding sheets in Agrégats IPP - Comptabilité nationale, and read, to assert_frame_equal
 
 
 # LE RUN
@@ -373,10 +378,8 @@ if __name__ == '__main__':
 
     # get_tidy_data(2013)
 
-    # create_and_save_CN1()
-    # values_CN1_target = read_CN1()  # to see df
-
-    # test_CN1()
+    create_and_save_CN1(2013)
+    test_CN1(2013)
 
     # create_and_save_dfs_get_or_construct_data()
     # values_profits_target = read_profits_societes()  # to see df
@@ -386,11 +389,21 @@ if __name__ == '__main__':
     # test_profits_societes()
 
     # df = get_tidy_data(2013)
+    # variables_CN1 = generate_CN1_variables(2013)
+    # variables_CN2 = generate_CN2_variables(2013)
     # values_CN1, formulas_CN1 = get_or_construct_data(df, variables_CN1, range(1949, 2014))
     # values_CN2, formulas_CN2 = get_or_construct_data(df, variables_CN2, range(1949, 2014))
 
-    df = get_tidy_data(2009)
-    values_CN1_2009 = get_or_construct_data(df, variables_CN1, range(1949, 2010))[0]
+    # df_2011 = get_tidy_data(2011)
+    # variables_CN1_2011 = generate_CN1_variables(2011)
+    # variables_CN2_2011 = generate_CN2_variables(2011)
+    # values_CN1_2011 = get_or_construct_data(df_2011, variables_CN1_2011, range(1949, 2012))[0]
+    # values_CN2_2011 = get_or_construct_data(df_2011, variables_CN2_2011, range(1949, 2012))[0]
 
-#    values_CN1_2012 = test_compare_sheets_to_IPP()[0]
-#    values_CN2_2012 = test_compare_sheets_to_IPP()[1]
+    # create_and_save_CN1(2012)
+    # values_CN1_2012 = read_CN1(2012)
+    # test_CN1(2012)
+    # values_CN1_2012, values_CN2_2012 = test_compare_sheets_to_IPP()
+
+    # values_CN1_2012 = test_compare_sheets_to_IPP()[0]
+    # values_CN2_2012 = test_compare_sheets_to_IPP()[1]

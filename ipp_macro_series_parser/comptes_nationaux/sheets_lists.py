@@ -22,15 +22,16 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
+import logging
+log = logging.getLogger(__name__)
 
 # CN1
 
 input_CN1 = {
-    'Produit_interieur_brut_PIB': {'code': None, 'institution': 'S1', 'ressources': False, 'description': 'PIB'},
-    'Produit_interieur_net_PIN': {'code': None, 'institution': 'S1', 'ressources': False, 'description': 'PIN'},
-    'Revenu_national_brut': {'code': None, 'institution': 'S1', 'ressources': False,
-                             'description': 'revenu national brut en milliards d'},
+    # 'Produit_interieur_brut_PIB': {'code': None, 'institution': 'S1', 'ressources': False, 'description': 'PIB'},
+    # 'Produit_interieur_net_PIN': {'code': None, 'institution': 'S1', 'ressources': False, 'description': 'PIN'},
+    # 'Revenu_national_brut': {'code': None, 'institution': 'S1', 'ressources': False,
+    #                          'description': 'revenu national brut en milliards d'},
     # Revenus versés par reste du monde
     'Salaires_verses_au_rdm': {'code': 'D11', 'institution': 'S2', 'ressources': True, 'drop': True},
     'Salaires_verses_par_rdm': {'code': 'D11', 'institution': 'S2', 'ressources': False, 'drop': True},
@@ -43,7 +44,7 @@ input_CN1 = {
     'Dividendes_verses_au_rdm_D43': {'code': 'D43', 'institution': 'S2', 'ressources': True, 'drop': True},
     'Revenus_de_la_propriete_verses_au_rdm': {'code': 'D44', 'institution': 'S2', 'ressources': True, 'drop': True},
     # Dépréciation du capital fixe (CCF) : économie nationale, APUs, ISBLSM
-    'Consommation_de_capital_fixe_economie_nationale': {'code': 'P51c', 'institution': 'S1', 'ressources': False},
+    # 'Consommation_de_capital_fixe_economie_nationale': {'code': 'P51c', 'institution': 'S1', 'ressources': False},
     # 'Consommation_de_capital_fixe _-_APU': {'code': 'P51c', 'institution': 'S13', 'ressources': False},
     # 'Consommation_de_capital_fixe _-_ISBLSM': {'code': 'P51c', 'institution': 'S15', 'ressources': False},
     # Variables CN2, nécessaires pour reconstruction du Revenu national façon Piketty
@@ -64,7 +65,7 @@ input_CN1 = {
     'cs_imput_empl_SF': {'code': 'D122', 'institution': 'S12', 'ressources': False, 'drop': True},
     'cs_imput_empl_APU': {'code': 'D122', 'institution': 'S13', 'ressources': False, 'drop': True},
     'cs_imput_empl_Menages': {'code': 'D122', 'institution': 'S14', 'ressources': False, 'drop': True},
-    'cs_imput_empl_ISBLSM': {'code': 'D122', 'institution': 'S15', 'ressources': False,  'drop': True},
+    'cs_imput_empl_ISBLSM': {'code': 'D122', 'institution': 'S15', 'ressources': False, 'drop': True},
     # Excedent_net_d_exploitation_ENE_SNF
     'ene_snf': {'code': 'B2n', 'institution': 'S11', 'ressources': False, 'description': '', 'drop': True},
     'ene_sf': {'code': 'B2n', 'institution': 'S12', 'ressources': False, 'description': '', 'drop': True},
@@ -78,25 +79,31 @@ input_CN1 = {
                                                             'drop': True}
     }
 
-input_code_by_year_CN1 = dict(
-    Consommation_de_capital_fixe_economie_nationale = dict(
-        code = {
-            'base_2000_2005': dict(
-                start = 2004,
-                end = 2012,
-                code = 'K1'
-                ),
-            'base_2010': dict(
-                start = 2012,
-                # end = 2015,
-                code = 'P51c'
-                ),
-            },
-        institution = 'S1',
-        ressources = False,
-        # drop = False
-        )
-    # and potentially other variables whose codes change throughout time
+input_CN1_base_2010 = input_CN1.copy()
+input_CN1_base_2010.update(
+    {'Consommation_de_capital_fixe_economie_nationale': {'code': 'P51c', 'institution': 'S1', 'ressources': False},
+     'Produit_interieur_brut_PIB': {'code': None, 'institution': 'S1', 'ressources': False, 'description': 'PIB'},
+     'Produit_interieur_net_PIN': {'code': None, 'institution': 'S1', 'ressources': False, 'description': 'PIN'},
+     'Revenu_national_brut': {'code': None, 'institution': 'S1', 'ressources': False,
+                             'description': 'revenu national brut en milliards d'},}
+    )
+
+input_CN1_base_2005 = input_CN1.copy()
+input_CN1_base_2005.update(
+    {'Consommation_de_capital_fixe_economie_nationale': {'code': 'K1', 'institution': 'S1', 'ressources': False},
+     'Produit_interieur_brut_PIB': {'code': None, 'institution': 'S1', 'ressources': False, 'description': 'PIB'},
+     'Produit_interieur_net_PIN': {'code': None, 'institution': 'S1', 'ressources': False, 'description': 'PIN'},
+     'Revenu_national_brut': {'code': None, 'institution': 'S1', 'ressources': False,
+                             'description': 'revenu national brut en milliards d'},}
+    )
+
+input_CN1_base_2000 = input_CN1.copy()
+input_CN1_base_2000.update(
+    {'Consommation_de_capital_fixe_economie_nationale': {'code': 'K1', 'institution': 'S1', 'ressources': False},
+     'Produit_interieur_brut_PIB': {'code': None, 'institution': 'S1', 'ressources': False, 'description': 'Valeur ajoutée brute'},
+     'Produit_interieur_net_PIN': {'code': None, 'institution': 'S1', 'ressources': False, 'description': 'Valeur ajoutée nette'},
+     'Revenu_national_brut': {'code': None, 'institution': 'S1', 'ressources': False,
+                             'description': 'Total des secteurs résidents'},}
     )
 
 
@@ -139,12 +146,12 @@ formulas_CN1 = {
     '%_Revenus_reste_du_monde_/_Revenu_national': {
         'formula': 'Revenus_verses_par_rdm_nets / Revenu_national_brut'
         },
-#    'Depreciation_du_capital_(CCF)': {
-#        'formula': 'Consommation_de_capital_fixe _-_APU + Consommation_de_capital_fixe _-_ISBLSM + '},
+    # 'Depreciation_du_capital_(CCF)': {
+    #     'formula': 'Consommation_de_capital_fixe _-_APU + Consommation_de_capital_fixe _-_ISBLSM + '},
     'CCF_/_PIB': {
         'formula': 'Consommation_de_capital_fixe_economie_nationale / Produit_interieur_brut_PIB'
         },  # voir si on utilise la CCF Piketty (à calculer)
-# 'Taux_de_croissance_du_PIB_entre_l_annee_N-2_et_l_annee_N-1'
+    # 'Taux_de_croissance_du_PIB_entre_l_annee_N-2_et_l_annee_N-1'
     '%_Revenu_national_/_PIB': {
         'formula': 'Revenu_national_brut / Produit_interieur_brut_PIB'
         },  # voir si on prend plutôt le RNB Piketty
@@ -173,10 +180,17 @@ formulas_CN1 = {
         },
     }
 
-variables_CN1 = input_CN1.copy()
-# variables_CN1.update(theindexwhichwillbecreatedonthebasisof'input_code_by_year_CN1')  # TODO: this line of code.
-variables_CN1.update(formulas_CN1)
 
+def generate_CN1_variables(year):
+    if year in range(2004, 2010):
+        variables_CN1 = input_CN1_base_2000.copy()
+        log.info('Sheet-creation not optimized for data of base 2000 and under : missing non-tee files > missing data')
+    if year in range(2010, 2013):
+        variables_CN1 = input_CN1_base_2005.copy()
+    if year > 2012:
+        variables_CN1 = input_CN1_base_2010.copy()
+    variables_CN1.update(formulas_CN1)
+    return variables_CN1
 
 # CN2
 
@@ -222,6 +236,7 @@ input_CN2 = {
                                                             'drop': True}
     }
 
+input_CN2_base_2005_2010 = input_CN2.copy()
 
 formulas_CN2 = {
     'Profits_des_societes': {
@@ -271,5 +286,12 @@ formulas_CN2 = {
         'formula': 'VA_Societes + VA_Immobilier_Loyers + Revenu_d_activite_des_non_salaries + Salaires_et_cot_soc_verses_par_les_non_salaries_et_les_menages + VA_APU_et_ISBLSM + Impots_indirects + Revenus_verses_par_rdm_nets'},
     }
 
-variables_CN2 = input_CN2.copy()
-variables_CN2.update(formulas_CN2)
+
+def generate_CN2_variables(year):
+    if year > 2010:
+        variables_CN2 = input_CN2_base_2005_2010.copy()
+    else:
+        variables_CN2 = input_CN2.copy()
+        log.info('Sheet-creation not optimized for data of base 2000 and under : missing non-tee files > missing data')
+    variables_CN2.update(formulas_CN2)
+    return variables_CN2
