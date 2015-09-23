@@ -42,7 +42,7 @@ config_parser = Config(
     )
 
 
-def update_index_by_variable_name_using_formula(index_by_variable_name, formula):
+def update_index_by_variable_name_appearing_in_formula(index_by_variable_name, formula):
     parser_formula = Parser()
     expr = parser_formula.parse(formula)
     formula_variables = expr.variables()
@@ -65,10 +65,10 @@ def create_index_by_variable_name(formula_by_variable_name, level_2_formula_by_v
 
         if isinstance(formula, list):
             for single_formula in formula:
-                index_by_variable_name = update_index_by_variable_name_using_formula(
+                index_by_variable_name = update_index_by_variable_name_appearing_in_formula(
                     index_by_variable_name, single_formula['formula'])
         else:
-            index_by_variable_name = update_index_by_variable_name_using_formula(index_by_variable_name, formula)
+            index_by_variable_name = update_index_by_variable_name_appearing_in_formula(index_by_variable_name, formula)
 
     if level_2_formula_by_variable_name is not None:
         level_2_index_by_variable_name = dict()
