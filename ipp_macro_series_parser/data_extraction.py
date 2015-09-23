@@ -182,6 +182,7 @@ def get_or_construct_value(df, variable_name, index_by_variable, years = None, f
     of the sum of the four variables, and the second element is the formula 'Interets_verses_par_rdm +
     Dividendes_verses_par_rdm_D42 + Dividendes_verses_par_rdm_D43 + Revenus_propriete_verses_par_rdm'
     """
+
     assert df is not None
     df = df.copy()
 
@@ -240,8 +241,10 @@ def get_or_construct_value(df, variable_name, index_by_variable, years = None, f
         for component in variables:
             variable_value, variable_formula = get_or_construct_value(
                 df, component, index_by_variable, years, fill_value = fill_value)
+
             if index is None:
                 index = variable_value.index
+                assert len(variable_value.index) == len(variable_value.index.unique()), "Component {} does not have a single valued index {}".format(component, variable_value.index)
             else:
                 try:
                     reindexing_condition = not(index == variable_value.index)
@@ -376,6 +379,8 @@ def get_or_construct_data(df, variable_dictionary, years = range(1949, 2014)):
     formulas = dict()
 
     for variable in variable_dictionary:
+        print 'we are calling get_or_construct_value for variable :'
+        print variable
         variable_values, variable_formula = get_or_construct_value(df, variable, variable_dictionary, years)
         variable_name = variable.replace('_', ' ')
 

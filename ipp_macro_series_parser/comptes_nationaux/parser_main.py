@@ -27,6 +27,7 @@ import logging
 import os
 import pandas
 import pkg_resources
+import numpy
 
 
 from ipp_macro_series_parser.config import Config
@@ -78,6 +79,11 @@ def cn_df_generator(year, list_years = None, drop_duplicates = True, subset = No
         subset = [u'code', u'institution', u'ressources', u'value', u'year']
     if drop_duplicates:
         df_full.drop_duplicates(subset = subset, inplace = True)
+        if year == 2011:
+            df_full['value_rounded'] = numpy.around(df_full['value'].astype('float64'), 3)
+        else:
+            df_full['value_rounded'] = numpy.around(df_full['value'].astype('float64'), 5)
+        df_full = df_full.drop_duplicates(['code', 'institution', 'ressources', 'value_rounded', 'year'])
     return df_full
 
 
