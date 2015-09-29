@@ -366,7 +366,9 @@ def test_compare_sheets_to_IPP():  # WIP. for now it only generates the first tw
     values_CN2_2012, formulas_CN2 = get_or_construct_data(df, variables_CN2, range(1949, 2013))
     return values_CN1_2012, values_CN2_2012
 # TODO: parse the corresponding sheets in Agrégats IPP - Comptabilité nationale, and read, to assert_frame_equal
-
+# NB: normal si Impôts indirects (CN2) ne sont pas les mêmes :
+# NB : on a des variables calculées qui sont NaN pour une série d'année, alors qu'Agrégats IPP a mis en 0 les variables
+# d'input n'existant pas pour des années (du coup là le calcul se fait).
 
 # LE RUN
 if __name__ == '__main__':
@@ -379,11 +381,11 @@ if __name__ == '__main__':
     # create_and_save_dfs_get_or_construct_data()  -- should no longer be done
     # test_profits_societes()
 
-    # df = get_tidy_data(2013)
+    df = get_tidy_data(2013)
     # variables_CN1 = generate_CN1_variables(2013)
-    # variables_CN2 = generate_CN2_variables(2013)
+    variables_CN2 = generate_CN2_variables(2013)
     # values_CN1, formulas_CN1 = get_or_construct_data(df, variables_CN1, range(1949, 2014))
-    # values_CN2, formulas_CN2 = get_or_construct_data(df, variables_CN2, range(1949, 2014))
+    values_CN2, formulas_CN2 = get_or_construct_data(df, variables_CN2, range(1949, 2014))
 
     # df_2011 = get_tidy_data(2011)
     # variables_CN1_2011 = generate_CN1_variables(2011)
@@ -395,9 +397,8 @@ if __name__ == '__main__':
     # test_CN1(2012)
     # values_CN1_2012, values_CN2_2012 = test_compare_sheets_to_IPP()
 
-    # df_2012 = get_tidy_data(2012)
-    # variables_CN1_2012 = generate_CN1_variables(2012)
-    # values_CN1_2012 = get_or_construct_data(df_2012, variables_CN1_2012, range(1949, 2013))[0]
-    # variables_CN2_2012 = generate_CN2_variables(2012)
-    # values_CN2_2012 = get_or_construct_data(df_2012, variables_CN2_2012, range(1949, 2013))[0]
-
+    df_2012 = get_tidy_data(2012)
+    variables_CN1_2012 = generate_CN1_variables(2012)
+    values_CN1_2012 = get_or_construct_data(df_2012, variables_CN1_2012, range(1949, 2013))[0]
+    variables_CN2_2012 = generate_CN2_variables(2012)
+    values_CN2_2012 = get_or_construct_data(df_2012, variables_CN2_2012, range(1949, 2013))[0]
