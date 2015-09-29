@@ -55,6 +55,8 @@ input_CN1 = {
     'cs_eff_empl_APU': {'code': 'D121', 'institution': 'S13', 'ressources': False, 'drop': True},
     'cs_eff_empl_Menages': {'code': 'D121', 'institution': 'S14', 'ressources': False, 'drop': True},
     'cs_eff_empl_ISBLSM': {'code': 'D121', 'institution': 'S15', 'ressources': False, 'drop': True},
+    'cs_eff_empl_par_rdm': {'code': 'D121', 'institution': 'S2', 'ressources': False, 'drop': True},
+    'cs_eff_empl_au_rdm': {'code': 'D121', 'institution': 'S2', 'ressources': True, 'drop': True},
     'cs_imput_empl_SNF': {'code': 'D122', 'institution': 'S11', 'ressources': False, 'drop': True},
     'cs_imput_empl_SF': {'code': 'D122', 'institution': 'S12', 'ressources': False, 'drop': True},
     'cs_imput_empl_APU': {'code': 'D122', 'institution': 'S13', 'ressources': False, 'drop': True},
@@ -184,7 +186,7 @@ formulas_CN1 = {
         'code': None,
         'institution': 'S2',
         'ressources': False,
-        'formula': 'Salaires_verses_par_rdm - Salaires_verses_au_rdm',
+        'formula': 'Salaires_verses_par_rdm + cs_eff_empl_par_rdm - Salaires_verses_au_rdm - cs_eff_empl_au_rdm',
         'drop': True
         },
     'Revenus_verses_par_rdm_nets': {
@@ -240,6 +242,8 @@ input_CN2 = {
     'cs_eff_empl_APU': {'code': 'D121', 'institution': 'S13', 'ressources': False, 'drop': True},
     'cs_eff_empl_Menages': {'code': 'D121', 'institution': 'S14', 'ressources': False, 'drop': True},
     'cs_eff_empl_ISBLSM': {'code': 'D121', 'institution': 'S15', 'ressources': False, 'drop': True},
+    'cs_eff_empl_par_rdm': {'code': 'D121', 'institution': 'S2', 'ressources': False, 'drop': True},
+    'cs_eff_empl_au_rdm': {'code': 'D121', 'institution': 'S2', 'ressources': True, 'drop': True},
     'cs_imput_empl_SNF': {'code': 'D122', 'institution': 'S11', 'ressources': False, 'drop': True},
     'cs_imput_empl_SF': {'code': 'D122', 'institution': 'S12', 'ressources': False, 'drop': True},
     'cs_imput_empl_APU': {'code': 'D122', 'institution': 'S13', 'ressources': False, 'drop': True},
@@ -305,13 +309,13 @@ formulas_CN2 = {
         'formula': 'Sal_verses_par_APU + Sal_verses_par_ISBLSM + cs_eff_empl_APU + cs_eff_empl_ISBLSM + cs_imput_empl_APU',  #  + cs_imput_empl_ISBLSM
         },
     'Impots_indirects': {
-        'formula': 'Impots_sur_les_produits_ressources_APU - Subventions_sur_les_produits_ressources_APU + Autres_impots_sur_la_production_ressources_APU - Autres_subventions_sur_la_production_ressources_APU',
+        'formula': 'Impots_sur_les_produits_ressources_APU + Subventions_sur_les_produits_ressources_APU + Autres_impots_sur_la_production_ressources_APU + Autres_subventions_sur_la_production_ressources_APU',
         },
     'Salaires_verses_par_rdm_nets': {
         'code': None,
         'institution': 'S2',
         'ressources': False,
-        'formula': 'Salaires_verses_par_rdm - Salaires_verses_au_rdm',
+        'formula': 'Salaires_verses_par_rdm + cs_eff_empl_par_rdm - Salaires_verses_au_rdm - cs_eff_empl_au_rdm',
         },
     'Revenus_verses_par_rdm_nets': {
         'code': None,
@@ -356,7 +360,7 @@ input_CN11 = {
     'cs_eff_empl_APU': {'code': 'D121', 'institution': 'S13', 'ressources': False},
     'cs_eff_empl_ISBLSM': {'code': 'D121', 'institution': 'S15', 'ressources': False},
     'cs_imput_empl_APU': {'code': 'D122', 'institution': 'S13', 'ressources': False},
-    'cs_imput_empl_ISBLSM': {'code': 'D122', 'institution': 'S15', 'ressources': False},
+    # 'cs_imput_empl_ISBLSM': {'code': 'D122', 'institution': 'S15', 'ressources': False, 'drop': True},  # n'existe pas
     'Salaires_verses_par_rdm': {'code': 'D11', 'institution': 'S2', 'ressources': False},
     'Salaires_verses_au_rdm': {'code': 'D11', 'institution': 'S2', 'ressources': True},
     'cs_eff_empl_versees_par_rdm': {'code': 'D121', 'institution': 'S2', 'ressources': False},
@@ -389,34 +393,34 @@ formulas_CN11 = {
         'formula': 'cs_eff_empl_recues_par_admin_oblig - cs_patronales_effectives_public'
         },
     #   pour colonne D
-    'cs_patronales_imputees_public': {
-        'formula': 'cs_imput_empl_APU + cs_imput_empl_ISBLSM'
+    'cs_patronales_public_imputees': {
+        'formula': 'cs_imput_empl_APU'  #  + cs_imput_empl_ISBLSM
         },
-    'cs_patronales_imputees_prive_oblig': {  # doit être égal à 0 car uniquement dans le public où il y a des imputées obligatoires
-        'formula': 'cs_imput_empl_recues_par_admin_oblig - cs_patronales_imputees_public'
+    'cs_patronales_prive_imputees_oblig': {  # doit être égal à 0 car uniquement dans le public où il y a des imputées obligatoires
+        'formula': 'cs_imput_empl_recues_par_admin_oblig - cs_patronales_public_imputees'
         },
     #   colonne E
     'taux_cs_patronales_prive_oblig': {
-        'formula': '( cs_patronales_effectives_prive_oblig + cs_patronales_imputees_prive_oblig) / Sal_bruts_secteur_prive'
+        'formula': '( cs_patronales_effectives_prive_oblig + cs_patronales_prive_imputees_oblig) / Sal_bruts_secteur_prive'
         },
 
     # cs patronales facultatives
     #   colonne F
-    'total_cs_empl_eff_versees': {
+    'total_cs_patronales_eff_versees': {
         'formula': 'cs_eff_empl_SNF + cs_eff_empl_SF + cs_eff_empl_APU + cs_eff_empl_ISBLSM + cs_eff_empl_Menages + cs_eff_empl_versees_par_rdm - cs_eff_empl_versees_au_rdm'
         },
     'cs_patronales_eff_facultatives': {  # ex cs_patr_eff_prive_facultatives
-        'formula': 'total_cs_empl_eff_versees - cs_eff_empl_recues_par_admin_oblig'
+        'formula': 'total_cs_patronales_eff_versees - cs_eff_empl_recues_par_admin_oblig'
         },  # en réalité viennent toutes du privé, car pas de facultatives dans le public je crois
     #   colonne G
-    'total_cs_empl_imput_versees': {
-        'formula': 'cs_imput_empl_SNF + cs_imput_empl_SF + cs_imput_empl_APU + cs_imput_empl_ISBLSM + cs_imput_empl_Menages'  #  + cs_imput_empl_versees_par_rdm - cs_imput_empl_versees_au_rdm (n'existent pas)
+    'total_cs_patronales_imput_versees': {
+        'formula': 'cs_imput_empl_SNF + cs_imput_empl_SF + cs_imput_empl_APU + cs_imput_empl_Menages'  #  + cs_imput_empl_ISBLSM + cs_imput_empl_versees_par_rdm - cs_imput_empl_versees_au_rdm (n'existent pas)
         },
     'cs_patronales_imput_facultatives': {  # ex cs_patronales_imput_prive_facultatives
-        'formula': 'total_cs_empl_imput_versees - cs_imput_empl_recues_par_admin_oblig'
+        'formula': 'total_cs_patronales_imput_versees - cs_imput_empl_recues_par_admin_oblig'
         },
     #   colonne H
-    'taux_cs_patronales_facult_prive': {
+    'taux_cs_patronales_prive_facult': {
         'formula': '( cs_patronales_eff_facultatives + cs_patronales_imput_facultatives ) / Sal_bruts_secteur_prive'
         },
 
@@ -436,7 +440,7 @@ formulas_CN11 = {
         'formula': 'cs_patronales_effectives_prive_oblig + cs_patronales_effectives_public'
         },
     'total_cs_patronales_imput_oblig': {  # doit être égal à cs_imput_empl_recues_par_admin_oblig
-        'formula' : 'cs_patronales_imputees_prive_oblig + cs_patronales_imputees_public'
+        'formula' : 'cs_patronales_prive_imputees_oblig + cs_patronales_public_imputees'
         },
     'taux_cs_patronales_oblig': {
         'formula': '( total_cs_patronales_eff_oblig + total_cs_patronales_imput_oblig ) / total_salaires'
@@ -448,7 +452,7 @@ formulas_CN11 = {
         'formula': 'cs_patronales_imput_facultatives'
         },
     'taux_cs_patronales_facult': {
-        'formula': '( total_cs_patronales_eff_facult + cs_patronales_imput_facultatives ) / total_salaires'
+        'formula': '( total_cs_patronales_eff_facult + total_cs_patronales_imput_facult ) / total_salaires'
         },
 
     # AUTRES
@@ -466,7 +470,7 @@ formulas_CN11 = {
         },
     # ISBLSM
     'taux_cs_patronales_ISBLSM': {
-        'formula': '( cs_eff_empl_ISBLSM + cs_imput_empl_ISBLSM ) / Sal_verses_par_ISBLSM'
+        'formula': '( cs_eff_empl_ISBLSM ) / Sal_verses_par_ISBLSM'  # ( + cs_imput_empl_ISBLSM )
         },
     # Ménages
     'taux_cs_patronales_Menages': {
@@ -481,14 +485,14 @@ formulas_CN11 = {
         'formula': '( cs_eff_empl_versees_au_rdm) / Salaires_verses_au_rdm'  #  + cs_imput_empl_versees_au_rdm (n'existe pas)
         },
     # -Privé-
-    'cs_patronales_eff_prive': {
+    'cs_patronales_prive_eff': {
         'formula': 'cs_eff_empl_SNF + cs_eff_empl_SF + cs_eff_empl_Menages + cs_eff_empl_versees_par_rdm - cs_eff_empl_versees_au_rdm'
         },
-    'cs_patronales_imput_prive': {  # doit être égal à cs_patronales_imput_facultatives (puisque toutes les imput privées sont facultatives) ou encore à total_cs_patronales_imput_facult (car toutes les imput facult sont dans le privé)
+    'cs_patronales_prive_imput': {  # doit être égal à cs_patronales_imput_facultatives (puisque toutes les imput privées sont facultatives) ou encore à total_cs_patronales_imput_facult (car toutes les imput facult sont dans le privé)
         'formula': 'cs_imput_empl_SNF + cs_imput_empl_SF + cs_imput_empl_Menages'  #  + cs_imput_empl_versees_par_rdm - cs_imput_empl_versees_au_rdm (n'existent pas)
         },
     'taux_cs_patronales_prive': {
-        'formula': '( cs_patronales_eff_prive + cs_patronales_imput_prive) / Sal_bruts_secteur_prive'
+        'formula': '( cs_patronales_prive_eff + cs_patronales_prive_imput) / Sal_bruts_secteur_prive'
         },
     # -oblig. + facult.-
     'total_cs_patronales_eff': {  # (obl. + facult.)
