@@ -38,7 +38,7 @@ def file_parser(excelfile_name):
         parse_cols = " A:end"
 
     df = pandas.read_excel(excelfile_name, header = header, skiprows = skiprows, skip_footer = skip_footer,
-       index_col = index_col, parse_cols = parse_cols)
+       index_col = index_col, parse_cols = parse_cols, na_values = ['0'])
     # rename first column, and trim content
     new_columns = df.columns.values
     new_columns[0] = 'code'

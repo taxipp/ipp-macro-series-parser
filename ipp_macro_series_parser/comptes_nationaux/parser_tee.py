@@ -56,10 +56,10 @@ def tee_file_parser(excelfile_name):
     assert os.path.exists(excelfile_name), 'Cannot find file {}. Use cn_dowloader to load and unzip the raw CN files'.format(excelfile_name)
     df_ea = pandas.read_excel(excelfile_name, sheetname = 1, header = header, skiprows = skiprows,
                               skip_footer = skip_footer, index_col = index_col, parse_cols = parse_cols,
-                              names = col_names_actifs)
+                              names = col_names_actifs, na_values = ['0'])
     df_rp = pandas.read_excel(excelfile_name, sheetname = 2, header = header, skiprows = skiprows,
                               skip_footer = skip_footer, index_col = index_col, parse_cols = parse_cols,
-                              names = col_names_passifs)
+                              names = col_names_passifs, na_values = ['0'])
     df_ea['ressources'] = False
     df_rp['ressources'] = True
 
