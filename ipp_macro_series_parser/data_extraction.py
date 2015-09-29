@@ -207,6 +207,9 @@ def get_or_construct_value(df, variable_name, index_by_variable, years = None, f
         result_data_frame = entry_df[['value']].copy()
         assert len(result_data_frame.columns) == 1
         result_data_frame.columns = [variable_name]
+
+        result_data_frame = result_data_frame.reindex(index = years, copy = False)
+
         final_formula = variable_name
 
     # For formulas that are not real formulas but that are actually a mapping
@@ -215,6 +218,7 @@ def get_or_construct_value(df, variable_name, index_by_variable, years = None, f
         final_formula = ''
 
     else:
+
         # When formula is a list of dictionnaries with start and end years
         if isinstance(formula, list):
             result_data_frame = pandas.DataFrame()
@@ -265,7 +269,7 @@ def get_or_construct_value(df, variable_name, index_by_variable, years = None, f
         for component, variable_value in dico_value.iteritems():  # Reindexing
             if variable_value.empty:  # Dealing with completely absent variable
                 variable_value = pandas.DataFrame({component: [fill_value]}, index = index)
-            dico_value[component] = variable_value.reindex(index = index, fill_value = fill_value).values.squeeze()
+            dico_value[component] = variable_value.reindex(index = years, fill_value = fill_value).values.squeeze()
 
         data = eval(formula_modified, dico_value)
         assert data is not None
@@ -379,8 +383,7 @@ def get_or_construct_data(df, variable_dictionary, years = range(1949, 2014)):
     formulas = dict()
 
     for variable in variable_dictionary:
-        print 'we are calling get_or_construct_value for variable :'
-        print variable
+
         variable_values, variable_formula = get_or_construct_value(df, variable, variable_dictionary, years)
         variable_name = variable.replace('_', ' ')
 
