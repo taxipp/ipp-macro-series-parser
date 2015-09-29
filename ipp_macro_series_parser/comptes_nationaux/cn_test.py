@@ -376,16 +376,16 @@ if __name__ == '__main__':
     # create_and_save_CN1(2013)  -- should no longer be done
     # test_CN1(2013)
 
-    # cn1_2013_cible = read_CN1(2013)
+    cn1_2013_cible = read_CN1(2013)
 
     # create_and_save_dfs_get_or_construct_data()  -- should no longer be done
     # test_profits_societes()
 
-    df = get_tidy_data(2013)
+    # df = get_tidy_data(2013)
     # variables_CN1 = generate_CN1_variables(2013)
-    variables_CN2 = generate_CN2_variables(2013)
+    # variables_CN2 = generate_CN2_variables(2013)
     # values_CN1, formulas_CN1 = get_or_construct_data(df, variables_CN1, range(1949, 2014))
-    values_CN2, formulas_CN2 = get_or_construct_data(df, variables_CN2, range(1949, 2014))
+    # values_CN2, formulas_CN2 = get_or_construct_data(df, variables_CN2, range(1949, 2014))
 
     # df_2011 = get_tidy_data(2011)
     # variables_CN1_2011 = generate_CN1_variables(2011)
@@ -397,8 +397,8 @@ if __name__ == '__main__':
     # test_CN1(2012)
     # values_CN1_2012, values_CN2_2012 = test_compare_sheets_to_IPP()
 
-    df_2012 = get_tidy_data(2012)
-    variables_CN1_2012 = generate_CN1_variables(2012)
-    values_CN1_2012 = get_or_construct_data(df_2012, variables_CN1_2012, range(1949, 2013))[0]
-    variables_CN2_2012 = generate_CN2_variables(2012)
-    values_CN2_2012 = get_or_construct_data(df_2012, variables_CN2_2012, range(1949, 2013))[0]
+    # df_2012 = get_tidy_data(2012)
+    # variables_CN1_2012 = generate_CN1_variables(2012)
+    # values_CN1_2012 = get_or_construct_data(df_2012, variables_CN1_2012, range(1949, 2013))[0]
+    # variables_CN2_2012 = generate_CN2_variables(2012)
+    # values_CN2_2012 = get_or_construct_data(df_2012, variables_CN2_2012, range(1949, 2013))[0]
