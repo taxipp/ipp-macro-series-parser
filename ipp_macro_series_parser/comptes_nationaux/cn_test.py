@@ -33,14 +33,11 @@ def get_tidy_data(year):
 
 
 def create_list_dicts_for_look_many():
-    # entry_by_index_list = [{'code': None, 'institution': 'S1', 'ressources': False, 'description': 'PIB'},
-        # {'code': None, 'institution': 'S1', 'ressources': False, 'description': 'PIN'},
-        # {'code': 'D121', 'institution': 'S11', 'ressources': False, 'description': None}]
     list_var = [
         {'code': 'B2n', 'institution': 'S11', 'ressources': False, 'description': ''},
         {'code': 'B2n', 'institution': 'S12', 'ressources': False, 'description': ''}
         ]
-    return list_var  # , entry_by_index_list
+    return list_var
 
 
 def create_dict_for_test_get_value_empty():
@@ -211,13 +208,12 @@ def tests_look_up():
                                               'description': '', 'formula': 'now it should be empty'})
     # should be empty series
 
-# TODO: tests on DF sizes, rather than a 'return'
+    # TODO: tests on DF sizes, rather than a 'return'
     return (
         data_precise, data_large, data_inexistant, data_inexistant_2, data_empty_because_formula
         )
 
 
-# - test look_many
 def test_look_many():
     df = get_tidy_data(2013)
     list_ENE = create_list_dicts_for_look_many()
@@ -246,8 +242,8 @@ def test_get_or_construct_value_empty():
     df = get_tidy_data(2013)
     incomplete_overall_dict = create_dict_for_test_get_value_empty()
     value_empty, formula_of_empty = get_or_construct_value(df, 'notfound_arg', incomplete_overall_dict)
-# should return KeyError because components of formula are not in dict
-# TODO: assert KeyError...
+    # should return KeyError because components of formula are not in dict
+    # TODO: assert KeyError...
     return value_empty
 
 
@@ -314,7 +310,7 @@ def tests_get_or_construct_data():
         )
 
 
-def create_and_save_dfs_get_or_construct_data():
+def create_and_save_dfs_get_or_construct_data():  # NB : should no longer be executed - already saved
     tuple_of_dfs = tests_get_or_construct_data()
 #    values_double_dict = tuple_of_dfs[0]
 #    values_double_plus_formula = tuple_of_dfs[1]
@@ -325,7 +321,7 @@ def create_and_save_dfs_get_or_construct_data():
     values_profits_societes.to_hdf(os.path.join(tests_data, 'values_profits_societes.h5'), 'profits_societes')
 
 
-def create_and_save_CN1(year):  # should no longer be executed - already saved
+def create_and_save_CN1(year):  # NB : should no longer be executed - already saved
     file_path = (os.path.join(tests_data, 'values_CN1_{}.h5'.format(year)))
     assert not os.path.exists(file_path), 'CN1 sheet with {} data already generated and saved'.format(year)
     df = get_tidy_data(year)
@@ -347,8 +343,8 @@ def read_CN1(year):
 def test_profits_societes():
     df = get_tidy_data(2013)
     values_profits_societes_target = read_profits_societes()
-    dict_profits = create_dict_profits()
-    values_profits_societes = get_or_construct_data(df, dict_profits)[0]
+    dict_profits_societes = create_dict_profits()
+    values_profits_societes = get_or_construct_data(df, dict_profits_societes)[0]
 
     assert_frame_equal(values_profits_societes, values_profits_societes_target)
 
@@ -362,7 +358,6 @@ def test_CN1(year):
     assert_frame_equal(values_CN1, values_CN1_target)
 
 
-# WIP
 def test_compare_sheets_to_IPP():  # WIP. for now it only generates the first two sheets, to be compared to Agrégats IPP
     df = get_tidy_data(2012)
     variables_CN1 = generate_CN1_variables(2012)
@@ -376,16 +371,12 @@ def test_compare_sheets_to_IPP():  # WIP. for now it only generates the first tw
 # LE RUN
 if __name__ == '__main__':
 
-    # get_tidy_data(2013)
+    # create_and_save_CN1(2013)  -- should no longer be done
+    # test_CN1(2013)
 
-    create_and_save_CN1(2013)
-    test_CN1(2013)
+    # cn1_2013_cible = read_CN1(2013)
 
-    # create_and_save_dfs_get_or_construct_data()
-    # values_profits_target = read_profits_societes()  # to see df
-    # dict_profits = create_dict_profits()
-    # values_profits_societes = get_or_construct_data(df, dict_profits)[0]
-
+    # create_and_save_dfs_get_or_construct_data()  -- should no longer be done
     # test_profits_societes()
 
     # df = get_tidy_data(2013)
@@ -400,10 +391,13 @@ if __name__ == '__main__':
     # values_CN1_2011 = get_or_construct_data(df_2011, variables_CN1_2011, range(1949, 2012))[0]
     # values_CN2_2011 = get_or_construct_data(df_2011, variables_CN2_2011, range(1949, 2012))[0]
 
-    # create_and_save_CN1(2012)
-    # values_CN1_2012 = read_CN1(2012)
+    # create_and_save_CN1(2012)  -- should no longer be done
     # test_CN1(2012)
     # values_CN1_2012, values_CN2_2012 = test_compare_sheets_to_IPP()
 
-    # values_CN1_2012 = test_compare_sheets_to_IPP()[0]
-    # values_CN2_2012 = test_compare_sheets_to_IPP()[1]
+    # df_2012 = get_tidy_data(2012)
+    # variables_CN1_2012 = generate_CN1_variables(2012)
+    # values_CN1_2012 = get_or_construct_data(df_2012, variables_CN1_2012, range(1949, 2013))[0]
+    # variables_CN2_2012 = generate_CN2_variables(2012)
+    # values_CN2_2012 = get_or_construct_data(df_2012, variables_CN2_2012, range(1949, 2013))[0]
+
