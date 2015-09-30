@@ -613,3 +613,84 @@ def generate_CN12_variables(year):
         variables_CN12.update(input_CN12_base_2010)
         variables_CN12.update(formulas_CN12)
     return variables_CN12
+
+
+# CN15
+
+input_CN15 = {
+    'interets_recus_par_menages_D41': {'code': 'D41', 'institution': 'S14', 'ressources': True, 'drop': True},
+    'revenus_distribues_societes_recus_par_menages_D42': {'code': 'D42', 'institution': 'S14', 'ressources': True,
+                                                          'drop': True},
+    # 'benefices_IDE_recus_par_menages_D43': {'code': 'D43', 'institution': 'S14', 'ressources': True},  # n'existe pas
+    'revenus_terrains_recus_par_menages_D45': {'code': 'D45', 'institution': 'S14', 'ressources': True, 'drop': True},
+    }
+
+input_CN15_base_2005 = {
+    'autres_revenus_distribues_des_societes': {'code': 'D4222', 'institution': 'S14', 'ressources': True, 'drop': True},
+    'Revenus_propriete_aux_assures_recus_par_menages_D44': {'code': 'D44', 'institution': 'S14', 'ressources': True}
+    }
+input_CN15_base_2010 = {
+    'autres_revenus_distribues_des_societes': {'code': 'D422', 'institution': 'S14', 'ressources': True, 'drop': True},
+    'autres_revenus_investissements_recus_par_menages_D44': {'code': 'D44', 'institution': 'S14', 'ressources': True}
+    }
+
+formulas_CN15 = {
+    'interets_recus_par_menages_sic': {
+        'formula': 'interets_recus_par_menages_D41 + revenus_terrains_recus_par_menages_D45'
+        },
+    'dividendes_recus_par_menages_D42_D43': {
+        'formula': 'revenus_distribues_societes_recus_par_menages_D42'  # + benefices_IDE_recus_par_menages_D43 (n'existe pas)
+        },
+    'dividendes_recus_par_menages_sic': {
+        'formula': 'dividendes_recus_par_menages_D42_D43 - autres_revenus_distribues_des_societes'},
+    }
+formulas_CN15_base_2005 = {
+    'revenus_propriete_recus_par_menages_sic': {
+        'formula': 'Revenus_propriete_aux_assures_recus_par_menages_D44'}
+        }
+formulas_CN15_base_2010 = {
+    'revenus_propriete_recus_par_menages_sic': {
+        'formula': 'autres_revenus_investissements_recus_par_menages_D44'}
+        }
+
+
+def generate_CN15_variables(year):
+    variables_CN15 = input_CN15.copy()
+    variables_CN15.update(formulas_CN15)
+    if year in range(2010, 2013):
+        variables_CN15.update(input_CN15_base_2005)
+        variables_CN15.update(formulas_CN15_base_2005)
+    if year > 2012:
+        variables_CN15.update(input_CN15_base_2010)
+        variables_CN15.update(formulas_CN15_base_2010)
+    return variables_CN15
+
+
+# CN6
+
+input_CN6 = {
+    'prestas_autres_que_secu_D621_versees_APU': {'code': 'D621', 'institution': 'S13', 'ressources': False},
+    'prestas_assu_sociale_employeurs_D623_versees_APU': {'code': 'D623', 'institution': 'S13', 'ressources': False},
+    'assistance_sociale_D624_versee_APU': {'code': 'D624', 'institution': 'S13', 'ressources': False},
+    'assistance_sociale_D624_versee_ISBLSM': {'code': 'D624', 'institution': 'S15', 'ressources': False},
+    'transferts_en_nature_D63_verses_APU': {'code': 'D63', 'institution': 'S13', 'ressources': False},
+    'transferts_en_nature_D63_verses_ISBLSM': {'code': 'D63', 'institution': 'S15', 'ressources': False},
+}
+
+formulas_CN6 = {
+    'revenus_de_transferts': {
+        'formula': 'prestas_autres_que_secu_D621_versees_APU + prestas_assu_sociale_employeurs_D623_versees_APU + assistance_sociale_D624_versee_APU + assistance_sociale_D624_versee_ISBLSM'
+        },
+    # 'revenus_de_remplacement': {'formula': 'prestas_autres_que_secu_D621_versees_APU + prestas_assu_sociale_employeurs_D623_versees_APU'}, il manque - Q - R (à chercher dans Agrégats IPP Prestas)
+    # 'revenus_de_transferts_purs': {'formula': 'assistance_sociale_D624_versee_APU + assistance_sociale_D624_versee_ISBLSM'}, il manque + Q + R (à chercher dans Agrégats IPP Prestas)
+    'transferts_en_nature': {'formula': 'transferts_en_nature_D63_verses_APU + transferts_en_nature_D63_verses_ISBLSM'},
+    # les exprimer en pourcentage du Rev Nation Piketty (+ en pourcentage du Revenu national Insee ?)
+#    : {'formula': },
+#    : {'formula': },
+#    : {'formula': },
+    }
+
+def generate_CN6_variables(year):
+    variables_CN6 = input_CN6.copy()
+    variables_CN6.update(formulas_CN6)
+    return variables_CN6

@@ -8,7 +8,8 @@ Created on Thu Sep 24 11:11:31 2015
 from ipp_macro_series_parser.comptes_nationaux.parser_main import get_comptes_nationaux_data
 from ipp_macro_series_parser.data_extraction import get_or_construct_data
 from ipp_macro_series_parser.comptes_nationaux.sheets_lists import (
-    generate_CN1_variables, generate_CN2_variables, generate_CN11_variables, generate_CN12_variables)
+    generate_CN1_variables, generate_CN2_variables, generate_CN6_variables, generate_CN11_variables,
+    generate_CN12_variables, generate_CN15_variables)
 
 
 year = 2012
@@ -53,3 +54,21 @@ def generate_CN12(year):
 
 # valCN12_2013 = generate_CN12(2013)[0]
 # valCN12_2012 = generate_CN12(2012)[0]
+
+
+def generate_CN15(year):
+    df = get_tidy_data(year)
+    variables_CN15 = generate_CN15_variables(year)
+    values_CN15, formulas_CN15 = get_or_construct_data(df, variables_CN15, range(1949, year + 1))
+    return values_CN15, formulas_CN15
+
+# valCN15_2012 = generate_CN15(2012)[0]
+
+
+def generate_CN6(year):
+    df = get_tidy_data(year)
+    variables_CN6 = generate_CN6_variables(year)
+    values_CN6, formulas_CN6 = get_or_construct_data(df, variables_CN6, range(1949, year + 1))
+    return values_CN6, formulas_CN6
+
+valCN6_2012 = generate_CN6(2012)[0]
