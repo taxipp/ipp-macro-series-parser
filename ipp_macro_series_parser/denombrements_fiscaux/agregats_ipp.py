@@ -33,7 +33,7 @@ from py_expression_eval import Parser
 
 
 from ipp_macro_series_parser.config import Config
-from ipp_macro_series_parser.denombrements_fiscaux.parser import (
+from ipp_macro_series_parser.denombrements_fiscaux.parsers import (
     create_denombrements_fiscaux_data_frame)
 from ipp_macro_series_parser.data_extraction import get_or_construct_value
 
