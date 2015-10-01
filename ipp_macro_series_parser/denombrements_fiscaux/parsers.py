@@ -642,31 +642,85 @@ def parse_openfisca_denombrements():
 
 
 def parse_dgfip_denombrements():
-    dgfip_directory = os.path.join(xls_directory, 'DONNEES NATIONALES IR', 'D2042Nat')
+    dgfip_directory = os.path.join(xls_directory,  # 'DONNEES NATIONALES IR',
+                                   'D2042Nat')
     files = os.listdir(dgfip_directory)
-    years = range(2011, 2014)
-    year =2001
+    years = range(2004, 2014)
+#    years = [2004]
+
+    result = pandas.DataFrame()
+
     for year in years:
         file_regex = re.compile("^R20{}".format(str(year)[2:4]))
         for filename in files:
             if file_regex.match(filename):
-                # log.info("Using file {} for year {}".format(filename, year))
-                print year
-                print filename
-
-
+                log.info("Using file {} for year {}".format(filename, year))
                 break
 
-        filename = "R2011 - 6 - OK.xls"
-        dgfip_denombrements = pandas.read_excel(os.path.join(dgfip_directory, filename))
-        if year == 2001:
+        print year
+
+        if year in [2001, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013]:
+            dgfip_denombrements = pandas.read_excel(os.path.join(dgfip_directory, filename))
+        if year == 2003:
+            dgfip_denombrements = pandas.read_excel(os.path.join(dgfip_directory, filename), skiprows = 4)
+
+        if year in [2001, 2003]:
             regex = re.compile("^[0-9][A-Z]{2}")
+            dgfip_denombrements.code.fillna("", inplace = True)
             dgfip_denombrements = dgfip_denombrements.set_index('code').filter(regex = regex, axis = 0)
             new_variable_name_by_old = dict(
                 (x, "f{}".format(x.lower())) for x in dgfip_denombrements.index)
             dgfip_denombrements = dgfip_denombrements.rename(index = new_variable_name_by_old)
+            dgfip_denombrements['year'] = year
+            dgfip_denombrements.rename(columns = {'montant': 'value', 'Nombre': 'nombre'}, inplace = True)
+            del dgfip_denombrements['nombre']
 
-        if year [2009, 2010, 2011, 2012]:
+# TODO:
+        if year in [2005, 2006, 2007, 2008]:
+            continue
+#            regex = re.compile("[A-Z]{2}")
+
+#            dgfip_denombrements = dgfip_denombrements.set_index('nom').filter(regex = regex, axis = 0)
+#            dgfip_denombrements.index.name = 'code'
+#            new_variable_name_by_old = dict(
+#                (x, "f{}".format(x.lower())) for x in dgfip_denombrements.index)
+#            dgfip_denombrements = dgfip_denombrements.rename(index = new_variable_name_by_old)
+            # trouver un moyen de renommer les codes pour qu'il y ait le numéro des sections
+
+#            dgfip_denombrements.rename(columns = {'nom': 'code'}, inplace = True)
+#            for ind in dgfip_denombrements.index:
+#                if re.match("[A-Z][I, J, K, O, P, Q, S, V, W, X]", dgfip_denombrements.ix[ind]['code']):
+#                    print dgfip_denombrements.ix[ind]['code']
+#                    dgfip_denombrements.rename(
+#                        {dgfip_denombrements.ix[ind]['code']: "1{}".format(dgfip_denombrements.ix[ind]['code'])}) # ,inplace = True
+
+# or
+#            dgfip_denombrements = dgfip_denombrements.filter(items = ['nom'], regex = regex)
+#
+#            dgfip_denombrements['code'] = dgfip_denombrements['nom']
+#            for ind in dgfip_denombrements.index:
+#                if re.match("[A-Z][I, J, K, O, P, Q, S, V, W, X]", dgfip_denombrements.ix[ind]['nom']):
+#                    print dgfip_denombrements.ix[ind]['nom']
+#                    dgfip_denombrements.ix[ind]['code'] = "1{}".format(dgfip_denombrements.ix[ind]['nom'])
+
+#            dgfip_denombrements = dgfip_denombrements.set_index('code').filter(regex = regex, axis = 0)
+
+        if year == 2004:
+            regex = re.compile("^Z[0-9][A-Z]{2}")
+            dgfip_denombrements.case.fillna("", inplace = True)
+            dgfip_denombrements.drop_duplicates(['case'], inplace = True)
+            dgfip_denombrements = dgfip_denombrements.set_index('case').filter(regex = regex, axis = 0)
+            dgfip_denombrements.index.name = 'code'
+            new_variable_name_by_old = dict(
+                (x, "f{}".format(x[1:].lower())) for x in dgfip_denombrements.index)
+            dgfip_denombrements = dgfip_denombrements.rename(index = new_variable_name_by_old)
+            dgfip_denombrements.reset_index(inplace = True)
+
+            dgfip_denombrements['year'] = year
+            dgfip_denombrements.rename(columns = {'Montant': 'value'}, inplace = True)
+            del dgfip_denombrements['Nombre'], dgfip_denombrements[u'libellé'], dgfip_denombrements['nom']
+
+        if year in [2009, 2010, 2011, 2012]:
             regex = re.compile("^Z[0-9][A-Z]{2}")
             dgfip_denombrements = dgfip_denombrements.set_index('nom').filter(regex = regex, axis = 0)
             dgfip_denombrements.index.name = 'code'
@@ -677,9 +731,10 @@ def parse_dgfip_denombrements():
             dgfip_denombrements['year'] = year
 
             if year == 2009:
-                dgfip_denombrements.rename(columns = {'Montants': 'value', 'Nombre': 'nombre'})
+                dgfip_denombrements.rename(columns = {'Montants': 'value', 'Nombre': 'nombre'}, inplace = True)
             else:
-                dgfip_denombrements.rename(columns = {'montants': 'value'})
+                dgfip_denombrements.rename(columns = {'montants': 'value'}, inplace = True)
+
             del dgfip_denombrements['maximal'], dgfip_denombrements['nombre']
 
         if year == 2013:
@@ -691,9 +746,14 @@ def parse_dgfip_denombrements():
             dgfip_denombrements = dgfip_denombrements.rename(index = new_variable_name_by_old)
             dgfip_denombrements.reset_index(inplace = True)
             dgfip_denombrements['year'] = year
-            dgfip_denombrements.rename(columns = {'ano': 'value'})
-            del dgfip_denombrements['pas ano']
+            dgfip_denombrements.rename(columns = {'ano': 'value'}, inplace = True)
+            del dgfip_denombrements['pas_ano']
 
+        result = pandas.concat((result, dgfip_denombrements))
+
+    return result
+
+dgfip = parse_dgfip_denombrements()
 
 
 def create_denombrements_fiscaux_data_frame(year = None, years = None):
@@ -718,11 +778,16 @@ def create_denombrements_fiscaux_data_frame(year = None, years = None):
 
     # Data coming for openfisca xls file
     openfisca_denombrements = parse_openfisca_denombrements()
+    openfisca_denombrements['origin'] = 'OF'
 
     # Data coming from IPP
     ipp_denombrements = parse_ipp_denombrements()
     ipp_denombrements['origin'] = 'IPP'
-    openfisca_denombrements['origin'] = 'OF'
+
+    # Data coming from DGFiP
+    dgfip_denombrements = parse_dgfip_denombrements()
+    dgfip_denombrements['origin'] = 'DGFiP'
+
     df = pandas.concat([ipp_denombrements, openfisca_denombrements])
     # Drop real duplicates
     df = df.drop_duplicates(subset = ['year', 'code', 'value'])
@@ -752,3 +817,4 @@ def import_hdf_to_df(hdf_file_name, key):
     df = store[key]
     return df
 
+denomb_fisc_all = create_denombrements_fiscaux_data_frame(year = 2012, years = range(2003, 2009))
