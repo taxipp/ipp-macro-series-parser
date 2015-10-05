@@ -29,14 +29,14 @@ from ipp_macro_series_parser.denombrements_fiscaux.agregats_ipp import (
     level_2_formula_by_variable_name
     )
 from ipp_macro_series_parser.denombrements_fiscaux.parser import (
-    create_denombrements_fiscaux_data_frame
+    get_denombrements_fiscaux_data_frame
     )
 from ipp_macro_series_parser.data_extraction import get_or_construct_value
 
 
 def test_run_through():
     years = [2006, 2007, 2008, 2009]
-    df = create_denombrements_fiscaux_data_frame(years = years)
+    df = get_denombrements_fiscaux_data_frame(years = years)
     index_by_variable_name = create_index_by_variable_name(formula_by_variable_name, level_2_formula_by_variable_name)
     variable_name = 'interets_imposes_au_prelevement_liberatoire'
     get_or_construct_value(df, variable_name, index_by_variable_name, years = years)
@@ -52,7 +52,7 @@ def test_run_through():
 
 def test_corrections():
     years = [2006, 2007, 2008, 2009]
-    df = create_denombrements_fiscaux_data_frame(years = years)
+    df = get_denombrements_fiscaux_data_frame(years = years)
     index_by_variable_name = create_index_by_variable_name(formula_by_variable_name, level_2_formula_by_variable_name)
 
     test_by_variable = dict(

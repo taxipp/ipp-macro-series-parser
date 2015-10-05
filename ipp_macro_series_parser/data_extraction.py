@@ -218,17 +218,19 @@ def get_or_construct_value(df, variable_name, index_by_variable, years = None, f
         final_formula = ''
 
     else:
-
         # When formula is a list of dictionnaries with start and end years
         if isinstance(formula, list):
             result_data_frame = pandas.DataFrame()
             for individual_formula in formula:
-                assert individual_formula['start'] and individual_formula['end']
-                start = individual_formula['start']
-                end = individual_formula['end']
+                assert individual_formula['start'] or individual_formula['end']
+                start = individual_formula.get('start', None)
+                end = individual_formula.get('end', None)
                 local_index_by_variable = copy.deepcopy(index_by_variable)
                 local_index_by_variable[variable_name]['formula'] = individual_formula['formula']
-                actual_years = list(set(range(start, end + 1)).intersection(years))
+                actual_years = list(set(range(
+                    max(start, min(years)) if start is not None else min(years),
+                    min(end + 1, max(years) + 1) if end is not None else (max(years) + 1),
+                    )))
                 variable_value, final_formula = get_or_construct_value(
                     df, variable_name, local_index_by_variable, actual_years, fill_value = fill_value)
                 if variable_value.empty:
@@ -274,10 +276,15 @@ def get_or_construct_value(df, variable_name, index_by_variable, years = None, f
         data = eval(formula_modified, dico_value)
         assert data is not None
         assert index is not None
-        result_data_frame = pandas.DataFrame(
-            data = {variable_name: data},
-            index = index,
-            )
+        try:
+            result_data_frame = pandas.DataFrame(
+                data = {variable_name: data},
+                index = index,
+                )
+        except Exception, e:
+            print variable_name, data, index
+            raise(e)
+
     return result_data_frame, final_formula
 
 
@@ -383,7 +390,6 @@ def get_or_construct_data(df, variable_dictionary, years = range(1949, 2014)):
     formulas = dict()
 
     for variable in variable_dictionary:
-
         variable_values, variable_formula = get_or_construct_value(df, variable, variable_dictionary, years)
         variable_name = variable.replace('_', ' ')
 

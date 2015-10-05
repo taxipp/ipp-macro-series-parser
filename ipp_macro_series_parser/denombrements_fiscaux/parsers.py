@@ -14,8 +14,9 @@ from ipp_macro_series_parser.config import Config
 config_parser = Config(
     config_files_directory = os.path.join(pkg_resources.get_distribution('ipp-macro-series-parser').location)
     )
+
 xls_directory = config_parser.get('data', 'denombrements_fiscaux_xls')
-# hdf_directory = config_parser.get('data', 'denombrements_fiscaux_hdf')
+hdf_directory = config_parser.get('data', 'denombrements_fiscaux_hdf')
 
 
 log = logging.getLogger(__name__)
@@ -641,13 +642,14 @@ def parse_openfisca_denombrements():
     return openfisca_denombrements
 
 
-def parse_dgfip_denombrements():
-    dgfip_directory = os.path.join(xls_directory,  # 'DONNEES NATIONALES IR',
-                                   'D2042Nat')
-    files = os.listdir(dgfip_directory)
-    years = range(2004, 2014)
-#    years = [2004]
+def parse_dgfip_denombrements(years = None):
 
+    assert years is not None
+    assert min(years) >= 2001
+    assert max(years) <= 2013
+
+    dgfip_directory = os.path.join(xls_directory, 'D2042Nat')
+    files = os.listdir(dgfip_directory)
     result = pandas.DataFrame()
 
     for year in years:
@@ -750,13 +752,12 @@ def parse_dgfip_denombrements():
             del dgfip_denombrements['pas_ano']
 
         result = pandas.concat((result, dgfip_denombrements))
+        result.dropna(subset = ['value'], inplace = True)  # dropping NA's
 
-    return result
-
-dgfip = parse_dgfip_denombrements()
+    return result.loc[result.value != 0].copy()  # excluding 0 values
 
 
-def create_denombrements_fiscaux_data_frame(year = None, years = None):
+def create_denombrements_fiscaux_data_frame(year = None, years = None, overwrite = False):
     """
     Generates the table with all the data from Dénombrements Fiscaux .
 
@@ -784,10 +785,6 @@ def create_denombrements_fiscaux_data_frame(year = None, years = None):
     ipp_denombrements = parse_ipp_denombrements()
     ipp_denombrements['origin'] = 'IPP'
 
-    # Data coming from DGFiP
-    dgfip_denombrements = parse_dgfip_denombrements()
-    dgfip_denombrements['origin'] = 'DGFiP'
-
     df = pandas.concat([ipp_denombrements, openfisca_denombrements])
     # Drop real duplicates
     df = df.drop_duplicates(subset = ['year', 'code', 'value'])
@@ -796,25 +793,67 @@ def create_denombrements_fiscaux_data_frame(year = None, years = None):
     # Problematic duplicates
     dups = df.duplicated(['year', 'code']) | df.duplicated(['year', 'code'], take_last = True)
     z = df.loc[dups].copy()
-    # sum of two columns iin IPP for year < 2007
+    # sum of two columns in IPP for year < 2007
     wrong_before_2007 = ['f5ne', 'f5oe', 'f5rd', 'f5ke', 'f5le', 'f5he', 'f5ie', 'f5qd']
     df = df.loc[~(df.code.isin(wrong_before_2007) & (df.year < 2007))]
-    log.info('Remaining problematic duplicates \n {}'.format(
+    log.info('Remaining roblematic duplicates when merging IPP and OF \n {}'.format(
         z.loc[~(z.code.isin(wrong_before_2007) & (z.year < 2007))]
         ))
-    return df.loc[df.year.isin(years)].copy() if years is not None else df.copy()
+    df = df.loc[df.year.isin(years)].copy() if years is not None else df.copy()
+
+    # Data coming from DGFiP
+    dgfip_denombrements = parse_dgfip_denombrements(years)
+    dgfip_denombrements['origin'] = 'DGFiP'
+
+    df2 = pandas.concat([ipp_denombrements, openfisca_denombrements])
+
+    # Drop real duplicates
+    df2 = df2.drop_duplicates(subset = ['year', 'code', 'value'])
+    df2 = df2.reset_index(drop=True)
+
+    dups2 = df2.duplicated(['year', 'code']) | df2.duplicated(['year', 'code'], take_last = True)
+    errors = df2.loc[dups2].copy()
+
+    wrong_codes = ['f5ne', 'f5oe', 'f5rd', 'f5ke', 'f5le', 'f4tq', 'f5hd',
+       'f5id', 'f5he', 'f5ie', 'f5qd']
+    wrong_years = [2006, 2005, 2004, 2003]
+    log.info('Remaining problematic duplicates when merging with DGFiP data \n {}'.format(
+        errors.loc[~(errors.code.isin(wrong_codes) & errors.year.isin(wrong_years))]
+        ))
+    df2 = df2.loc[~(df2.code.isin(wrong_codes) & (df2.year < 2007))]
+    result = df2.loc[df2.year.isin(years)].copy() if years is not None else df2.copy()
+
+    if overwrite:
+        save_df_to_hdf(result, 'denombrements_fiscaux', 'montants')
+
+    return result, errors
 
 
-def save_df_to_hdf(df, hdf_file_name, key):
-    file_path = os.path.join(hdf_directory, hdf_file_name)
+def get_denombrements_fiscaux_data_frame(year = None, years = None, rebuild = False, overwrite = False):
+    if year is not None and years is None:
+        years = [year]
+    if rebuild:
+        return get_denombrements_fiscaux_data_frame(years = years, overwrite = overwrite)
+    else:
+        data_frame = import_from_hdf('denombrements_fiscaux', 'montants')
+        return data_frame.loc[data_frame.year.isin(years)].copy()
+
+
+def save_df_to_hdf(df, hdf_filename, key):
+    file_path = os.path.join(hdf_directory, hdf_filename)
     df.to_hdf(file_path, key)
-    pandas.DataFrame().to_hdf
 
 
-def import_hdf_to_df(hdf_file_name, key):
-    file_path = os.path.join(hdf_directory, hdf_file_name)
+def import_from_hdf(hdf_filename, key):
+    file_path = os.path.join(hdf_directory, hdf_filename)
     store = pandas.HDFStore(file_path)
     df = store[key]
     return df
 
-denomb_fisc_all = create_denombrements_fiscaux_data_frame(year = 2012, years = range(2003, 2009))
+
+if __name__ == '__main__':
+    # dgfip = parse_dgfip_denombrements(years = range(2004, 2014))
+    denomb_fisc_all, errors = create_denombrements_fiscaux_data_frame(
+        years = range(2003, 2014),
+        overwrite = True
+        )

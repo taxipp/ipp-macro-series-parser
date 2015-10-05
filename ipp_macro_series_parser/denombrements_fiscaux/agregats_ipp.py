@@ -24,6 +24,7 @@
 
 
 import collections
+import numpy
 import os
 import pandas
 import pkg_resources
@@ -34,7 +35,7 @@ from py_expression_eval import Parser
 
 from ipp_macro_series_parser.config import Config
 from ipp_macro_series_parser.denombrements_fiscaux.parsers import (
-    create_denombrements_fiscaux_data_frame)
+    get_denombrements_fiscaux_data_frame)
 from ipp_macro_series_parser.data_extraction import get_or_construct_value
 
 config_parser = Config(
@@ -82,17 +83,25 @@ def create_index_by_variable_name(formula_by_variable_name, level_2_formula_by_v
 
 
 def build_aggregates(raw_data, formula_by_variable_name, level_2_formula_by_variable_name = None, years = None,
-        fill_value = 0):
+        fill_value = numpy.NaN):
     assert years is not None
     aggregates = None
     index_by_variable_name = create_index_by_variable_name(formula_by_variable_name, level_2_formula_by_variable_name)
     for variable_name in formula_by_variable_name.keys() + level_2_formula_by_variable_name.keys():
         serie, formula = get_or_construct_value(
             raw_data, variable_name, index_by_variable_name, years = years, fill_value = fill_value)
+
         if aggregates is None:
             aggregates = serie
+
         else:
-            aggregates = pandas.concat([aggregates, serie], axis = 1)
+            try:
+                aggregates = pandas.concat([aggregates, serie], axis = 1)
+            except Exception, e:
+                print "aggregates", aggregates
+                print "serie", serie
+                raise(e)
+
     return aggregates
 
 
@@ -102,17 +111,23 @@ formula_by_variable_name = dict(
         dict(
             start = 1990,
             end = 2004,
-            formula = 'f1aj + f1bj + f1cj + f1dj + f1ej',
+            formula = 'f1aj + f1bj + f1cj + f1dj + f1ej + + f1fj',
             ),
         dict(
             start = 2005,
             end = 2006,
-            formula = 'f1aj + f1bj + f1cj + f1dj',
+            formula = 'f1aj + f1bj + f1cj + f1dj + f1ej',
             ),
         dict(
             start = 2007,
-            end = 2010,
-            formula = 'f1aj + f1bj + f1cj + f1au + f1bu + f1cu + f1du',
+            end = 2013,
+            formula = 'f1aj + f1bj + f1cj + f1dj + f1au + f1bu + f1cu + f1du',
+            # f1au + f1bu + f1cu + f1du sont les heures sup effectuées en 2012 payées en 2013 ...
+            ),
+        dict(
+            start = 2013,
+            end = 2014,
+            formula = 'f1aj + f1bj + f1cj + f1dj',
             ),
         ],
     ## Bénéfices agricoles
@@ -202,7 +217,6 @@ formula_by_variable_name = dict(
     allocations_chomage = [
         dict(
             start = 2007,
-            end = 2009,
             formula = 'f1ap + f1bp + f1cp + f1dp',
             ),
         dict(
@@ -219,7 +233,6 @@ formula_by_variable_name = dict(
     pensions_de_retraite = [
         dict(
             start = 2007,
-            end = 2009,
             formula = 'f1as + f1bs + f1cs + f1ds',
             ),
         dict(
@@ -307,13 +320,17 @@ level_2_formula_by_variable_name = dict(
     )
 
 
-def build_ipp_tables(years = [2006, 2007, 2008, 2009]):
-    raw_data = create_denombrements_fiscaux_data_frame(years = years)
+def build_ipp_tables(years = None, fill_value = numpy.NaN):
+    assert years is not None
+    assert isinstance(years, list)
+    raw_data = get_denombrements_fiscaux_data_frame(years = years)
     aggregates = build_aggregates(
         raw_data,
         formula_by_variable_name,
         level_2_formula_by_variable_name = level_2_formula_by_variable_name,
-        years = years)
+        years = years,
+        fill_value = numpy.NaN
+        )
     data_frame_by_ipp_table_name = collections.OrderedDict([
         # 1. Tableau IRPP1: Les revenus figurant dans les déclarations de revenus
         ('irpp_1', aggregates[[
@@ -383,3 +400,7 @@ def build_ipp_tables(years = [2006, 2007, 2008, 2009]):
         #            ]])
         ])
     return data_frame_by_ipp_table_name
+
+
+if __name__ == '__main__':
+    data_frame_by_ipp_table_name = build_ipp_tables(years = range(2006, 2013))
