@@ -320,7 +320,7 @@ level_2_formula_by_variable_name = dict(
     )
 
 
-def build_ipp_tables(years = None, fill_value = numpy.NaN):
+def build_irpp_tables(years = None, fill_value = numpy.NaN):
     assert years is not None
     assert isinstance(years, list)
     raw_data = get_denombrements_fiscaux_data_frame(years = years)
@@ -329,9 +329,9 @@ def build_ipp_tables(years = None, fill_value = numpy.NaN):
         formula_by_variable_name,
         level_2_formula_by_variable_name = level_2_formula_by_variable_name,
         years = years,
-        fill_value = numpy.NaN
+        fill_value = fill_value
         )
-    data_frame_by_ipp_table_name = collections.OrderedDict([
+    data_frame_by_irpp_table_name = collections.OrderedDict([
         # 1. Tableau IRPP1: Les revenus figurant dans les déclarations de revenus
         ('irpp_1', aggregates[[
             'salaires',
@@ -399,8 +399,8 @@ def build_ipp_tables(years = None, fill_value = numpy.NaN):
         #            'benefices_agricoles_reels_sans_cga_deficits',
         #            ]])
         ])
-    return data_frame_by_ipp_table_name
+    return data_frame_by_irpp_table_name
 
 
 if __name__ == '__main__':
-    data_frame_by_ipp_table_name = build_ipp_tables(years = range(2006, 2013))
+    data_frame_by_irpp_table_name = build_irpp_tables(years = range(2006, 2013), fill_value = 0)

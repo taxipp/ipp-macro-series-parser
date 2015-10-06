@@ -29,7 +29,7 @@ import pkg_resources
 
 
 from ipp_macro_series_parser.config import Config
-from ipp_macro_series_parser.denombrements_fiscaux.agregats_ipp import build_ipp_tables
+from ipp_macro_series_parser.denombrements_fiscaux.agregats_ipp import build_irpp_tables
 
 config_parser = Config(
     config_files_directory = os.path.join(pkg_resources.get_distribution('ipp-macro-series-parser').location)
@@ -39,11 +39,11 @@ file_path = os.path.join(xls_directory, u"Agrégats IPP - Données fiscales.xls"
 sheetname = 'calculs calage'
 
 
-def error_msg(ipp_table_name, variable, year, target, actual):
+def error_msg(irpp_table_name, variable, year, target, actual):
     msg = '''
 In table {} on year {}, error on variable {}:
 should be {} instead of {}
-'''.format(ipp_table_name, year, variable, target, actual)
+'''.format(irpp_table_name, year, variable, target, actual)
     return msg
 
 fill_value = 0
@@ -155,37 +155,37 @@ def build_original_irpp_tables():
     irpp_4.rename(columns = slugified_name_by_long_name, inplace = True)
     irpp_4.index.name = 'year'
 
-    original_data_frame_by_ipp_table_name = dict(
+    original_data_frame_by_irpp_table_name = dict(
         irpp_1 = irpp_1,
         irpp_2 = irpp_2,
         irpp_3 = irpp_3,
         irpp_4 = irpp_4,
         )
 
-    return original_data_frame_by_ipp_table_name
+    return original_data_frame_by_irpp_table_name
 
 
-data_frame_by_ipp_table_name = build_ipp_tables()
-original_data_frame_by_ipp_table_name = build_original_irpp_tables()
+data_frame_by_irpp_table_name = build_irpp_tables(years = range(2008, 2013), fill_value = 0)
+original_data_frame_by_irpp_table_name = build_original_irpp_tables()
 
 messages = list()
-for ipp_table_name, data_frame in data_frame_by_ipp_table_name.iteritems():
+for irpp_table_name, data_frame in data_frame_by_irpp_table_name.iteritems():
     for year in data_frame.index:
         for variable in data_frame.columns:
             if year >= 2009:
                 continue
             try:
                 target = (
-                    original_data_frame_by_ipp_table_name[ipp_table_name].loc[year, variable]
-                    if ipp_table_name != 'irpp_4'
-                    else original_data_frame_by_ipp_table_name[ipp_table_name].loc[year, variable] / 1e9
+                    original_data_frame_by_irpp_table_name[irpp_table_name].loc[year, variable]
+                    if irpp_table_name != 'irpp_4'
+                    else original_data_frame_by_irpp_table_name[irpp_table_name].loc[year, variable] / 1e9
                     )
             except KeyError:
-                print '{} not found for {} in table {}'.format(variable, year, ipp_table_name)
+                print '{} not found for {} in table {}'.format(variable, year, irpp_table_name)
                 continue
             actual = data_frame.fillna(value = fill_value).loc[year, variable] / 1e9
             if not abs(target - actual) <= 1e-6:
-                messages.append(error_msg(ipp_table_name, variable, year, target, actual))
+                messages.append(error_msg(irpp_table_name, variable, year, target, actual))
 
 for message in messages:
     print message
