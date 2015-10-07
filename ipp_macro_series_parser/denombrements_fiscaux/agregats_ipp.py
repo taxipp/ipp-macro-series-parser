@@ -104,6 +104,8 @@ def build_aggregates(raw_data, formula_by_variable_name, level_2_formula_by_vari
                 raise(e)
 
     return aggregates
+
+
 formula_by_variable_name = dict(
     ## Salaires
     salaires = [
@@ -145,7 +147,6 @@ formula_by_variable_name = dict(
             formula = 'f5hc + f5ic + f5jc'
             ),
         ],  # arag_impg TODO: check last values in openfisca
-
     benefices_agricoles_reels_deficits = 'f5hf + f5if + f5jf',  # arag_defi
     benefices_agricoles_reels_sans_cga_exoneres = 'f5hh + f5ih + f5jh',  # nrag_exon
     benefices_agricoles_reels_sans_cga_imposables = [
@@ -287,7 +288,6 @@ formula_by_variable_name = dict(
     pension_alimentaires_recues = 'f1ao + f1bo + f1co + f1do + f1eo + f1fo',  # pensions_alimentaires_percues
     pensions_alimentaires_versess = 'f6gi + f6gj + f6el + f6em + f6gp + f6gu + f6dd',
     )
-
 level_2_formula_by_variable_name = dict(
     revenus_d_activite_non_salariee = 'benefices_agricoles + benefices_industriels_commerciaux + benefices_non_commerciaux', # + revenus_activite_non_salariee_exoneres',
     # TODO get parameters form openfisca legislation
@@ -428,7 +428,6 @@ def build_irpp_tables(years = None, fill_value = numpy.NaN):
 
 if __name__ == '__main__':
     data_frame_by_irpp_table_name = build_irpp_tables(years = range(2006, 2013), fill_value = 0)
-
     short_of_name_by_long_names = dict(
         salaires = 'salaire_imposable',
         benefices_agricoles_forfait_exoneres = 'frag_exon',
@@ -439,7 +438,6 @@ if __name__ == '__main__':
         benefices_agricoles_reels_deficits = 'arag_defi',
         benefices_agricoles_reels_sans_cga_exoneres = 'nrag_exon',
         benefices_agricoles_reels_sans_cga_imposables = 'arag_defi',
-        benefices_agricoles_reels_sans_cga_deficits = 'nrag_exon',
         benefices_industriels_commerciaux_professionnels_micro_entreprise_vente = 'mbic_impv',
         benefices_industriels_commerciaux_professionnels_micro_entreprise_services = 'mbic_imps',
         benefices_industriels_commerciaux_professionnels_reels_exoneres = 'mbic_imps',
@@ -472,12 +470,10 @@ if __name__ == '__main__':
         benefices_non_commerciaux_non_professionnels_micro_entreprise_imposables = '',
         benefices_non_commerciaux_non_professionnels_declaration_controlee = '',
         benefices_non_commerciaux_non_professionnels_declaration_controlee_sans_cga = '',
-        deficits_non_commerciaux_non_professionnels_declaration_controlee = '',
-        deficits_non_commerciaux_non_professionnels_declaration_controlee_sans_cga = '',
         revenus_fonciers_regime_normal = 'f4ba', # f4ba
         revenus_fonciers_micro_foncier = 'f4be', # f4be
-        allocations_chomage = 'choi'
-        pensions_de_retraite = 'rsti'
+        allocations_chomage = 'choi',
+        pensions_de_retraite = 'rsti',
     #    dividendes_imposes_au_bareme = 'f2dc + f2fu', # 'f2dc + f2fu' non agrégés
     #    interet_imposes_au_bareme = 'f2ts + f2go + f2tr', # non agrégés
         assurances_vie_imposees_au_bareme = 'f2ch', # non agrégés
