@@ -165,46 +165,47 @@ formula_by_variable_name = dict(
     benefices_agricoles_reels_sans_cga_deficits = 'f5hl + f5il + f5jl',  # nrag_defi
     # TODO: benefices_agricoles_  = 'f5hm + f5im + f5jm',  # nrag_ajag
     ## Bénéfices industriels et commerciaux professionnels (déclaration complémentaire, cadres 5B)
-    benefices_industriels_commerciaux_professionnels_micro_entreprise_vente = 'f5ko + f5lo + f5mo',
-    benefices_industriels_commerciaux_professionnels_micro_entreprise_services = 'f5kp + f5lp + f5mp',
-    benefices_industriels_commerciaux_professionnels_reels_exoneres = 'f5kb + f5lb + f5mb',
-    benefices_industriels_commerciaux_professionnels_reels_imposables_normal = 'f5kc + f5lc + f5mc',
-    benefices_industriels_commerciaux_professionnels_reels_imposables_simplifie = 'f5kd + f5ld + f5md',
-    benefices_industriels_commerciaux_professionnels_reels_exoneres_sans_cga = 'f5kh + f5lh + f5mh',
-    benefices_industriels_commerciaux_professionnels_reels_imposables_normal_sans_cga = 'f5ki + f5li + f5mi',
-    benefices_industriels_commerciaux_professionnels_reels_imposables_simplifie_sans_cga = 'f5kj + f5lj + f5mj',
-    deficits_industriels_commerciaux_professionnels_normal = 'f5kf + f5lf + f5mf',
-    deficits_industriels_commerciaux_professionnels_simplifie = 'f5kg + f5lg + f5mg',
-    deficits_industriels_commerciaux_professionnels_sans_cga = 'f5kl + f5ll + f5ml',
+    benefices_industriels_commerciaux_professionnels_micro_entreprise_vente = 'f5ko + f5lo + f5mo', # mbic_impv
+    # TODO erreur car 2 fois la mm ligne
+    benefices_industriels_commerciaux_professionnels_micro_entreprise_services = 'f5kp + f5lp + f5mp', # mbic_imps
+    benefices_industriels_commerciaux_professionnels_reels_exoneres = 'f5kb + f5lb + f5mb', # mbic_imps
+    benefices_industriels_commerciaux_professionnels_reels_imposables_normal = 'f5kc + f5lc + f5mc', # abic_impn
+    benefices_industriels_commerciaux_professionnels_reels_imposables_simplifie = 'f5kd + f5ld + f5md', # abic_imps
+    benefices_industriels_commerciaux_professionnels_reels_exoneres_sans_cga = 'f5kh + f5lh + f5mh', # nbic_exon
+    benefices_industriels_commerciaux_professionnels_reels_imposables_normal_sans_cga = 'f5ki + f5li + f5mi', # nbic_impn
+    benefices_industriels_commerciaux_professionnels_reels_imposables_simplifie_sans_cga = 'f5kj + f5lj + f5mj', # nbic_mvct
+    deficits_industriels_commerciaux_professionnels_normal = 'f5kf + f5lf + f5mf', # abic_defn
+    deficits_industriels_commerciaux_professionnels_simplifie = 'f5kg + f5lg + f5mg', # abic_defs
+    deficits_industriels_commerciaux_professionnels_sans_cga = 'f5kl + f5ll + f5ml', # nbic_defn
     deficits_industriels_commerciaux_professionnels_locations = [
         dict(
             start = 1990,
             end = 2008,
             formula = 'f5km + f5lm + f5mm',
             ),
-        ],
+        ], # nbic_defs
     ## Bénéfices industriels et commerciaux non professionnels (déclaration complémentaire, cadres 5C)
-    benefices_industriels_commerciaux_non_professionnels_micro_entreprise_exoneres = 'f5nn + f5on + f5pn',
-    benefices_industriels_commerciaux_non_professionnels_micro_entreprise_vente = 'f5no + f5oo + f5po',
-    benefices_industriels_commerciaux_non_professionnels_micro_entreprise_services = 'f5np + f5op + f5op',
-    benefices_industriels_commerciaux_non_professionnels_reels_exoneres = 'f5nb + f5ob + f5pb',
-    benefices_industriels_commerciaux_non_professionnels_reels_imposables_normal = 'f5nc + f5nc + f5nc',
-    benefices_industriels_commerciaux_non_professionnels_reels_imposables_simplifie = 'f5nd + f5nd + f5nd',  # TODO: ceci avant 2010 mais après locations meublées pro,
-    benefices_industriels_commerciaux_non_professionnels_reels_exoneres_sans_cga = 'f5nh + f5oh + f5ph',
-    benefices_industriels_commerciaux_non_professionnels_reels_imposables_normal_sans_cga = 'f5ni + f5ni + f5ni',
-    benefices_industriels_commerciaux_non_professionnels_reels_imposables_simplifie_sans_cga = 'f5nj + f5nj + f5nj',  # TODO: ceci avant 2012 mais après locations déjà soumises aux prélèvements sociaux,
-    deficits_industriels_commerciaux_non_professionnels_normal = 'f5nf + f5of + f5pf',
-    deficits_industriels_commerciaux_non_professionnels_simplifie = 'f5og + f5og + f5pg',
-    deficits_industriels_commerciaux_non_professionnels_sans_cga = 'f5nl + f5ol + f5pl',
+    benefices_industriels_commerciaux_non_professionnels_micro_entreprise_exoneres = 'f5nn + f5on + f5pn', # macc_exon
+    benefices_industriels_commerciaux_non_professionnels_micro_entreprise_vente = 'f5no + f5oo + f5po', # macc_impv
+    benefices_industriels_commerciaux_non_professionnels_micro_entreprise_services = 'f5np + f5op + f5op', # macc_impS
+    benefices_industriels_commerciaux_non_professionnels_reels_exoneres = 'f5nb + f5ob + f5pb', # aacc_exon
+    benefices_industriels_commerciaux_non_professionnels_reels_imposables_normal = 'f5nc + f5nc + f5nc', # aacc_impn
+    benefices_industriels_commerciaux_non_professionnels_reels_imposables_simplifie = 'f5nd + f5nd + f5nd',  # aacc_imps TODO: ceci avant 2010 mais après locations meublées pro,
+    benefices_industriels_commerciaux_non_professionnels_reels_exoneres_sans_cga = 'f5nh + f5oh + f5ph', # nacc_exon
+    benefices_industriels_commerciaux_non_professionnels_reels_imposables_normal_sans_cga = 'f5ni + f5ni + f5ni', # nacc_impn
+    benefices_industriels_commerciaux_non_professionnels_reels_imposables_simplifie_sans_cga = 'f5nj + f5nj + f5nj',  # nacc_meup TODO: ceci avant 2012 mais après locations déjà soumises aux prélèvements sociaux,
+    deficits_industriels_commerciaux_non_professionnels_normal = 'f5nf + f5of + f5pf', # aacc_defn
+    deficits_industriels_commerciaux_non_professionnels_simplifie = 'f5ng + f5og + f5pg', # aacc_gits
+    deficits_industriels_commerciaux_non_professionnels_sans_cga = 'f5nl + f5ol + f5pl', # nacc_defn
     # TODO: Locations déjà soumises aux prélèvements sociaux sans CGA (régime du bénéfice réel)
 
     # - Détails Bénéfices non commerciaux professionnels (déclaration complémentaire, cadres 5D)
 
-    benefices_non_commerciaux_professionnels_micro_entreprise_imposables = 'f5hq + f5iq + f5jq',
-    benefices_non_commerciaux_professionnels_declaration_controlee = 'f5qc + f5rc + f5sc',
-    benefices_non_commerciaux_professionnels_declaration_controlee_sans_cga = 'f5qi + f5ri + f5si',
-    deficits_non_commerciaux_professionnels_declaration_controlee = 'f5qe + f5re + f5se',
-    deficits_non_commerciaux_professionnels_declaration_controlee_sans_cga = 'f5qk + f5rk + f5sk',
+    benefices_non_commerciaux_professionnels_micro_entreprise_imposables = 'f5hq + f5iq + f5jq', # mbnc_impo
+    benefices_non_commerciaux_professionnels_declaration_controlee = 'f5qc + f5rc + f5sc', #
+    benefices_non_commerciaux_professionnels_declaration_controlee_sans_cga = 'f5qi + f5ri + f5si', #
+    deficits_non_commerciaux_professionnels_declaration_controlee = 'f5qe + f5re + f5se', #
+    deficits_non_commerciaux_professionnels_declaration_controlee_sans_cga = 'f5qk + f5rk + f5sk', #
 
     # - Détails Bénéfices non commerciaux non professionnels (déclaration complémentaire, cadres 5E)
     benefices_non_commerciaux_non_professionnels_micro_entreprise_imposables = 'f5ku + f5lu + f5mu',
@@ -213,8 +214,24 @@ formula_by_variable_name = dict(
     deficits_non_commerciaux_non_professionnels_declaration_controlee = 'f5jj + f5rg + f5sg',
     deficits_non_commerciaux_non_professionnels_declaration_controlee_sans_cga = 'f5sp + f5nu + f5ou',
 
-    revenus_fonciers_regime_normal = 'f4ba',
-    revenus_fonciers_micro_foncier = 'f4be',
+    # - Revenus fonciers
+    revenus_fonciers_regime_normal = 'f4ba', # f4ba
+    revenus_fonciers_micro_foncier = 'f4be', # f4be
+
+    # Missing financier (tout est par case dans of)
+        # - Déficits des années antérieures non encore déduits
+    # Missing foncier
+        # - rentes viagères : 'f1aw', 'f1bw', 'f1cw', 'f1dw'
+        # - Déficits  : 'f4bb', et suivantes... 'f4bd'
+    # Missing plus value
+        # - Gains de levée d'options sur titres 'f1tv' 'f1uv' 'f1tw' 'f1uw' 'f1tx' 'f1ux'
+    # Missing revenus_de_remplacement
+        # - chomeur_longue_duree: 'f1ai', 'f1bi', 'f1ci', 'f1di'
+    # Missing salarie
+        # - sal_pen_exo_etr (start = 2013, 1ac, 1bc, 1cc, 1cd)
+        # - frais_reels '1ak' (f1ak, f1bk, f1ck, f1dk, f1ek)
+        # - hsup  (f1au, f1bu, f1cu, f1du, f1eu) start 2007
+        # -
     allocations_chomage = [
         dict(
             start = 2007,
@@ -231,7 +248,8 @@ formula_by_variable_name = dict(
             end = 2004,
             formula = 'f1ap + f1bp + f1cp + f1dp + f1ep + f1fp',
             ),
-        ],
+        ], # choi
+        #
     pensions_de_retraite = [
         dict(
             start = 2007,
@@ -248,10 +266,10 @@ formula_by_variable_name = dict(
             end = 2004,
             formula = 'f1as + f1bs + f1cs + f1ds + f1es + f1fs',
             ),
-        ],
-    dividendes_imposes_au_bareme = 'f2dc + f2fu',
-    interet_imposes_au_bareme = 'f2ts + f2go + f2tr',
-    assurances_vie_imposees_au_bareme = 'f2ch',
+        ], # rsti
+    dividendes_imposes_au_bareme = 'f2dc + f2fu', # 'f2dc + f2fu' non agrégés
+    interet_imposes_au_bareme = 'f2ts + f2go + f2tr', # non agrégés
+    assurances_vie_imposees_au_bareme = 'f2ch', # non agrégés
     dividendes_imposes_au_prelevement_liberatoire = 'f2da',
     interets_imposes_au_prelevement_liberatoire = 'f2ee',
     assurances_vie_imposees_au_prelevement_liberatoire = 'f2dh',
@@ -267,7 +285,7 @@ formula_by_variable_name = dict(
             formula = 'f2gr',
             ),
         ],
-    pension_alimentaires_recues = 'f1ao + f1bo + f1co + f1do + f1eo + f1fo',
+    pension_alimentaires_recues = 'f1ao + f1bo + f1co + f1do + f1eo + f1fo',  # pensions_alimentaires_percues
     pensions_alimentaires_versess = 'f6gi + f6gj + f6el + f6em + f6gp + f6gu + f6dd',
     )
 
@@ -411,5 +429,67 @@ def build_irpp_tables(years = None, fill_value = numpy.NaN):
     return data_frame_by_irpp_table_name
 
 
-if __name__ == '__main__':
-    data_frame_by_irpp_table_name = build_irpp_tables(years = range(2006, 2014), fill_value = 0)
+    short_of_name_by_long_names = dict(
+        salaires = 'salaire_imposable',
+        benefices_agricoles_forfait_exoneres = 'frag_exon',
+        benefices_agricoles_forfait_imposables = 'frag_impo',
+        benefices_agricoles_reels_exoneres = 'arag_exon',
+        benefices_agricoles_reels_sans_cga_deficits = 'nrag_defi',
+        benefices_agricoles_reels_imposables = 'arag_impg',
+        benefices_agricoles_reels_deficits = 'arag_defi',
+        benefices_agricoles_reels_sans_cga_exoneres = 'nrag_exon',
+        benefices_agricoles_reels_sans_cga_imposables = 'arag_defi',
+        benefices_agricoles_reels_sans_cga_deficits = 'nrag_exon',
+        benefices_industriels_commerciaux_professionnels_micro_entreprise_vente = 'mbic_impv',
+        benefices_industriels_commerciaux_professionnels_micro_entreprise_services = 'mbic_imps',
+        benefices_industriels_commerciaux_professionnels_reels_exoneres = 'mbic_imps',
+        benefices_industriels_commerciaux_professionnels_reels_imposables_normal = 'abic_impn',
+        benefices_industriels_commerciaux_professionnels_reels_imposables_simplifie = 'abic_imps',
+        benefices_industriels_commerciaux_professionnels_reels_exoneres_sans_cga = 'nbic_exon',
+        benefices_industriels_commerciaux_professionnels_reels_imposables_normal_sans_cga = 'nbic_impn',
+        benefices_industriels_commerciaux_professionnels_reels_imposables_simplifie_sans_cga = 'nbic_mvct',
+        deficits_industriels_commerciaux_professionnels_normal = 'abic_defn',
+        deficits_industriels_commerciaux_professionnels_simplifie = 'abic_defs',
+        deficits_industriels_commerciaux_professionnels_sans_cga = 'nbic_defn',
+        deficits_industriels_commerciaux_professionnels_locations = 'nbic_defs',
+        benefices_industriels_commerciaux_non_professionnels_micro_entreprise_exoneres = 'macc_exon',
+        benefices_industriels_commerciaux_non_professionnels_micro_entreprise_vente = 'macc_impv',
+        benefices_industriels_commerciaux_non_professionnels_micro_entreprise_services = 'macc_impS',
+        benefices_industriels_commerciaux_non_professionnels_reels_exoneres = 'aacc_exon',
+        benefices_industriels_commerciaux_non_professionnels_reels_imposables_normal = 'aacc_impn',
+        benefices_industriels_commerciaux_non_professionnels_reels_imposables_simplifie = 'aacc_imps',
+        benefices_industriels_commerciaux_non_professionnels_reels_exoneres_sans_cga = 'nacc_exon',
+        benefices_industriels_commerciaux_non_professionnels_reels_imposables_normal_sans_cga = 'nacc_impn',
+        benefices_industriels_commerciaux_non_professionnels_reels_imposables_simplifie_sans_cga = 'nacc_meup',
+        deficits_industriels_commerciaux_non_professionnels_normal = 'aacc_defn',
+        deficits_industriels_commerciaux_non_professionnels_simplifie = 'aacc_gits',
+        deficits_industriels_commerciaux_non_professionnels_sans_cga = 'nacc_defn',
+        benefices_non_commerciaux_professionnels_micro_entreprise_imposables = 'mbnc_impo',
+        benefices_non_commerciaux_professionnels_declaration_controlee = '',
+        benefices_non_commerciaux_professionnels_declaration_controlee_sans_cga = '',
+        deficits_non_commerciaux_professionnels_declaration_controlee = '',
+        deficits_non_commerciaux_professionnels_declaration_controlee_sans_cga = '',
+        benefices_non_commerciaux_non_professionnels_micro_entreprise_imposables = '',
+        benefices_non_commerciaux_non_professionnels_declaration_controlee = '',
+        benefices_non_commerciaux_non_professionnels_declaration_controlee_sans_cga = '',
+        deficits_non_commerciaux_non_professionnels_declaration_controlee = '',
+        deficits_non_commerciaux_non_professionnels_declaration_controlee_sans_cga = '',
+        revenus_fonciers_regime_normal = 'f4ba', # f4ba
+        revenus_fonciers_micro_foncier = 'f4be', # f4be
+        allocations_chomage = 'choi'
+        pensions_de_retraite = 'rsti'
+    #    dividendes_imposes_au_bareme = 'f2dc + f2fu', # 'f2dc + f2fu' non agrégés
+    #    interet_imposes_au_bareme = 'f2ts + f2go + f2tr', # non agrégés
+        assurances_vie_imposees_au_bareme = 'f2ch', # non agrégés
+        dividendes_imposes_au_prelevement_liberatoire = 'f2da',
+        interets_imposes_au_prelevement_liberatoire = 'f2ee',
+        assurances_vie_imposees_au_prelevement_liberatoire = 'f2dh',
+        plus_values_mobilieres_regime_normal = 'f3vg',
+    #    plus_values_mobilieres_stock_options = 'f3vf + f3vi',  # PV stock options 1, stock options 2, TODO Différencier ?
+        plus_values_mobilieres_retraite_dirigeant = 'f3va',  # TODO f3vb ?
+    #    plus_values_professionnelles_regime_normal = 'f5hz + f5iz + f5jz',  # TODO: ceci n'est valable qu'avant 2010
+    #    plus_values_professionnelles_retraite_dirigeant = 'f5hg + f5ig',
+        revenus_distribues_pea_exoneres = 'f2gr',
+        pension_alimentaires_recues = 'pensions_alimentaires_percues', # pensions_alimentaires_percues
+    #    pensions_alimentaires_versess = 'f6gi + f6gj + f6el + f6em + f6gp + f6gu + f6dd',
+    )
