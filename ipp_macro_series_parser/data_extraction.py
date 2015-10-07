@@ -66,7 +66,8 @@ def look_up(df, entry_by_index, years = None):
             continue
         if key != 'description' and key != 'formula':
             try:
-                result = result[df[key] == value].copy()
+                query_expression = "{} == '{}'".format(key, value)
+                result = df.query(query_expression)
             except KeyError, e:
                 log.info('{} for {} is not available'.format(value, key))
                 raise(e)
@@ -207,9 +208,10 @@ def get_or_construct_value(df, variable_name, index_by_variable, years = None, f
         result_data_frame = entry_df[['value']].copy()
         assert len(result_data_frame.columns) == 1
         result_data_frame.columns = [variable_name]
-
-        result_data_frame = result_data_frame.reindex(index = years, copy = False)
-
+        try:
+            result_data_frame = result_data_frame.reindex(index = years, copy = False)
+        except:
+            print result_data_frame
         final_formula = variable_name
 
     # For formulas that are not real formulas but that are actually a mapping
@@ -228,8 +230,8 @@ def get_or_construct_value(df, variable_name, index_by_variable, years = None, f
                 local_index_by_variable = copy.deepcopy(index_by_variable)
                 local_index_by_variable[variable_name]['formula'] = individual_formula['formula']
                 actual_years = list(set(range(
-                    max(start, min(years)) if start is not None else min(years),
-                    min(end + 1, max(years) + 1) if end is not None else (max(years) + 1),
+                    max(start, min(years)) if (start is not None) else min(years),
+                    min(end + 1, max(years) + 1) if (end is not None) else (max(years) + 1),
                     )))
                 variable_value, final_formula = get_or_construct_value(
                     df, variable_name, local_index_by_variable, actual_years, fill_value = fill_value)

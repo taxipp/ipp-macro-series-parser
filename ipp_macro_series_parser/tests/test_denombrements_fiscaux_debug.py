@@ -28,7 +28,7 @@ from ipp_macro_series_parser.denombrements_fiscaux.agregats_ipp import (
     formula_by_variable_name,
     level_2_formula_by_variable_name
     )
-from ipp_macro_series_parser.denombrements_fiscaux.parser import (
+from ipp_macro_series_parser.denombrements_fiscaux.parsers import (
     get_denombrements_fiscaux_data_frame
     )
 from ipp_macro_series_parser.data_extraction import get_or_construct_value
@@ -79,6 +79,9 @@ def test_corrections():
             ],
         deficits_industriels_commerciaux_non_professionnels = [
             {'year': 2006, 'target': 301194784},
+            ],
+        plus_values_mobilieres_stock_options = [
+            {'year': 2008, 'target': 228873359}
             ],
         )
 

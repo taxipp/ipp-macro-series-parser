@@ -804,8 +804,7 @@ def create_denombrements_fiscaux_data_frame(year = None, years = None, overwrite
     # Data coming from DGFiP
     dgfip_denombrements = parse_dgfip_denombrements(years)
     dgfip_denombrements['origin'] = 'DGFiP'
-
-    df2 = pandas.concat([ipp_denombrements, openfisca_denombrements])
+    df2 = pandas.concat([dgfip_denombrements, df])
 
     # Drop real duplicates
     df2 = df2.drop_duplicates(subset = ['year', 'code', 'value'])
@@ -815,13 +814,16 @@ def create_denombrements_fiscaux_data_frame(year = None, years = None, overwrite
     errors = df2.loc[dups2].copy()
 
     wrong_codes = ['f5ne', 'f5oe', 'f5rd', 'f5ke', 'f5le', 'f4tq', 'f5hd',
-       'f5id', 'f5he', 'f5ie', 'f5qd']
+       'f5id', 'f5he', 'f5ie', 'f5qd', 'f3ve', 'f3vf', 'f3ve', 'f3vf', 'f7tf', 'f7tf', 'f2gr', 'f2ch', 'f2bg', 'f6el',
+        'f6st', 'f2bg', 'f7cd', 'f2gr', 'f2ch', 'f7cd', 'f6st', 'f6el']
     wrong_years = [2006, 2005, 2004, 2003]
     log.info('Remaining problematic duplicates when merging with DGFiP data \n {}'.format(
-        errors.loc[~(errors.code.isin(wrong_codes) & errors.year.isin(wrong_years))]
+        errors.loc[~(errors.code.isin(wrong_codes) | errors.year.isin(wrong_years))]
         ))
-    df2 = df2.loc[~(df2.code.isin(wrong_codes) & (df2.year < 2007))]
+    df2 = df2.loc[~(df2.code.isin(wrong_codes) | (df2.year.isin(wrong_years)))]
     result = df2.loc[df2.year.isin(years)].copy() if years is not None else df2.copy()
+
+    result = dgfip_denombrements.copy()
 
     if overwrite:
         save_df_to_hdf(result, 'denombrements_fiscaux', 'montants')
@@ -829,7 +831,8 @@ def create_denombrements_fiscaux_data_frame(year = None, years = None, overwrite
     return result, errors
 
 
-def get_denombrements_fiscaux_data_frame(year = None, years = None, rebuild = False, overwrite = False):
+def get_denombrements_fiscaux_data_frame(year = None, years = None, rebuild = False, overwrite = False,
+        fill_value = numpy.nan):
     if year is not None and years is None:
         years = [year]
     if rebuild:
@@ -854,6 +857,6 @@ def import_from_hdf(hdf_filename, key):
 if __name__ == '__main__':
     # dgfip = parse_dgfip_denombrements(years = range(2004, 2014))
     denomb_fisc_all, errors = create_denombrements_fiscaux_data_frame(
-        years = range(2003, 2014),
+        years = range(2009, 2014),
         overwrite = True
         )

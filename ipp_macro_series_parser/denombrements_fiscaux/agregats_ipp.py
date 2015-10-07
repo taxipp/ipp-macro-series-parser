@@ -90,13 +90,14 @@ def build_aggregates(raw_data, formula_by_variable_name, level_2_formula_by_vari
     for variable_name in formula_by_variable_name.keys() + level_2_formula_by_variable_name.keys():
         serie, formula = get_or_construct_value(
             raw_data, variable_name, index_by_variable_name, years = years, fill_value = fill_value)
-
+        serie = serie.reset_index().drop_duplicates().set_index('year')
+        assert not numpy.any(serie.index.duplicated()), 'Duplicated index for {} : {}'.format(
+            variable_name, serie)
         if aggregates is None:
             aggregates = serie
-
         else:
             try:
-                aggregates = pandas.concat([aggregates, serie], axis = 1)
+                aggregates = pandas.concat([aggregates, serie], axis = 1, verify_integrity = True)
             except Exception, e:
                 print "aggregates", aggregates
                 print "serie", serie
@@ -125,8 +126,8 @@ formula_by_variable_name = dict(
             # f1au + f1bu + f1cu + f1du sont les heures sup effectuées en 2012 payées en 2013 ...
             ),
         dict(
-            start = 2013,
-            end = 2014,
+            start = 2014,
+            end = 2015,
             formula = 'f1aj + f1bj + f1cj + f1dj',
             ),
         ],
@@ -142,7 +143,7 @@ formula_by_variable_name = dict(
             ),
         dict(
             start = 2006,
-            end = 2015,
+            end = 2013,
             formula = 'f5hc + f5ic + f5jc'
             ),
         ],  # arag_impg TODO: check last values in openfisca
@@ -156,7 +157,7 @@ formula_by_variable_name = dict(
             ),
         dict(
             start = 2006,
-            end = 2015,
+            end = 2013,
             formula = 'f5hi + f5ii + f5ji',
             ),
         ],  # nrag_impg TODO: check last values in openfisca
@@ -217,6 +218,7 @@ formula_by_variable_name = dict(
     allocations_chomage = [
         dict(
             start = 2007,
+            end = 2013,
             formula = 'f1ap + f1bp + f1cp + f1dp',
             ),
         dict(
@@ -233,6 +235,7 @@ formula_by_variable_name = dict(
     pensions_de_retraite = [
         dict(
             start = 2007,
+            end = 2013,
             formula = 'f1as + f1bs + f1cs + f1ds',
             ),
         dict(
@@ -257,8 +260,14 @@ formula_by_variable_name = dict(
     plus_values_mobilieres_retraite_dirigeant = 'f3va',  # TODO f3vb ?
     plus_values_professionnelles_regime_normal = 'f5hz + f5iz + f5jz',  # TODO: ceci n'est valable qu'avant 2010
     plus_values_professionnelles_retraite_dirigeant = 'f5hg + f5ig',
-    revenus_distribues_pea_exoneres = 'f2gr',
-    pension_alimentaires_recues = 'f1ao	+ f1bo + f1co + f1do + f1eo + f1fo',
+    revenus_distribues_pea_exoneres = [
+        dict(
+            start = 2009,
+            end = 2009,
+            formula = 'f2gr',
+            ),
+        ],
+    pension_alimentaires_recues = 'f1ao + f1bo + f1co + f1do + f1eo + f1fo',
     pensions_alimentaires_versess = 'f6gi + f6gj + f6el + f6em + f6gp + f6gu + f6dd',
     )
 
@@ -323,13 +332,13 @@ level_2_formula_by_variable_name = dict(
 def build_irpp_tables(years = None, fill_value = numpy.NaN):
     assert years is not None
     assert isinstance(years, list)
-    raw_data = get_denombrements_fiscaux_data_frame(years = years)
+    raw_data = get_denombrements_fiscaux_data_frame(years = years, fill_value = 0)
     aggregates = build_aggregates(
         raw_data,
         formula_by_variable_name,
         level_2_formula_by_variable_name = level_2_formula_by_variable_name,
         years = years,
-        fill_value = fill_value
+        fill_value = fill_value,
         )
     data_frame_by_irpp_table_name = collections.OrderedDict([
         # 1. Tableau IRPP1: Les revenus figurant dans les déclarations de revenus
@@ -403,4 +412,4 @@ def build_irpp_tables(years = None, fill_value = numpy.NaN):
 
 
 if __name__ == '__main__':
-    data_frame_by_irpp_table_name = build_irpp_tables(years = range(2006, 2013), fill_value = 0)
+    data_frame_by_irpp_table_name = build_irpp_tables(years = range(2006, 2014), fill_value = 0)
