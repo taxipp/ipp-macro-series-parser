@@ -104,8 +104,6 @@ def build_aggregates(raw_data, formula_by_variable_name, level_2_formula_by_vari
                 raise(e)
 
     return aggregates
-
-
 formula_by_variable_name = dict(
     ## Salaires
     salaires = [
@@ -147,6 +145,7 @@ formula_by_variable_name = dict(
             formula = 'f5hc + f5ic + f5jc'
             ),
         ],  # arag_impg TODO: check last values in openfisca
+
     benefices_agricoles_reels_deficits = 'f5hf + f5if + f5jf',  # arag_defi
     benefices_agricoles_reels_sans_cga_exoneres = 'f5hh + f5ih + f5jh',  # nrag_exon
     benefices_agricoles_reels_sans_cga_imposables = [
@@ -289,7 +288,6 @@ formula_by_variable_name = dict(
     pensions_alimentaires_versess = 'f6gi + f6gj + f6el + f6em + f6gp + f6gu + f6dd',
     )
 
-
 level_2_formula_by_variable_name = dict(
     revenus_d_activite_non_salariee = 'benefices_agricoles + benefices_industriels_commerciaux + benefices_non_commerciaux', # + revenus_activite_non_salariee_exoneres',
     # TODO get parameters form openfisca legislation
@@ -428,6 +426,8 @@ def build_irpp_tables(years = None, fill_value = numpy.NaN):
         ])
     return data_frame_by_irpp_table_name
 
+if __name__ == '__main__':
+    data_frame_by_irpp_table_name = build_irpp_tables(years = range(2006, 2013), fill_value = 0)
 
     short_of_name_by_long_names = dict(
         salaires = 'salaire_imposable',
