@@ -254,10 +254,9 @@ def get_or_construct_value(df, variable_name, index_by_variable, years = None, f
                 index = variable_value.index
                 assert len(variable_value.index) == len(variable_value.index.unique()), "Component {} does not have a single valued index {}".format(component, variable_value.index)
             else:
-                try:
-                    reindexing_condition = not(index == variable_value.index)
-                except ValueError:
-                    reindexing_condition = not(index == variable_value.index).all()
+                reindexing_condition = (
+                    numpy.sort(index.unique()) != numpy.sort(variable_value.index.unique())
+                    ).any()
                 if reindexing_condition:
                     log.info('index differs {} vs {} after getting {}'.format(
                         index, variable_value.index, component))

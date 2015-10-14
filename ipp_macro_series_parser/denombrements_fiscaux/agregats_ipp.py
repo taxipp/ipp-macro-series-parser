@@ -519,9 +519,7 @@ of_name_by_irpp_table_name = dict(
     revenus_distribues_pea_exoneres = 'f2gr',
     pensions_alimentaires_percues = 'pensions_alimentaires_percues', # pensions_alimentaires_percues
 #    pensions_alimentaires_versess = 'f6gi + f6gj + f6el + f6em + f6gp + f6gu + f6dd',
-)
-
-
+    )
 
 
 if __name__ == '__main__':
