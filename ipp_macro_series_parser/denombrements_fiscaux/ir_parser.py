@@ -10,6 +10,7 @@ import re
 
 
 from ipp_macro_series_parser.config import Config
+from taxipp.utils import to_percent_formatter, ipp_colors, save_to_figure_directory
 
 config_parser = Config(
     config_files_directory = os.path.join(pkg_resources.get_distribution('ipp-macro-series-parser').location)
@@ -22,7 +23,7 @@ hdf_directory = config_parser.get('data', 'denombrements_fiscaux_hdf')
 log = logging.getLogger(__name__)
 
 
-def parse_impot_revenu_national():
+def get_impot_revenu_national():
     data_frame_by_year = dict()
     for year in range(2003, 2014):
         file_path = os.path.join(xls_directory, u'revenus de {}.xls'.format(year))
@@ -53,7 +54,6 @@ def parse_impot_revenu_national():
             ]
         data_frame.drop(data_frame.index[0], inplace = True)
         data_frame.dropna(how = 'all', axis = 0, inplace = True)
-        print year
         if year == 2010:
             for col in [
                 u'Nombre de foyers fiscaux',
@@ -82,17 +82,7 @@ def parse_impot_revenu_national():
         data_frame['year'] = year
         total_data_frame_by_year[year] = data_frame
 
-    total_data_frame = pandas.concat(total_data_frame_by_year.values())
+    return pandas.concat(total_data_frame_by_year.values())
 
 
-    df = total_data_frame.loc[
-        total_data_frame.variable.isin([
-            u"Nombre de foyers fiscaux imposés", u'Nombre de foyers fiscaux']),
-        ['year', 'value', 'variable']
-        ].pivot(index='year', columns='variable')['value']
 
-    df[u"Part des foyers fiscaux imposés"] = df[u"Nombre de foyers fiscaux imposés"] / df[u'Nombre de foyers fiscaux']
-    df[u"Part des foyers fiscaux imposés"].plot()
-
-
-        print year, data_frame.loc['Total', [u'Impôt net']]
