@@ -791,7 +791,7 @@ def create_denombrements_fiscaux_data_frame(year = None, years = None, overwrite
     df = df.reset_index(drop=True)
 
     # Problematic duplicates
-    dups = df.duplicated(['year', 'code']) | df.duplicated(['year', 'code'], take_last = True)
+    dups = df.duplicated(['year', 'code']) | df.duplicated(['year', 'code'], keep = 'last')
     z = df.loc[dups].copy()
     # sum of two columns in IPP for year < 2007
     wrong_before_2007 = ['f5ne', 'f5oe', 'f5rd', 'f5ke', 'f5le', 'f5he', 'f5ie', 'f5qd']
@@ -810,7 +810,7 @@ def create_denombrements_fiscaux_data_frame(year = None, years = None, overwrite
     df2 = df2.drop_duplicates(subset = ['year', 'code', 'value'])
     df2 = df2.reset_index(drop=True)
 
-    dups2 = df2.duplicated(['year', 'code']) | df2.duplicated(['year', 'code'], take_last = True)
+    dups2 = df2.duplicated(['year', 'code']) | df2.duplicated(['year', 'code'], keep = 'last')
     errors = df2.loc[dups2].copy()
 
     wrong_codes = ['f5ne', 'f5oe', 'f5rd', 'f5ke', 'f5le', 'f4tq', 'f5hd',
