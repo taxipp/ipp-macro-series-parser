@@ -2,15 +2,12 @@
 
 
 import logging
-import numpy
 import os
 import pandas
 import pkg_resources
-import re
 
 
 from ipp_macro_series_parser.config import Config
-from taxipp.utils import to_percent_formatter, ipp_colors, save_to_figure_directory
 
 config_parser = Config(
     config_files_directory = os.path.join(pkg_resources.get_distribution('ipp-macro-series-parser').location)
@@ -25,7 +22,7 @@ log = logging.getLogger(__name__)
 
 def get_impot_revenu_national():
     data_frame_by_year = dict()
-    for year in range(2003, 2014):
+    for year in range(2004, 2014):
         file_path = os.path.join(xls_directory, u'revenus de {}.xls'.format(year))
         if year <= 2005:
             skiprows = 5
@@ -54,25 +51,29 @@ def get_impot_revenu_national():
             ]
         data_frame.drop(data_frame.index[0], inplace = True)
         data_frame.dropna(how = 'all', axis = 0, inplace = True)
+
+        amount_columns = [
+            u'Revenu fiscal de référence des foyers fiscaux',
+            u'Impôt net',
+            u'Revenu fiscal de référence des foyers fiscaux imposés',
+            u'Traitements et salaires (montants)',
+            u'Retraites et pensions (montants)'
+            ]
+        number_columns = [
+            u'Nombre de foyers fiscaux',
+            u'Nombre de foyers fiscaux imposés',
+            u'Traitements et salaires (nombre de foyers concernés)',
+            u'Retraites et pensions (nombre de foyers concernés)',
+            ]
+
         if year == 2010:
-            for col in [
-                u'Nombre de foyers fiscaux',
-                u'Nombre de foyers fiscaux imposés',
-                u'Traitements et salaires (nombre de foyers concernés)',
-                u'Retraites et pensions (nombre de foyers concernés)'
-                ]:
+            for col in number_columns:
                 data_frame[col] = data_frame[col] * 1e3
-            for col in [
-                u'Revenu fiscal de référence des foyers fiscaux',
-                u'Impôt net',
-                u'Revenu fiscal de référence des foyers fiscaux imposés',
-                u'Traitements et salaires (montants)',
-                u'Retraites et pensions (montants)',
-                ]:
+
+            for col in amount_columns:
                 data_frame[col] = data_frame[col] * 1e9
 
         data_frame_by_year[year] = data_frame
-
 
     total_data_frame_by_year = dict()
     for year, data_frame in data_frame_by_year.iteritems():
@@ -83,6 +84,3 @@ def get_impot_revenu_national():
         total_data_frame_by_year[year] = data_frame
 
     return pandas.concat(total_data_frame_by_year.values())
-
-
-
