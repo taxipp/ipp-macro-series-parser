@@ -169,7 +169,15 @@ data_frame_by_irpp_table_name = build_irpp_tables(years = range(2008, 2013), fil
 original_data_frame_by_irpp_table_name = build_original_irpp_tables()
 
 
-excluded_variables = ['plus_values_mobilieres_stock_options', 'plus_values_mobilieres']
+excluded_variables = [
+    'salaires_imposables',
+    'heures_supplementaires',
+    'frais_reels',
+    'pensions_alimentaires_percues',
+    'plus_values_mobilieres_stock_options',
+    'plus_values_mobilieres',
+    'plus_values_professionnelles',
+    ]
 
 messages = list()
 for irpp_table_name, data_frame in data_frame_by_irpp_table_name.iteritems():
