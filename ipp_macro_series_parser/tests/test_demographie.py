@@ -23,7 +23,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from ipp_macro_series_parser.demographie.demographie_parser import (
+from ipp_macro_series_parser.demographie.parser import (
     create_demographie_data_frame
     )
 
@@ -37,7 +37,6 @@ def test_demographie():
         2008: 63961859,
         2012: 65241241
         }
-    data_frame = test_demographie()
     for year in years:
         expr = '(year == {}) & (variable == "Ensemble") & (champ == "France")'.format(year)
 

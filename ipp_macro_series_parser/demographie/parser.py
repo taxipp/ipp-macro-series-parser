@@ -58,10 +58,9 @@ def create_demographie_data_frame():
             try:
                 df = pandas.read_excel(
                     file_path,
-                    # na_values = '-',
                     sheetname = sheetname,
                     skiprows = skiprows,
-                    parse_cols = parse_cols).iloc[slice_start:slice_end]
+                    parse_cols = parse_cols).iloc[slice_start:slice_end].copy()
                 df['year'] = year
                 if sheetname in ['France', u'France métropolitaine']:
                     df['champ'] = sheetname
@@ -80,5 +79,6 @@ def create_demographie_data_frame():
             except Exception, e:
                 print year
                 print sheetname
-                raise(e)
+                raise e
+
     return pandas.melt(data_frame, id_vars = ['year', 'champ', u'Âge révolu', u'Année de naissance'])
