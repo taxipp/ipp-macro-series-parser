@@ -84,3 +84,8 @@ def get_impot_revenu_national():
         total_data_frame_by_year[year] = data_frame
 
     return pandas.concat(total_data_frame_by_year.values())
+
+
+if __name__ == '__main__':
+    data_frame = get_impot_revenu_national()
+    data_frame.to_excel('foyers_imposables_imposes.xls')

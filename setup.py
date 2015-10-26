@@ -45,7 +45,7 @@ doc_lines = __doc__.split('\n')
 
 
 setup(
-    name = 'Ipp-Macro-Series-Parser',
+    name = 'IPP-Macro-Series-Parser',
     version = '0.1.dev0',
 
     author = 'IPP',
