@@ -132,7 +132,7 @@ def build_original_irpp_tables():
         u"Revenus d'activité non salariée": 'revenus_d_activite_non_salariee',
         u'BA': 'benefices_agricoles',
         u'BIC': 'benefices_industriels_commerciaux',
-        #        u'BNC',
+        u'BNC': 'benefices_non_commerciaux',
         #        u'Nonsal exo',
         u'BA brut': 'benefices_agricoles_bruts',
         u'BIC brut': 'benefices_industriels_commerciaux_bruts',
@@ -165,7 +165,7 @@ def build_original_irpp_tables():
     return original_data_frame_by_irpp_table_name
 
 
-data_frame_by_irpp_table_name = build_irpp_tables(years = range(2008, 2013), fill_value = 0)
+data_frame_by_irpp_table_name = build_irpp_tables(years = range(2009, 2013), fill_value = 0)
 original_data_frame_by_irpp_table_name = build_original_irpp_tables()
 
 
@@ -183,7 +183,7 @@ messages = list()
 for irpp_table_name, data_frame in data_frame_by_irpp_table_name.iteritems():
     for year in data_frame.index:
         for variable in data_frame.columns:
-            if (year >= 2014) or year <= 2008:
+            if not (2008 <=  year <= 2011):
                 continue
             if variable in excluded_variables:
                 continue
@@ -197,7 +197,7 @@ for irpp_table_name, data_frame in data_frame_by_irpp_table_name.iteritems():
                 print '{} not found for {} in table {}'.format(variable, year, irpp_table_name)
                 continue
             actual = data_frame.fillna(value = fill_value).loc[year, variable] / 1e9
-            if not abs(target - actual) <= 1e-6:
+            if not abs(target - actual) / abs(target) <= 1e-3:
                 messages.append(error_msg(irpp_table_name, variable, year, target, actual))
 
 for message in messages:

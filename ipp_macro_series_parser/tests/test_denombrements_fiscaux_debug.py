@@ -35,7 +35,7 @@ from ipp_macro_series_parser.data_extraction import get_or_construct_value
 
 
 def test_run_through():
-    years = [2006, 2007, 2008, 2009]
+    years = [2006, 2007, 2008, 2009, 2010, 2011]
     df = get_denombrements_fiscaux_data_frame(years = years)
     index_by_variable_name = create_index_by_variable_name(formula_by_variable_name, level_2_formula_by_variable_name)
     variable_name = 'interets_imposes_au_prelevement_liberatoire'
@@ -48,10 +48,16 @@ def test_run_through():
     get_or_construct_value(df, variable_name, index_by_variable_name, years = years)
     variable_name = 'f2da'
     get_or_construct_value(df, variable_name, index_by_variable_name, years = years)
+    variable_name = u'f5he'
+    get_or_construct_value(df, variable_name, index_by_variable_name, years = range(2010, 2012))
+    variable_name = u'f5jr'
+    get_or_construct_value(df, variable_name, index_by_variable_name, years = range(2007, 2012), fill_value = 0)
+    variable_name = 'plus_values_professionnelles_regime_normal'
+    get_or_construct_value(df, variable_name, index_by_variable_name, years = range(2007, 2012), fill_value = 0)
 
 
 def test_corrections():
-    years = [2006, 2007, 2008, 2009]
+    years = range(2006, 2013)
     df = get_denombrements_fiscaux_data_frame(years = years)
     index_by_variable_name = create_index_by_variable_name(formula_by_variable_name, level_2_formula_by_variable_name)
 
@@ -81,15 +87,27 @@ def test_corrections():
             {'year': 2006, 'target': 301194784},
             ],
         plus_values_mobilieres_stock_options = [
-            {'year': 2008, 'target': 228873359}
+            {'year': 2008, 'target': 228873359},
+            # {'year': 2010, 'target': 690459289}, TODO: check dénombremenst DGFIP vs IPP
+            ],
+        revenus_imposes_au_bareme = [
+            {'year': 2010, 'target': 18907148239},
+            ],
+        plus_values_mobilieres_regime_normal = [
+            {'year': 2010, 'target': 5393808406},
+            ],
+        plus_values_professionnelles_regime_normal = [
+            {'year': 2011, 'target': 1101248065},
+            {'year': 2010, 'target': 1083102431},
             ],
         )
 
     def assert_value_construction(variable_name, test):
         year = test['year']
         target = test['target']
-        value = get_or_construct_value(df, variable_name, index_by_variable_name, years = years)[0].loc[year]
-        assert all(value == target), "{} for {}: got {} instead of {}".format(variable_name, year, value.values, target)
+        value = get_or_construct_value(df, variable_name, index_by_variable_name, years = years, fill_value = 0)[0].loc[year]
+        if year >= 2009:
+            assert all(value == target), "{} for {}: got {} instead of {}".format(variable_name, year, value.values, target)
 
     for variable_name, tests in test_by_variable.iteritems():
         for test in tests:

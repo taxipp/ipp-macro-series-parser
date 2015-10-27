@@ -209,14 +209,14 @@ def get_or_construct_value(df, variable_name, index_by_variable, years = None, f
         assert len(result_data_frame.columns) == 1
         result_data_frame.columns = [variable_name]
         try:
-            result_data_frame = result_data_frame.reindex(index = years, copy = False)
+            result_data_frame = result_data_frame.reindex(index = years, fill_value = fill_value, copy = False)
         except:
             print result_data_frame
         final_formula = variable_name
 
     # For formulas that are not real formulas but that are actually a mapping
-    elif not formula and entry_df.empty:
-        result_data_frame = pandas.DataFrame()
+    elif (not formula) and entry_df.empty:
+        result_data_frame = pandas.DataFrame(data = [fill_value] * len(years), index = years)
         final_formula = ''
 
     else:
@@ -254,9 +254,13 @@ def get_or_construct_value(df, variable_name, index_by_variable, years = None, f
                 index = variable_value.index
                 assert len(variable_value.index) == len(variable_value.index.unique()), "Component {} does not have a single valued index {}".format(component, variable_value.index)
             else:
-                reindexing_condition = (
+                equality_index_test = (
                     numpy.sort(index.unique()) != numpy.sort(variable_value.index.unique())
-                    ).any()
+                    )
+                try:
+                    reindexing_condition = equality_index_test.any()
+                except AttributeError:
+                    reindexing_condition = equality_index_test
                 if reindexing_condition:
                     log.info('index differs {} vs {} after getting {}'.format(
                         index, variable_value.index, component))

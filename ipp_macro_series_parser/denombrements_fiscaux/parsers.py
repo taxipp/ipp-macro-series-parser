@@ -679,14 +679,16 @@ def parse_dgfip_denombrements(years = None):
 
 # TODO:
         if year in [2005, 2006, 2007, 2008]:
-            continue
-#            regex = re.compile("[A-Z]{2}")
+#            continue
+            regex = re.compile("[A-Z]{2}")
 
-#            dgfip_denombrements = dgfip_denombrements.set_index('nom').filter(regex = regex, axis = 0)
-#            dgfip_denombrements.index.name = 'code'
-#            new_variable_name_by_old = dict(
-#                (x, "f{}".format(x.lower())) for x in dgfip_denombrements.index)
-#            dgfip_denombrements = dgfip_denombrements.rename(index = new_variable_name_by_old)
+            dgfip_denombrements = dgfip_denombrements.set_index('nom').filter(regex = regex, axis = 0)
+            dgfip_denombrements.index.name = 'code'
+            new_variable_name_by_old = dict(
+                (x, "f{}".format(x.lower())) for x in dgfip_denombrements.index)
+            dgfip_denombrements = dgfip_denombrements.rename(index = new_variable_name_by_old)
+            print dgfip_denombrements
+            boum
             # trouver un moyen de renommer les codes pour qu'il y ait le numéro des sections
 
 #            dgfip_denombrements.rename(columns = {'nom': 'code'}, inplace = True)
@@ -695,7 +697,7 @@ def parse_dgfip_denombrements(years = None):
 #                    print dgfip_denombrements.ix[ind]['code']
 #                    dgfip_denombrements.rename(
 #                        {dgfip_denombrements.ix[ind]['code']: "1{}".format(dgfip_denombrements.ix[ind]['code'])}) # ,inplace = True
-
+#
 # or
 #            dgfip_denombrements = dgfip_denombrements.filter(items = ['nom'], regex = regex)
 #
@@ -704,7 +706,7 @@ def parse_dgfip_denombrements(years = None):
 #                if re.match("[A-Z][I, J, K, O, P, Q, S, V, W, X]", dgfip_denombrements.ix[ind]['nom']):
 #                    print dgfip_denombrements.ix[ind]['nom']
 #                    dgfip_denombrements.ix[ind]['code'] = "1{}".format(dgfip_denombrements.ix[ind]['nom'])
-
+#
 #            dgfip_denombrements = dgfip_denombrements.set_index('code').filter(regex = regex, axis = 0)
 
         if year == 2004:
@@ -823,7 +825,7 @@ def create_denombrements_fiscaux_data_frame(year = None, years = None, overwrite
     df2 = df2.loc[~(df2.code.isin(wrong_codes) | (df2.year.isin(wrong_years)))]
     result = df2.loc[df2.year.isin(years)].copy() if years is not None else df2.copy()
 
-    result = dgfip_denombrements.copy()
+    result = dgfip_denombrements.copy()  # seulement DGFiP pour l'instant. TODO: recoupement avec data OpenFisca & IPP
 
     if overwrite:
         save_df_to_hdf(result, 'denombrements_fiscaux', 'montants')
@@ -831,12 +833,18 @@ def create_denombrements_fiscaux_data_frame(year = None, years = None, overwrite
     return result, errors
 
 
+def build_section_code():
+    openfisca_denombrements = parse_openfisca_denombrements()
+    ipp_denombrements = parse_ipp_denombrements()
+    df = pandas.concat([openfisca_denombrements.code, openfisca_denombrements.code])
+    return df.unique()
+
 def get_denombrements_fiscaux_data_frame(year = None, years = None, rebuild = False, overwrite = False,
         fill_value = numpy.nan):
     if year is not None and years is None:
         years = [year]
     if rebuild:
-        return get_denombrements_fiscaux_data_frame(years = years, overwrite = overwrite)
+        return create_denombrements_fiscaux_data_frame(years = years, overwrite = overwrite)
     else:
         data_frame = import_from_hdf('denombrements_fiscaux', 'montants')
         return data_frame.loc[data_frame.year.isin(years)].copy()
@@ -855,8 +863,10 @@ def import_from_hdf(hdf_filename, key):
 
 
 if __name__ == '__main__':
-    # dgfip = parse_dgfip_denombrements(years = range(2004, 2014))
-    denomb_fisc_all, errors = create_denombrements_fiscaux_data_frame(
-        years = range(2009, 2014),
-        overwrite = True
-        )
+    build_section_code()
+    dgfip = parse_dgfip_denombrements(years = range(2008, 2009))
+    print dgfip
+#    denomb_fisc_all, errors = create_denombrements_fiscaux_data_frame(
+#        years = range(2009, 2014),
+#        overwrite = True,
+#        )
