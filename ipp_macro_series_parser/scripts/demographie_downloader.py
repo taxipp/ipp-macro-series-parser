@@ -23,8 +23,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""Download Comptes nationaux files from the INSEE website for specific years and unzip them
-INSEE website: http://www.insee.fr/fr/indicateurs/cnat_annu/archives/comptes_annee_YEAR.zip
+"""Download http://www.insee.fr/fr/ppp/bases-de-donnees/donnees-detaillees/bilan-demo/fichiers-xls/
 """
 
 

@@ -16,7 +16,7 @@ parser = Config(
     config_files_directory = os.path.join(pkg_resources.get_distribution('ipp-macro-series-parser').location)
     )
 transports_directory = parser.get('data', 'transports_directory')
-
+assert os.path.exists(transports_directory), "{} is not a valid directory".format(transports_directory)
 
 def getunzipped(theurl, thedir, file_name):
     name = os.path.join(thedir, file_name)
