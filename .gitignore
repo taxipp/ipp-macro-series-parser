@@ -1,10 +1,12 @@
+.tags*
+
 # Local configuration file
 config_local.ini
 
 # Spyder config file
 .spyderproject
 
-# 
+#
 .idea/
 
 
