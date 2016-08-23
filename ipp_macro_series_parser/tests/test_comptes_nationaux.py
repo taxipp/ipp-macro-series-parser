@@ -58,32 +58,30 @@ def test_get_or_construct_value1():
     folder_year = 2013
     overall_dict = {
         'pib': {
-            'code': None,
+            'code': 'B1g/PIB',
             'institution': 'S1',
-            'ressources': False,
             'description': 'PIB'
             },
         'complicated_var': {
             'code': None,
-            'institution': 'S1',
-            'ressources': False,
             'description': 'PIB0',
             'formula': '2*pib - pib - pib + pib*pib - pib^2'
             },
         'very_complicated_var': {
             'code': None,
-            'institution': 'S1',
-            'ressources': False,
             'description': 'PIB0',
             'formula': 'complicated_var^2'
             }
         }
-    variable_name = 'very_complicated_var'
     df = get_comptes_nationaux_data(folder_year)
+
+    variable_name = 'pib'
+    pib_serie = get_or_construct_value(df, variable_name, overall_dict, years = range(1949, 2014))
+    variable_name = 'very_complicated_var'
     serie, formula = get_or_construct_value(df, variable_name, overall_dict, years = range(1949, 2014))
     assert isinstance(serie, pandas.DataFrame)
     assert serie.columns == [variable_name]
-    assert all(serie[variable_name] == 0)
+    assert all(serie[variable_name] == 0), serie[variable_name]
 
 
 def test_get_or_construct_data_profits():  # copied on the one in cn_test

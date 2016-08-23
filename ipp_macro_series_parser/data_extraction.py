@@ -50,8 +50,14 @@ def look_up(df, entry_by_index, years = None):
     --------
     >>> from ipp_macro_series_parser.comptes_nationaux.cn_parser_main import get_comptes_nationaux_data
     >>> table2013 = get_comptes_nationaux_data(2013)
-    >>> dico = {'code': 'B1g/PIB', 'institution': 'S1', 'ressources': False, 'year': None, 'description': 'PIB'}
-    >>> df0 = look_up(table2013, dico)
+    >>> entry_by_index = {
+        'code': 'B1g/PIB',
+        'description': 'PIB'
+        'institution': 'S1',
+        'ressources': False,
+        'year': None,
+        }
+    >>> df0 = look_up(table2013, entry_by_index)
 
     Returns a slice of get_comptes_nationaux_data(2013) containing only the gross product (PIB) of the whole economy
     (S1), for all years.
@@ -59,25 +65,37 @@ def look_up(df, entry_by_index, years = None):
     assert years is not None
     result = df.copy()
     result = result[df['year'].isin(years)].copy()
-    for key, value in entry_by_index.items():
-        if value is None:
-            continue
-        if key == 'drop':
-            continue
-        if key != 'description' and key != 'formula':
-            try:
-                query_expression = "{} == '{}'".format(key, value)
-                result = df.query(query_expression)
-            except KeyError, e:
-                log.info('{} for {} is not available'.format(value, key))
-                raise(e)
-            if result.empty:
-                log.info('Variable {} is not available'.format(value))
-                result = pandas.DataFrame()
-        elif key == 'description':
-            result = result[df[key].str.contains(value)].copy()
-        else:
-            result = pandas.DataFrame()
+    code = entry_by_index['code']
+    institution = entry_by_index.get('institution')
+    if institution is not None:
+        query_expression = "code == @code & institution == @institution"
+    else:
+        query_expression = "code == @code"
+
+    result = result.query(query_expression)
+
+    # for key, value in entry_by_index.items():
+    #     if value is None:
+    #         continue
+    #     if key == 'drop':
+    #         continue
+    #     if key != 'description' and key != 'formula' and key != 'ressources':
+    #         print key, value
+    #         try:
+    #             query_expression = "{} == @value".format(key)
+    #             result = df.query(query_expression)
+    #         except KeyError, e:
+    #             log.info('{} for {} is not available'.format(value, key))
+    #             raise(e)
+    #         if result.empty:
+    #             log.info('No result for {} == {}'.format(key, value))
+    #             result = pandas.DataFrame()
+    #     else:
+    #         result = pandas.DataFrame()
+
+    if result.empty:
+        log.info('Cannot find variable for {}.\nReturning empy DataFrame'.format(entry_by_index))
+
     return result
 
 
@@ -122,7 +140,7 @@ def look_many(df, entry_by_index_list, years = None):
     return df_output
 
 
-def get_or_construct_value(df, variable_name, index_by_variable, years = None, fill_value = numpy.NaN):
+def get_or_construct_value(df, variable_name = None, index_by_variable = None, years = None, fill_value = numpy.NaN):
     """
     Returns the DateFrame (1 column) of the value of economic variable(s) for years of interest.
     Years are set to the index of the DataFrame.
@@ -185,11 +203,11 @@ def get_or_construct_value(df, variable_name, index_by_variable, years = None, f
     """
 
     assert df is not None
-    df = df.copy()
-
+    assert variable_name is not None
     assert years is not None
 
-    assert variable_name is not None
+    df = df.copy()
+
     if index_by_variable is None:
         index_by_variable = {
             variable_name: {'code': variable_name}
@@ -200,6 +218,7 @@ def get_or_construct_value(df, variable_name, index_by_variable, years = None, f
     formula = variable.get('formula')
 
     dico_value = dict()
+    print variable
     entry_df = look_up(df, variable, years)
     index = None
 
@@ -208,10 +227,7 @@ def get_or_construct_value(df, variable_name, index_by_variable, years = None, f
         result_data_frame = entry_df[['value']].copy()
         assert len(result_data_frame.columns) == 1
         result_data_frame.columns = [variable_name]
-        try:
-            result_data_frame = result_data_frame.reindex(index = years, fill_value = fill_value, copy = False)
-        except:
-            print result_data_frame
+        result_data_frame = result_data_frame.drop_duplicates()
         final_formula = variable_name
 
     # For formulas that are not real formulas but that are actually a mapping
@@ -247,12 +263,19 @@ def get_or_construct_value(df, variable_name, index_by_variable, years = None, f
 
         variables = expr.variables()
         for component in variables:
+            print "\n***************"
+            print component
+            print ''
+            print index_by_variable
             variable_value, variable_formula = get_or_construct_value(
                 df, component, index_by_variable, years, fill_value = fill_value)
 
             if index is None:
                 index = variable_value.index
-                assert len(variable_value.index) == len(variable_value.index.unique()), "Component {} does not have a single valued index {}".format(component, variable_value.index)
+                # assert not variable_value.duplicated().any(), "There are duplicated variables "
+                assert len(variable_value.index) == len(variable_value.index.unique()), \
+                    "Component {} does not have a single valued index.\n The following values {} are duplicated".format(
+                        component, variable_value.index[variable_value.index.duplicated()])
             else:
                 equality_index_test = (
                     numpy.sort(index.unique()) != numpy.sort(variable_value.index.unique())
@@ -267,7 +290,7 @@ def get_or_construct_value(df, variable_name, index_by_variable, years = None, f
                     index = index.union(variable_value.index)
                     log.info('Will be using union index {}'.format(index))
 
-            formula_with_parenthesis = '(' + variable_formula + ')'  # needs a nicer formula output
+            formula_with_parenthesis = '(' + variable_formula + ')'  # TODO needs a nicer formula output
             final_formula = formula.replace(component, formula_with_parenthesis)
             dico_value[component] = variable_value
 
@@ -287,7 +310,13 @@ def get_or_construct_value(df, variable_name, index_by_variable, years = None, f
                 index = index,
                 )
         except Exception, e:
-            print variable_name, data, index
+            print 'FAILED'
+            print variable_name
+            print 'data'
+            print data
+            print 'index'
+            print index
+
             raise(e)
 
     return result_data_frame, final_formula
