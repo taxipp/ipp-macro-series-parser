@@ -679,7 +679,7 @@ def parse_dgfip_denombrements(years = None):
 
 # TODO:
         if year in [2005, 2006, 2007, 2008]:
-#            continue
+            # continue
             regex = re.compile("[A-Z]{2}")
 
             dgfip_denombrements = dgfip_denombrements.set_index('nom').filter(regex = regex, axis = 0)
@@ -838,6 +838,7 @@ def build_section_code():
     ipp_denombrements = parse_ipp_denombrements()
     df = pandas.concat([openfisca_denombrements.code, openfisca_denombrements.code])
     return df.unique()
+
 
 def get_denombrements_fiscaux_data_frame(year = None, years = None, rebuild = False, overwrite = False,
         fill_value = numpy.nan):

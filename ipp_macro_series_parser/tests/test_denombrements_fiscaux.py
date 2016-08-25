@@ -161,7 +161,7 @@ messages = list()
 for irpp_table_name, data_frame in data_frame_by_irpp_table_name.iteritems():
     for year in data_frame.index:
         for variable in data_frame.columns:
-            if not (2008 <=  year <= 2011):
+            if not (2008 <= year <= 2011):
                 continue
             if variable in excluded_variables:
                 continue
@@ -180,3 +180,5 @@ for irpp_table_name, data_frame in data_frame_by_irpp_table_name.iteritems():
 
 for message in messages:
     print message
+
+assert len(messages) == 0, "There are {} errors".format(len(messages))

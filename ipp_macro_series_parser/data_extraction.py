@@ -49,6 +49,9 @@ def look_up(df, entry_by_index, years = None):
     code = entry_by_index.get('code')
     query_expression = "code == @code"
 
+    if code is None:
+        return pandas.DataFrame()
+
     for index, entry in entry_by_index.iteritems():
         if index == 'code':
             continue
@@ -64,7 +67,7 @@ def look_up(df, entry_by_index, years = None):
 
     result = result.query(query_expression)
 
-    if code is None or result.empty:
+    if result.empty:
         log.info('Cannot find variable for {}.\nReturning empy DataFrame'.format(entry_by_index))
         return pandas.DataFrame()
 
@@ -112,7 +115,8 @@ def look_many(df, entry_by_index_list, years = None):
     return df_output
 
 
-def get_or_construct_value(df, variable_name = None, index_by_variable = None, years = None, fill_value = numpy.NaN):
+def get_or_construct_value(df, variable_name = None, index_by_variable = None, years = None, fill_value = numpy.NaN,
+        verbose = False):
     """
     Returns the DateFrame (1 column) of the value of economic variable(s) for years of interest.
     Years are set to the index of the DataFrame.
@@ -234,11 +238,13 @@ def get_or_construct_value(df, variable_name = None, index_by_variable = None, y
 
         variables = expr.variables()
         for component in variables:
-            log.info('Component {} of the formula'.format(component))
-            log.info(pretty_printer(index_by_variable))
+            if verbose:
+                log.error('Component {} of the formula'.format(component))
+                log.error(pretty_printer(index_by_variable))
             variable_value, variable_formula = get_or_construct_value(
                 df, component, index_by_variable, years, fill_value = fill_value)
-            log.info(variable_value)
+            if verbose:
+                log.info(variable_value)
 
             if index is None:
                 index = variable_value.index

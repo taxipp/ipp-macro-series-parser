@@ -14,7 +14,7 @@ from ipp_macro_series_parser.data_extraction import get_or_construct_value
 
 def test_run_through():
     years = [2006, 2007, 2008, 2009, 2010, 2011]
-    df = get_denombrements_fiscaux_data_frame(years = years)
+    df = get_denombrements_fiscaux_data_frame(yenars = years)
     index_by_variable_name = create_index_by_variable_name(formula_by_variable_name, level_2_formula_by_variable_name)
     variable_name = 'interets_imposes_au_prelevement_liberatoire'
     get_or_construct_value(df, variable_name, index_by_variable_name, years = years)
@@ -83,9 +83,11 @@ def test_corrections():
     def assert_value_construction(variable_name, test):
         year = test['year']
         target = test['target']
-        value = get_or_construct_value(df, variable_name, index_by_variable_name, years = years, fill_value = 0)[0].loc[year]
+        value = get_or_construct_value(
+            df, variable_name, index_by_variable_name, years = years, fill_value = 0)[0].loc[year]
         if year >= 2009:
-            assert all(value == target), "{} for {}: got {} instead of {}".format(variable_name, year, value.values, target)
+            assert all(value == target), "{} for {}: got {} instead of {}".format(
+                variable_name, year, value.values, target)
 
     for variable_name, tests in test_by_variable.iteritems():
         for test in tests:
