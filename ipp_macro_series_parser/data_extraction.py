@@ -27,10 +27,12 @@ import copy
 import logging
 import numpy
 import pandas
+import pprint
 from py_expression_eval import Parser
 
 
 log = logging.getLogger(__name__)
+pretty_printer = pprint.PrettyPrinter(indent=4).pprint
 
 
 def look_up(df, entry_by_index, years = None):
@@ -254,13 +256,11 @@ def get_or_construct_value(df, variable_name = None, index_by_variable = None, y
 
         variables = expr.variables()
         for component in variables:
-            print "\n***************"
-            print component
-            print ''
-            print index_by_variable
+            log.info('Component {} of the formula'.format(component))
+            log.info(pretty_printer(index_by_variable))
             variable_value, variable_formula = get_or_construct_value(
                 df, component, index_by_variable, years, fill_value = fill_value)
-            print variable_value
+            log.info(variable_value)
 
             if index is None:
                 index = variable_value.index
@@ -304,12 +304,12 @@ def get_or_construct_value(df, variable_name = None, index_by_variable = None, y
                 )
             result_data_frame.index.name = 'year'
         except Exception, e:
-            print 'FAILED'
-            print variable_name
-            print 'data'
-            print data
-            print 'index'
-            print index
+            log.error('FAILED')
+            log.error(variable_name)
+            log.error('data')
+            log.error(data)
+            log.error('index')
+            log.error(index)
             raise(e)
 
     return result_data_frame, final_formula
