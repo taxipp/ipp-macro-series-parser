@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
+import logging
 import os
 import pandas
 import pkg_resources
@@ -8,6 +9,10 @@ import pkg_resources
 
 from ipp_macro_series_parser.config import Config
 from ipp_macro_series_parser.denombrements_fiscaux.agregats_ipp import build_irpp_tables
+
+
+log = logging.getLogger(__name__)
+
 
 config_parser = Config(
     config_files_directory = os.path.join(pkg_resources.get_distribution('ipp-macro-series-parser').location)
@@ -178,7 +183,4 @@ for irpp_table_name, data_frame in data_frame_by_irpp_table_name.iteritems():
             if not abs(target - actual) / abs(target) <= 1e-3:
                 messages.append(error_msg(irpp_table_name, variable, year, target, actual))
 
-for message in messages:
-    print message
-
-assert len(messages) == 0, "There are {} errors".format(len(messages))
+assert len(messages) == 0, "\nThere are {} errors.".format(len(messages)) + "\n".join(messages)

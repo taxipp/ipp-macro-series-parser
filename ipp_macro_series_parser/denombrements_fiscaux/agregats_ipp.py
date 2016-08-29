@@ -12,7 +12,7 @@ from py_expression_eval import Parser
 
 
 from ipp_macro_series_parser.config import Config
-from ipp_macro_series_parser.denombrements_fiscaux.parsers import (
+from ipp_macro_series_parser.denombrements_fiscaux.denombrements_parsers import (
     get_denombrements_fiscaux_data_frame)
 from ipp_macro_series_parser.data_extraction import get_or_construct_value
 
@@ -614,8 +614,8 @@ of_name_by_irpp_table_name = dict(
     benefices_non_commerciaux_non_professionnels_declaration_controlee_sans_cga = '',
     revenus_fonciers_regime_normal = 'f4ba',  # f4ba
     revenus_fonciers_micro_foncier = 'f4be',  # f4be
-    allocations_chomage = 'cho',
-    pensions_de_retraite = 'rst',
+    allocations_chomage = 'chomage_imposable',
+    pensions_de_retraite = 'retraite_imposable',
     dividendes_imposes_au_bareme = 'f2dc + f2fu',  # 'f2dc + f2fu' non agrégés
     interet_imposes_au_bareme = 'f2ts + f2go + f2tr',  # non agrégés
     assurances_vie_imposees_au_bareme = 'f2ch',  # non agrégés

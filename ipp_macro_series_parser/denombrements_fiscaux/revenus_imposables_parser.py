@@ -86,6 +86,7 @@ def get_impot_revenu_national():
     return pandas.concat(total_data_frame_by_year.values())
 
 
-if __name__ == '__main__':
+def build_excel(file_path = None):
+    assert file_path is not None
     data_frame = get_impot_revenu_national()
-    data_frame.to_excel('foyers_imposables_imposes.xls')
+    data_frame.to_excel(file_path)
