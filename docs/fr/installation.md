@@ -15,6 +15,6 @@ pip install -e .
 
 ## Configuration
 
-Renommez config.ini en config_local.ini, et remplacez None par le chemin du dossier dans lequel vous souhaitez sauvergarder les données qui seront téléchargées.
+Renommez config.ini en config_local.ini, et remplacez None par les chemins des dossiers dans lesquels vous souhaitez sauvergarder les données qui seront téléchargées ou produites.
 Par exemple, les données téléchargées à  l'aide du script comptes_nationaux seront sauvegardées dans le dossier de votre choix, que vous aurez indiqué dans cn_directory.
 
