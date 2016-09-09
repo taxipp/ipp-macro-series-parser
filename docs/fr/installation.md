@@ -1,4 +1,4 @@
-# Installation and configuration
+# Installation et configuration
 
 > Note: Cette documentation est en cours d'écriture.
 
