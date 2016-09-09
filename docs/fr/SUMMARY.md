@@ -1,7 +1,7 @@
 ## Table des matières
 
 * [Présentation](./presentation.md)
-* [Installation et configuration](./install.md)
+* [Installation et configuration](./installation.md)
 * [Description des moissonneurs](./parsers.md)
   * [Comptes nationaux](./comptes_nationaux.md)
   * [Démographie](./demographie.md)
