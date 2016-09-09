@@ -15,5 +15,5 @@ pip install -e .
 
 ## Configuration
 
-Rename config.ini as config_local.ini, replacing None by the path to the folder in which you wish to store the data which will be downloaded.
+Rename config.ini as config_local.ini, replacing each None by the path of the folder in which you wish to store the data which will be downloaded or created.
 For example, the data downloaded with comptes_nationaux will be stored in a folder of your choice, which you should have indicated in cn_directory.
