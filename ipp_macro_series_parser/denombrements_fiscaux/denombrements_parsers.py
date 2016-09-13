@@ -648,7 +648,7 @@ def parse_dgfip_denombrements(years = None):
     assert min(years) >= 2001
     assert max(years) <= 2013
 
-    dgfip_directory = os.path.join(xls_directory, 'D2042Nat')
+    dgfip_directory = os.path.join(xls_direhctory, 'D2042Nat')
     files = os.listdir(dgfip_directory)
     result = pandas.DataFrame()
 
@@ -677,7 +677,7 @@ def parse_dgfip_denombrements(years = None):
             dgfip_denombrements.rename(columns = {'montant': 'value', 'Nombre': 'nombre'}, inplace = True)
             del dgfip_denombrements['nombre']
 
-# TODO:
+        # TODO:
         if year in [2005, 2006, 2007, 2008]:
             # continue
             regex = re.compile("[A-Z]{2}")
@@ -825,7 +825,8 @@ def create_denombrements_fiscaux_data_frame(year = None, years = None, overwrite
     df2 = df2.loc[~(df2.code.isin(wrong_codes) | (df2.year.isin(wrong_years)))]
     result = df2.loc[df2.year.isin(years)].copy() if years is not None else df2.copy()
 
-    result = dgfip_denombrements.copy()  # seulement DGFiP pour l'instant. TODO: recoupement avec data OpenFisca & IPP
+    log.info('For now, we keep only DGFiP data')
+    result = dgfip_denombrements.copy()  # TODO: recoupement avec data OpenFisca & IPP
 
     if overwrite:
         save_df_to_hdf(result, 'denombrements_fiscaux', 'montants')
@@ -847,7 +848,7 @@ def get_denombrements_fiscaux_data_frame(year = None, years = None, rebuild = Fa
     if rebuild:
         return create_denombrements_fiscaux_data_frame(years = years, overwrite = overwrite)
     else:
-        data_frame = import_from_hdf('denombrements_fiscaux', 'montants')
+        data_frame = import_from_hdf('denombrements_fiscaux.hdf5', 'montants')
         return data_frame.loc[data_frame.year.isin(years)].copy()
 
 

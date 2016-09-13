@@ -628,7 +628,7 @@ of_name_by_irpp_table_name = dict(
     plus_values_professionnelles_regime_normal = 'f5hz + f5iz + f5jz',  # TODO: ceci n'est valable qu'avant 2010
     plus_values_professionnelles_retraite_dirigeant = 'f5hg + f5ig',
     revenus_distribues_pea_exoneres = 'f2gr',
-    pensions_alimentaires_percues = 'pensions_alimentaires_percues', # pensions_alimentaires_percues
+    pensions_alimentaires_percues = 'pensions_alimentaires_percues',  # pensions_alimentaires_percues
 #    pensions_alimentaires_versess = 'f6gi + f6gj + f6el + f6em + f6gp + f6gu + f6dd',
     )
 

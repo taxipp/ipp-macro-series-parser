@@ -29,7 +29,7 @@ assert demographie_directory != 'None', \
     "Set demographie_directory_directory in the data section of you config[_local].ini file to a valid directory"
 
 
-# Download a the xls file from url and unzipp it in directory thedir
+# Download a the xls file from url and unzipp it in directory
 def demographie_downloader(years = None, directory = demographie_directory):
     assert years is not None
     if type(years) is int:
