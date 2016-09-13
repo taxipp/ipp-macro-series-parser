@@ -5,8 +5,10 @@
 Le script [`cn_downloader`] (../../ipp-macro-series-parser/scripts/cn_downloader.py) permet le téléchargement des
 données brutes de la comptabilité nationale depuis le site de l'INSEE. Vous pouvez choisir de télécharger l'ensemble des données publiées les dix dernières années, ou de choisir une ou plusieurs années, par exemple la dernière <span>&mdash;</span> qui contient aussi les agrégats (aux montants éventuellement corrigés) des années précédentes.
 
-Une aide existe concernant les options à renseigner : exécuter
-```python ./ipp-macro-series-parser/scripts/cn_downloader.py -h```
+Une aide existe concernant les options à renseigner. Elle est accessible en exécutant:
+```python
+./ipp-macro-series-parser/scripts/cn_downloader.py -h
+```
   
 ### Extraire des agrégats de la comptabilité nationale
 
