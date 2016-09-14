@@ -15,7 +15,7 @@ import urllib
 
 
 from ipp_macro_series_parser.config import Config
-from ipp_macro_series_parser.denombrements_fiscaux.denombrements_fiscaux_parser import (
+from ipp_macro_series_parser.denombrements_fiscaux.denombrements_parsers import (
     create_denombrements_fiscaux_data_frame
     )
 app_name = os.path.splitext(os.path.basename(__file__))[0]
@@ -54,13 +54,13 @@ def main():
         "Set denombrements_fiscaux_hdf in the data section of you config[_local].ini file to a valid directory"
     if not os.path.exists(denombrements_fiscaux_hdf_directory):
         log.info("We create the directory {} which doesn't exists")
-    hdf_file_path = os.path.join(denombrements_fiscaux_hdf_directory, 'denombrements_fiscaux.hdf5')
+    hdf_file_path = os.path.join(denombrements_fiscaux_hdf_directory, 'denombrements_fiscaux.h5')
     if os.path.exists(hdf_file_path):
         if not args.force:
             log.error("The file {} already exists. Use the --force to overwrite.".format(hdf_file_path))
             return
 
-    create_denombrements_fiscaux_data_frame(years = years, overwrite = True)
+    create_denombrements_fiscaux_data_frame(year = None,    years = years, overwrite = True)
 
 
 if __name__ == "__main__":

@@ -648,7 +648,7 @@ def parse_dgfip_denombrements(years = None):
     assert min(years) >= 2001
     assert max(years) <= 2013
 
-    dgfip_directory = os.path.join(xls_direhctory, 'D2042Nat')
+    dgfip_directory = os.path.join(xls_directory, 'D2042Nat')
     files = os.listdir(dgfip_directory)
     result = pandas.DataFrame()
 
@@ -779,6 +779,7 @@ def create_denombrements_fiscaux_data_frame(year = None, years = None, overwrite
     if year is not None and years is None:
         years = [year]
 
+    log.info('Parsing dénombrements fiscaux raw data for the following years: {}'.format(years))
     # Data coming for openfisca xls file
     openfisca_denombrements = parse_openfisca_denombrements()
     openfisca_denombrements['origin'] = 'OF'
@@ -829,7 +830,7 @@ def create_denombrements_fiscaux_data_frame(year = None, years = None, overwrite
     result = dgfip_denombrements.copy()  # TODO: recoupement avec data OpenFisca & IPP
 
     if overwrite:
-        save_df_to_hdf(result, 'denombrements_fiscaux', 'montants')
+        save_df_to_hdf(result, 'denombrements_fiscaux.h5', 'montants')
 
     return result, errors
 
@@ -848,7 +849,7 @@ def get_denombrements_fiscaux_data_frame(year = None, years = None, rebuild = Fa
     if rebuild:
         return create_denombrements_fiscaux_data_frame(years = years, overwrite = overwrite)
     else:
-        data_frame = import_from_hdf('denombrements_fiscaux.hdf5', 'montants')
+        data_frame = import_from_hdf('denombrements_fiscaux.h5', 'montants')
         return data_frame.loc[data_frame.year.isin(years)].copy()
 
 

@@ -32,6 +32,21 @@ should be {} instead of {}
 fill_value = 0
 
 
+def check_nan_log_msg(table_name, data_frame):
+
+    data_frame = data_frame.reset_index()
+    data_frame = data_frame.loc[
+        (data_frame.year >= 2008) & (data_frame.year <= 2011)
+        ].set_index('year')
+    if not data_frame.notnull().all().all():
+        log.info('{} has NaN variables:\n {} \n'.format(
+            table_name,
+            data_frame[
+                data_frame.isnull().any(axis=1) & ~data_frame.isnull().all(axis=1)
+                ].T
+            ))
+
+
 def build_original_irpp_tables():
 
     # Table 1
@@ -61,6 +76,7 @@ def build_original_irpp_tables():
         parse_cols = 'A:O').iloc[1:20]
     irpp_1.rename(columns = slugified_name_by_long_name, inplace = True)
     irpp_1.index.name = 'year'
+    check_nan_log_msg('irpp_1', irpp_1)
 
     # Table 2
     slugified_name_by_long_name.update({
@@ -87,13 +103,16 @@ def build_original_irpp_tables():
         parse_cols = 'A:M').iloc[1:20]
     irpp_2.rename(columns = slugified_name_by_long_name, inplace = True)
     irpp_2.index.name = 'year'
+    del irpp_2[u'Total (après abat.)']
+    check_nan_log_msg('irpp_2', irpp_2)
 
     # Table 3
     slugified_name_by_long_name.update({
         u'Total  Plus-values': 'plus_values',
         u'PV mobilières (régime normal)': 'plus_values_mobilieres_regime_normal',
-        # u'PV stock options 1',
-        # u'PV stock options 2',  'plus_values_mobilieres_stock_options' sum of both
+        u'PV stock options 1': 'pv_stock_options_1',
+        u'PV stock options 2': 'pv_stock_options_2',
+        # 'plus_values_mobilieres_stock_options' sum of both see below
         u'PV retraite dirigeant': 'plus_values_mobilieres_retraite_dirigeant',
         u'PV profess. (régime normal)*': 'plus_values_professionnelles_regime_normal',
         u'PV profess. (retraite dirigeant)': 'plus_values_professionnelles_retraite_dirigeant',
@@ -109,6 +128,8 @@ def build_original_irpp_tables():
         parse_cols = 'A:I').iloc[1:20]
     irpp_3.rename(columns = slugified_name_by_long_name, inplace = True)
     irpp_3.index.name = 'year'
+    irpp_3['plus_values_mobilieres_stock_options'] = irpp_3.pv_stock_options_1 + irpp_3.pv_stock_options_2
+    check_nan_log_msg('irpp_3', irpp_3)
 
     # Table 4
     slugified_name_by_long_name.update({
@@ -137,6 +158,11 @@ def build_original_irpp_tables():
         parse_cols = 'A:O').iloc[1:20]
     irpp_4.rename(columns = slugified_name_by_long_name, inplace = True)
     irpp_4.index.name = 'year'
+    irpp_4 = irpp_4 / 1e9
+    del irpp_4['txabt_micro']
+    del irpp_4['txabt_micro_service']
+    del irpp_4['txabt_microbnc']
+    check_nan_log_msg('irpp_4', irpp_4)
 
     original_data_frame_by_irpp_table_name = dict(
         irpp_1 = irpp_1,
@@ -148,39 +174,37 @@ def build_original_irpp_tables():
     return original_data_frame_by_irpp_table_name
 
 
-data_frame_by_irpp_table_name = build_irpp_tables(years = range(2009, 2013), fill_value = 0)
-original_data_frame_by_irpp_table_name = build_original_irpp_tables()
+def test():
+    data_frame_by_irpp_table_name = build_irpp_tables(years = range(2009, 2013), fill_value = 0)
+    original_data_frame_by_irpp_table_name = build_original_irpp_tables()
 
+    excluded_variables = [
+        'salaires_imposables',
+        'heures_supplementaires',
+        'frais_reels',
+        'pensions_alimentaires_percues',
+        'plus_values_mobilieres_stock_options',
+        'plus_values_mobilieres',
+        'plus_values_professionnelles',
+        ]
 
-excluded_variables = [
-    'salaires_imposables',
-    'heures_supplementaires',
-    'frais_reels',
-    'pensions_alimentaires_percues',
-    'plus_values_mobilieres_stock_options',
-    'plus_values_mobilieres',
-    'plus_values_professionnelles',
-    ]
+    messages = list()
+    for irpp_table_name, data_frame in data_frame_by_irpp_table_name.iteritems():
+        for year in data_frame.index:
+            for variable in data_frame.columns:
+                if not (2008 <= year <= 2011):
+                    continue
+                if variable in excluded_variables:
+                    continue
+                try:
+                    target = (
+                        original_data_frame_by_irpp_table_name[irpp_table_name].loc[year, variable]
+                        )
+                except KeyError:
+                    print '{} not found for {} in table {}'.format(variable, year, irpp_table_name)
+                    continue
+                actual = data_frame.fillna(value = fill_value).loc[year, variable] / 1e9
+                if not abs(target - actual) / abs(target) <= 1e-3:
+                    messages.append(error_msg(irpp_table_name, variable, year, target, actual))
 
-messages = list()
-for irpp_table_name, data_frame in data_frame_by_irpp_table_name.iteritems():
-    for year in data_frame.index:
-        for variable in data_frame.columns:
-            if not (2008 <= year <= 2011):
-                continue
-            if variable in excluded_variables:
-                continue
-            try:
-                target = (
-                    original_data_frame_by_irpp_table_name[irpp_table_name].loc[year, variable]
-                    if irpp_table_name != 'irpp_4'
-                    else original_data_frame_by_irpp_table_name[irpp_table_name].loc[year, variable] / 1e9
-                    )
-            except KeyError:
-                print '{} not found for {} in table {}'.format(variable, year, irpp_table_name)
-                continue
-            actual = data_frame.fillna(value = fill_value).loc[year, variable] / 1e9
-            if not abs(target - actual) / abs(target) <= 1e-3:
-                messages.append(error_msg(irpp_table_name, variable, year, target, actual))
-
-assert len(messages) == 0, "\nThere are {} errors.".format(len(messages)) + "\n".join(messages)
+    assert len(messages) == 0, "\nThere are {} errors.".format(len(messages)) + "\n".join(messages)
