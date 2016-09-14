@@ -21,7 +21,7 @@ Cette base de données est générée par l'exécution du programme [denombremen
 
 ### Production des agrégats
 
-Les nouveaux agrégats IPP sont généés à partir de fonction se trouvant dans ce https://github.com/taxipp/ipp-macro-series-parser/blob/master/ipp_macro_series_parser/denombrements_fiscaux/agregats_ipp.py
+Les nouveaux agrégats IPP sont généés à partir de fonction se trouvant dans ce [module] (https://github.com/taxipp/ipp-macro-series-parser/blob/master/ipp_macro_series_parser/denombrements_fiscaux/agregats_ipp.py) 
 
 
 
