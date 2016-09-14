@@ -16,10 +16,12 @@ Le chemin du répertoire contenant ces fichiers Excel doit être indiqué dans l
 
 Afin de disposer d'un accès rapide aux données précédentes, il est utile de les stocker dans uen base de données au format HDF5. Le chemin du répertoire contenant ces fichiers HDF5 doit être indiqué dans le [fichier de configuration] (https://github.com/taxipp/ipp-macro-series-parser/blob/master/config.ini#L18). 
 
-Cette base de données est générée par l'exécution du programme[denombrements_fiscaux_parser.py] (https://github.com/taxipp/ipp-macro-series-parser/blob/master/ipp_macro_series_parser/scripts/denombrements_fiscaux_parser.py)
+Cette base de données est générée par l'exécution du programme [denombrements_fiscaux_parser.py] (https://github.com/taxipp/ipp-macro-series-parser/blob/master/ipp_macro_series_parser/scripts/denombrements_fiscaux_parser.py)
 
 
 ### Production des agrégats
+
+Les nouveaux agrégats IPP sont généés à partir de fonction se trouvant dans ce https://github.com/taxipp/ipp-macro-series-parser/blob/master/ipp_macro_series_parser/denombrements_fiscaux/agregats_ipp.py
 
 
 
