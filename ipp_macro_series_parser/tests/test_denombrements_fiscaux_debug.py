@@ -6,7 +6,7 @@ from ipp_macro_series_parser.denombrements_fiscaux.agregats_ipp import (
     formula_by_variable_name,
     level_2_formula_by_variable_name
     )
-from ipp_macro_series_parser.denombrements_fiscaux.parsers import (
+from ipp_macro_series_parser.denombrements_fiscaux.denombrements_parsers import (
     get_denombrements_fiscaux_data_frame
     )
 from ipp_macro_series_parser.data_extraction import get_or_construct_value
@@ -78,6 +78,10 @@ def test_corrections():
             {'year': 2011, 'target': 1101248065},
             {'year': 2010, 'target': 1083102431},
             ],
+        # Inversion 2ch et 2gr dans dénombrements fiscax (Agrégats IPP et en ligne)
+        assurances_vie_imposees_au_bareme = [
+            {'year': 2009, 'target': 1063726777},
+            ]
         )
 
     def assert_value_construction(variable_name, test):

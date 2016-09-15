@@ -77,6 +77,7 @@ def build_original_irpp_tables():
     irpp_1.rename(columns = slugified_name_by_long_name, inplace = True)
     irpp_1.index.name = 'year'
     check_nan_log_msg('irpp_1', irpp_1)
+    irpp_1.loc[2009, 'revenus_financiers'] = 39.334742586
 
     # Table 2
     slugified_name_by_long_name.update({
@@ -105,6 +106,11 @@ def build_original_irpp_tables():
     irpp_2.index.name = 'year'
     del irpp_2[u'Total (après abat.)']
     check_nan_log_msg('irpp_2', irpp_2)
+    # Fix issue #34 inversion 2CH et 2GR en 2009
+    irpp_2.loc[2009, 'assurances_vie_imposees_au_bareme'] = 1.063726777
+    irpp_2.loc[2009, 'revenus_imposes_au_bareme'] = 18.642426901
+    irpp_2.loc[2009, 'revenus_financiers'] = 39.334742586
+    irpp_2.loc[2009, 'revenus_financiers_hors_plus_values'] = 31.316215196
 
     # Table 3
     slugified_name_by_long_name.update({
@@ -130,6 +136,7 @@ def build_original_irpp_tables():
     irpp_3.index.name = 'year'
     irpp_3['plus_values_mobilieres_stock_options'] = irpp_3.pv_stock_options_1 + irpp_3.pv_stock_options_2
     check_nan_log_msg('irpp_3', irpp_3)
+    # plus_values_professionnelles_regime_normal = 'f5hz + f5iz + f5jz' pas valabe après 2010
 
     # Table 4
     slugified_name_by_long_name.update({
