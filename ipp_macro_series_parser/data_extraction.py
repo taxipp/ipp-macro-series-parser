@@ -234,7 +234,11 @@ def get_or_construct_value(df, variable_name = None, index_by_variable = None, y
             return result_data_frame, 'formula changes accross time'
 
         parser_formula = Parser()
-        expr = parser_formula.parse(formula)
+        try:
+            expr = parser_formula.parse(formula)
+        except Exception as e:
+            log.info('Got the following error when evaluation formula: \n {}'.format(formula))
+            raise(e)
 
         variables = expr.variables()
         for component in variables:

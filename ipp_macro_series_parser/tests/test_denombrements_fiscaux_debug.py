@@ -49,7 +49,7 @@ def test_corrections():
             {'year': 2006, 'target': 5150417953},
             {'year': 2008, 'target': 6515953706},
             ],
-        benefices_agricoles_reels_sans_cga_imposables = [
+        benefices_agricoles_reels_imposables_sans_cga = [
             {'year': 2006, 'target': 165830038},
             ],
         benefices_agricoles_reels_deficits = [
@@ -81,7 +81,18 @@ def test_corrections():
         # Inversion 2ch et 2gr dans dénombrements fiscax (Agrégats IPP et en ligne)
         assurances_vie_imposees_au_bareme = [
             {'year': 2009, 'target': 1063726777},
-            ]
+            ],
+        # Test revenus exonérés
+        benefices_agricoles_forfait_exoneres = [
+            {'year': 2011, 'target': (5826752 + 466632 + 467)},
+            ],
+        benefices_agricoles_reels_exoneres = [
+            {'year': 2011, 'target': (64880784 + 15074222 + 3733)},
+            ],
+        benefices_agricoles_reels_exoneres_sans_cga = [
+            {'year': 2011, 'target': (10214497 + 2275427 + 171787)},
+            ],
+        
         )
 
     def assert_value_construction(variable_name, test):

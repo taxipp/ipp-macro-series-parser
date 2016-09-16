@@ -159,6 +159,7 @@ formula_by_variable_name = dict(
     benefices_industriels_commerciaux_professionnels_micro_entreprise_vente = 'f5ko + f5lo + f5mo',  # mbic_impv
     # TODO erreur car 2 fois la mm ligne
     benefices_industriels_commerciaux_professionnels_micro_entreprise_services = 'f5kp + f5lp + f5mp',  # mbic_imps
+    benefices_industriels_commerciaux_professionnels_micro_entreprise_exoneres = 'f5kn + f5ln + f5mn',  # mbic_exon
     benefices_industriels_commerciaux_professionnels_reels_exoneres = 'f5kb + f5lb + f5mb',  # mbic_imps
     benefices_industriels_commerciaux_professionnels_reels_imposables_normal = [
         dict(
@@ -444,7 +445,7 @@ level_2_formula_by_variable_name = dict(
     benefices_industriels_commerciaux = 'benefices_industriels_commerciaux_professionnels + benefices_industriels_commerciaux_non_professionnels',  # analysis:ignore
     benefices_industriels_commerciaux_bruts = 'benefices_industriels_commerciaux_professionnels_bruts + benefices_industriels_commerciaux_non_professionnels_bruts',  # analysis:ignore
     deficits_industriels_commerciaux = 'deficits_industriels_commerciaux_professionnels + deficits_industriels_commerciaux_non_professionnels',  # analysis:ignore
-    benefices_industriels_commerciaux_exoneres = 'benefices_industriels_commerciaux_professionnels_reels_exoneres + 1.25 * benefices_industriels_commerciaux_professionnels_reels_exoneres_sans_cga + benefices_industriels_commerciaux_non_professionnels_micro_entreprise_exoneres + benefices_industriels_commerciaux_non_professionnels_reels_exoneres + 1.25 * benefices_industriels_commerciaux_non_professionnels_reels_exoneres_sans_cga',
+    benefices_industriels_commerciaux_exoneres = 'benefices_industriels_commerciaux_professionnels_exoneres + benefices_industriels_commerciaux_non_professionnels_exoneres',  # analysis:ignore
 
     # - Bénéfices industriels et commerciaux professionnels
     benefices_industriels_commerciaux_professionnels = 'benefices_industriels_commerciaux_professionnels_bruts  - 0.5 * deficits_industriels_commerciaux_professionnels',  # analysis:ignore
@@ -454,6 +455,8 @@ level_2_formula_by_variable_name = dict(
     benefices_industriels_commerciaux_professionnels_reels_avec_cga = 'benefices_industriels_commerciaux_professionnels_reels_imposables_normal + benefices_industriels_commerciaux_professionnels_reels_imposables_simplifie',  # analysis:ignore
     benefices_industriels_commerciaux_professionnels_reels_sans_cga = '1.25 * (benefices_industriels_commerciaux_professionnels_reels_imposables_normal_sans_cga + benefices_industriels_commerciaux_professionnels_reels_imposables_simplifie_sans_cga)',  # TODO check and use legislation  # analysis:ignore
     deficits_industriels_commerciaux_professionnels = 'deficits_industriels_commerciaux_professionnels_normal + deficits_industriels_commerciaux_professionnels_simplifie + deficits_industriels_commerciaux_professionnels_normal_sans_cga + deficits_industriels_commerciaux_professionnels_simplifie_sans_cga',  # analysis:ignore
+    benefices_industriels_commerciaux_professionnels_exoneres = 'benefices_industriels_commerciaux_professionnels_micro_entreprise_exoneres + benefices_industriels_commerciaux_professionnels_reels_exoneres + 1.25 * benefices_industriels_commerciaux_professionnels_reels_exoneres_sans_cga',
+
     # - Bénéfices industriels et commerciaux non professionnels (déclaration complémentaire, cadres 5C)
     benefices_industriels_commerciaux_non_professionnels = 'benefices_industriels_commerciaux_non_professionnels_bruts  - 0.5 * deficits_industriels_commerciaux_non_professionnels',
     benefices_industriels_commerciaux_non_professionnels_bruts = 'benefices_industriels_commerciaux_non_professionnels_micro_entreprise + benefices_industriels_commerciaux_non_professionnels_reels',
@@ -461,6 +464,7 @@ level_2_formula_by_variable_name = dict(
     benefices_industriels_commerciaux_non_professionnels_reels = 'benefices_industriels_commerciaux_non_professionnels_reels_avec_cga + benefices_industriels_commerciaux_non_professionnels_reels_sans_cga',
     benefices_industriels_commerciaux_non_professionnels_reels_avec_cga = 'benefices_industriels_commerciaux_non_professionnels_reels_imposables_normal + benefices_industriels_commerciaux_non_professionnels_reels_imposables_simplifie',
     benefices_industriels_commerciaux_non_professionnels_reels_sans_cga = '1.25 * (benefices_industriels_commerciaux_non_professionnels_reels_imposables_normal_sans_cga + benefices_industriels_commerciaux_non_professionnels_reels_imposables_simplifie_sans_cga)',  # TODO check and use legislation
+    benefices_industriels_commerciaux_non_professionnels_exoneres = 'benefices_industriels_commerciaux_non_professionnels_micro_entreprise_exoneres + benefices_industriels_commerciaux_non_professionnels_reels_exoneres + 1.25 * benefices_industriels_commerciaux_non_professionnels_reels_exoneres_sans_cga',
 
     # Bénéfices non commerciaux
     benefices_non_commerciaux = 'benefices_non_commerciaux_professionnels + benefices_non_commerciaux_non_professionnels',
@@ -590,6 +594,7 @@ of_name_by_irpp_table_name = dict(
     benefices_agricoles_reels_imposables_sans_cga = 'arag_defi',
     benefices_industriels_commerciaux_professionnels_micro_entreprise_vente = 'mbic_impv',
     benefices_industriels_commerciaux_professionnels_micro_entreprise_services = 'mbic_imps',
+    benefices_industriels_commerciaux_professionnels_micro_entreprise_exoneres = 'mbic_exon',
     benefices_industriels_commerciaux_professionnels_reels_exoneres = 'mbic_imps',
     benefices_industriels_commerciaux_professionnels_reels_imposables_normal = 'abic_impn',
     benefices_industriels_commerciaux_professionnels_reels_imposables_simplifie = 'abic_imps',
