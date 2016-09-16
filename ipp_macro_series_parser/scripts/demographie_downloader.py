@@ -26,7 +26,7 @@ parser = Config(
     )
 demographie_directory = parser.get('data', 'demographie_directory')
 assert demographie_directory != 'None', \
-    "Set demographie_directory_directory in the data section of you config[_local].ini file to a valid directory"
+    "Set demographie_directory in the data section of you config[_local].ini file to a valid directory"
 
 
 # Download a the xls file from url and unzipp it in directory
