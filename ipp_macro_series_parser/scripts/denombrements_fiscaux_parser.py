@@ -11,7 +11,6 @@ import logging
 import os
 import pkg_resources
 import sys
-import urllib
 
 
 from ipp_macro_series_parser.config import Config
@@ -50,7 +49,7 @@ def main():
     args = parser.parse_args()
     logging.basicConfig(level = logging.DEBUG if args.verbose else logging.WARNING, stream = sys.stdout)
     years = range(args.start, args.end + 1)
-    assert denombrements_fiscaux_xls_directory != 'None', \
+    assert denombrements_fiscaux_hdf_directory != 'None', \
         "Set denombrements_fiscaux_hdf in the data section of you config[_local].ini file to a valid directory"
     if not os.path.exists(denombrements_fiscaux_hdf_directory):
         log.info("We create the directory {} which doesn't exists")

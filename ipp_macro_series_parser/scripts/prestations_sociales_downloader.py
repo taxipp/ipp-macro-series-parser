@@ -35,7 +35,7 @@ def prestations_sociales_downloader(years = None, directory = prestations_social
         if type(years) is int:
             years = [years]
     if not os.path.exists(directory):
-        log.info('Creating directory {} since it does not exist.'.format(section_directory))
+        log.info('Creating directory {} since it does not exist.'.format(directory))
         os.makedirs(directory)
 
     base_url = 'http://data.caf.fr/dataset/'
