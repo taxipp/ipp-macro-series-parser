@@ -72,3 +72,14 @@ def create_prestations_sociales_data_frames():
     for section in ['beneficiaires', 'depenses']:
         data_frame = build_data_frame(section)
         store[section] = data_frame
+
+
+def build_histo_data_frames():
+    directory = os.path.join(
+        prestations_sociales_directory,
+        'xls',
+        )
+    file_path = os.path.join(directory, u"bénéficiaire_tousrégimes2015.xls")
+    # file_path = os.path(directory, u"histo_benef_presta.xls")
+    # file_path = os.path(directory, u"histo_dépenses_tousrégimes")
+    data_frame = pd.read_excel(file_path)
