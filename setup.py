@@ -47,7 +47,6 @@ doc_lines = __doc__.split('\n')
 setup(
     name = 'IPP-Macro-Series-Parser',
     version = '0.1.2',
-
     author = 'IPP',
     author_email = 'taxipp@ipp.eu',
     classifiers = [classifier for classifier in classifiers.split('\n') if classifier],
@@ -57,9 +56,11 @@ setup(
     long_description = '\n'.join(doc_lines[2:]),
     url = 'https://github.com/taxipp/ipp-macro-series-parser.git',
     entry_points = {
-        'console_scripts': ['build-collection=openfisca_survey_manager.scripts.build_collection:main'],
+        'console_scripts': [
+            'download-prestations-sociales=ipp_macro_series_parser.scripts.prestations_sociales_downloader:main',
+            'parse-prestations-sociales=ipp_macro_series_parser.scripts.prestations_sociales_parser:main',
+            ],
         },
-
     install_requires = [
         'glob2',
         'pandas',
