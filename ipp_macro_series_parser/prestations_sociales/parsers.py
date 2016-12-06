@@ -76,7 +76,41 @@ def build_histo_data_frames():
         prestations_sociales_directory,
         'xls',
         )
-    file_path = os.path.join(directory, u"bénéficiaire_tousrégimes2015.xls")
-    # file_path = os.path(directory, u"histo_benef_presta.xls")
-    # file_path = os.path(directory, u"histo_dépenses_tousrégimes")
-    data_frame = pd.read_excel(file_path)
+    file_path = os.path.join(directory, u"historique_dépenses_depuis 1946.xls")
+
+    # sheetname = u'données histo D'
+    sheetname = u'données histo M'
+    # sheetname = u'données histo MD'
+
+    data_frame = pd.read_excel(file_path, sheetname = sheetname, header = 1, inbdex_col = 0)
+    print data_frame
+    dico = {
+        'af': 'Allocations familiales (AF)',
+        'af_base': None,
+        'af_majoration': None,
+        'af_allocation_forfaitaire': None,
+        'cf': 'Complément familial (CF)',
+        'paje_base': 'PAJE  naissance adoption de base (AB)',
+        'paje_naissance': 'PAJE naissance adoption',
+        'paje_clca': 'PAJE complément (optionnel) libre choix activité PréPARE',  # contient également le COLCA
+        'paje_clmg': 'PAJE complément mode de garde (CMG)',
+        'ars': 'Allocation de rentrée scolaire (ARS)',
+        'aeeh': 'Allocation d’éducation de l’enfant handicapé de base',
+        'asf': 'Allocation de soutien familial (ASF)',
+        'aspa',
+        'aah': ' Allocation adultes handicapés de base',
+        'caah': 'Majoration pour la vie autonome (MVA) - Complément AAH',
+        'rsa': ' Revenu solidarité active (RSA versé yc prime, créances, indus)',
+        'rsa_activite': 'RSA activité (hors RSA Jeunes)',
+        'aefa': 'Prime exceptionnelle décembre RSA (Etat)',
+        'api': 'Allocation de parent isolé (API)',
+        'psa': None,
+        'aides_logement',
+        'alf': 'Allocation logement familiale (ALF)',
+        'als': 'Allocation logement sociale (ALS)',
+        'apl': 'Aide personnalisée au logement (APL)',
+        },
+
+
+if __name__ == '__main__':
+    build_histo_data_frames()
