@@ -14,9 +14,7 @@ from ipp_macro_series_parser.denombrements_fiscaux.agregats_ipp import build_irp
 log = logging.getLogger(__name__)
 
 
-config_parser = Config(
-    config_files_directory = os.path.join(pkg_resources.get_distribution('ipp-macro-series-parser').location)
-    )
+config_parser = Config()
 xls_directory = config_parser.get('data', 'denombrements_fiscaux_xls')
 file_path = os.path.join(xls_directory, u"Agrégats IPP - Données fiscales.xls")
 sheetname = 'calculs calage'

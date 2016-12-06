@@ -9,7 +9,6 @@
 import argparse
 import logging
 import os
-import pkg_resources
 import sys
 
 
@@ -19,15 +18,6 @@ from ipp_macro_series_parser.prestations_sociales.parsers import (
     )
 app_name = os.path.splitext(os.path.basename(__file__))[0]
 log = logging.getLogger(app_name)
-
-
-parser = Config(
-    config_files_directory = os.path.join(pkg_resources.get_distribution('ipp-macro-series-parser').location)
-    )
-directory = parser.get('data', 'prestations_sociales_directory')
-
-assert directory != 'None', \
-    "Set prestations_sociales_directory in the data section of you config[_local].ini file to a valid directory"
 
 
 def main():
@@ -40,6 +30,12 @@ def main():
 
     args = parser.parse_args()
     logging.basicConfig(level = logging.DEBUG if args.verbose else logging.WARNING, stream = sys.stdout)
+
+    config = Config()
+    directory = config.get('data', 'prestations_sociales_directory')
+    assert directory != 'None', \
+        "Set prestations_sociales_directory in the data section of you config[_local].ini file to a valid directory"
+
     # years = range(args.start, args.end + 1)
     hdf_file_path = os.path.join(directory, 'prestations_sociales.h5')
     if os.path.exists(hdf_file_path):

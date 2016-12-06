@@ -16,9 +16,7 @@ from ipp_macro_series_parser.comptes_nationaux.parser_non_tee import non_tee_df_
 log = logging.getLogger(__name__)
 
 
-parser = Config(
-    config_files_directory = os.path.join(pkg_resources.get_distribution('ipp-macro-series-parser').location)
-    )
+parser = Config()
 hdf_directory = parser.get('data', 'cn_hdf_directory')
 
 

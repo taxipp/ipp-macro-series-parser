@@ -9,7 +9,6 @@
 import argparse
 import logging
 import os
-import pkg_resources
 import sys
 
 
@@ -21,9 +20,7 @@ app_name = os.path.splitext(os.path.basename(__file__))[0]
 log = logging.getLogger(app_name)
 
 
-parser = Config(
-    config_files_directory = os.path.join(pkg_resources.get_distribution('ipp-macro-series-parser').location)
-    )
+parser = Config()
 denombrements_fiscaux_xls_directory = parser.get('data', 'denombrements_fiscaux_xls')
 denombrements_fiscaux_hdf_directory = parser.get('data', 'denombrements_fiscaux_hdf')
 

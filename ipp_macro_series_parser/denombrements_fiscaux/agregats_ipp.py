@@ -16,9 +16,7 @@ from ipp_macro_series_parser.denombrements_fiscaux.denombrements_parsers import 
     get_denombrements_fiscaux_data_frame)
 from ipp_macro_series_parser.data_extraction import get_or_construct_value
 
-config_parser = Config(
-    config_files_directory = os.path.join(pkg_resources.get_distribution('ipp-macro-series-parser').location)
-    )
+config_parser = Config()
 
 
 def update_index_by_variable_name_appearing_in_formula(index_by_variable_name, formula):

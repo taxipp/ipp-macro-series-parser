@@ -14,9 +14,7 @@ from ipp_macro_series_parser.comptes_nationaux.parser_main import get_comptes_na
 from ipp_macro_series_parser.data_extraction import look_many
 
 
-parser = Config(
-    config_files_directory = os.path.join(pkg_resources.get_distribution('ipp-macro-series-parser').location)
-    )
+parser = Config()
 excel_output_directory = parser.get('data', 'cn_csv_directory')
 
 

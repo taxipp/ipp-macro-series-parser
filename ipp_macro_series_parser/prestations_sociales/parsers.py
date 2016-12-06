@@ -15,10 +15,7 @@ from ipp_macro_series_parser.config import Config
 
 log = logging.getLogger(__name__)
 
-
-parser = Config(
-    config_files_directory = os.path.join(pkg_resources.get_distribution('ipp-macro-series-parser').location)
-    )
+parser = Config()
 prestations_sociales_directory = parser.get('data', 'prestations_sociales_directory')
 
 

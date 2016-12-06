@@ -14,9 +14,7 @@ from ipp_macro_series_parser.comptes_nationaux.sheets_lists import generate_CN1_
 from ipp_macro_series_parser.comptes_nationaux.cn_test import read_CN1, read_profits_societes, create_dict_profits
 
 from ipp_macro_series_parser.config import Config
-parser = Config(
-    config_files_directory = os.path.join(pkg_resources.get_distribution('ipp-macro-series-parser').location)
-    )
+parser = Config()
 cn_csv = parser.get('data', 'cn_csv_directory')
 tests_data = os.path.join(
     pkg_resources.get_distribution('ipp-macro-series-parser').location,

@@ -11,9 +11,7 @@ import pandas as pd
 
 from ipp_macro_series_parser.config import Config
 
-parser = Config(
-    config_files_directory = os.path.join(pkg_resources.get_distribution('ipp-macro-series-parser').location)
-    )
+parser = Config()
 
 transports_directory = parser.get('data', 'transports_directory')
 prix_annuel_carburants = parser.get('data', 'prix_annuel_carburants_90_2014')

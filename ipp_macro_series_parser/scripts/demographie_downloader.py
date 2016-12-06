@@ -21,9 +21,7 @@ app_name = os.path.splitext(os.path.basename(__file__))[0]
 log = logging.getLogger(app_name)
 
 
-parser = Config(
-    config_files_directory = os.path.join(pkg_resources.get_distribution('ipp-macro-series-parser').location)
-    )
+parser = Config()
 demographie_directory = parser.get('data', 'demographie_directory')
 assert demographie_directory != 'None', \
     "Set demographie_directory in the data section of you config[_local].ini file to a valid directory"

@@ -11,9 +11,7 @@ import re
 
 from ipp_macro_series_parser.config import Config
 
-config_parser = Config(
-    config_files_directory = os.path.join(pkg_resources.get_distribution('ipp-macro-series-parser').location)
-    )
+config_parser = Config()
 
 xls_directory = config_parser.get('data', 'denombrements_fiscaux_xls')
 hdf_directory = config_parser.get('data', 'denombrements_fiscaux_hdf')

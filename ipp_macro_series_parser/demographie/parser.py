@@ -7,9 +7,7 @@ import pandas
 import pkg_resources
 from ipp_macro_series_parser.config import Config
 
-config_parser = Config(
-    config_files_directory = os.path.join(pkg_resources.get_distribution('ipp-macro-series-parser').location)
-    )
+config_parser = Config()
 xls_directory = os.path.join(config_parser.get('data', 'demographie_directory'), 'xls')
 
 

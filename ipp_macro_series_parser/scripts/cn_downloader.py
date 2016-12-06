@@ -10,7 +10,6 @@ INSEE website: http://www.insee.fr/fr/indicateurs/cnat_annu/archives/comptes_ann
 import argparse
 import logging
 import os
-import pkg_resources
 import shutil
 import sys
 import urllib
@@ -21,9 +20,7 @@ from ipp_macro_series_parser.config import Config
 app_name = os.path.splitext(os.path.basename(__file__))[0]
 log = logging.getLogger(app_name)
 
-parser = Config(
-    config_files_directory = os.path.join(pkg_resources.get_distribution('ipp-macro-series-parser').location)
-    )
+parser = Config()
 cn_directory = parser.get('data', 'cn_directory')
 assert cn_directory != 'None', 'Set cn_directory in the data section of your config_local.ini file to a valid directory'
 
@@ -37,13 +34,13 @@ def getunzipped(url = None, directory = None):
     try:
         log.info('Downloading {}/{}'.format(url, name))
         name, hdrs = urllib.urlretrieve(url, name)
-    except IOError, e:
+    except IOError as e:
         log.info("Can't retrieve %r to %r: %s" % (url, directory, e))
         return
     try:
         log.info('Unzipping {}'.format(name))
         z = zipfile.ZipFile(name)
-    except zipfile.error, e:
+    except zipfile.error as e:
         log.info("Bad or nonexistent zipfile (from %r): %s" % (url, e))
         return
     z.close()

@@ -21,14 +21,6 @@ app_name = os.path.splitext(os.path.basename(__file__))[0]
 log = logging.getLogger(app_name)
 
 
-parser = Config(
-    config_files_directory = os.path.join(pkg_resources.get_distribution('ipp-macro-series-parser').location)
-    )
-prestations_sociales_directory = parser.get('data', 'prestations_sociales_directory')
-assert prestations_sociales_directory != 'None', \
-    "Set prestations_sociales_directory in the data section of you config[_local].ini file to a valid directory"
-
-
 # Download a the xls file from url and unzipp it in directory
 def prestations_sociales_downloader(years = None, directory = prestations_sociales_directory):
     if years is not None:
@@ -72,6 +64,11 @@ def prestations_sociales_downloader(years = None, directory = prestations_social
 
 
 def main():
+    parser = Config()
+    prestations_sociales_directory = parser.get('data', 'prestations_sociales_directory')
+    assert prestations_sociales_directory != 'None', \
+        "Set prestations_sociales_directory in the data section of you config[_local].ini file to a valid directory"
+
     parser = argparse.ArgumentParser()
     # parser.add_argument('-e', '--end', default = 2015, help = 'ending year to be downloaded')
     # parser.add_argument('-s', '--start', default = 2008, help = 'starting year to be downloaded')

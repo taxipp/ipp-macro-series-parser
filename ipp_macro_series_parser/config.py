@@ -6,6 +6,7 @@ import logging
 import os
 import pkg_resources
 import shutil
+import sys
 from xdg import BaseDirectory
 
 config_files_directory = BaseDirectory.save_config_path('ipp-macro-series-parser')
@@ -41,10 +42,10 @@ class Config(ConfigParser.SafeConfigParser):
     config_ini = None
 
     def __init__(self):
-        if not check_template_config_files():
-            print("Problem with the configuration directory {}: cannot proceed".format(config_files_directory))
-            return
         ConfigParser.SafeConfigParser.__init__(self)
+        if not check_template_config_files():
+            print("Problem with the configuration directory {}: cannot proceed and thus exiting\n".format(config_files_directory))
+            sys.exit()
         config_ini = os.path.join(config_files_directory, 'config.ini')
         if os.path.exists(config_ini):
             self.config_ini = config_ini
