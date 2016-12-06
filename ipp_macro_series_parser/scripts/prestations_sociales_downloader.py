@@ -9,7 +9,6 @@
 import argparse
 import logging
 import os
-import pkg_resources
 import sys
 import urllib
 
@@ -19,6 +18,11 @@ from ipp_macro_series_parser.config import Config
 
 app_name = os.path.splitext(os.path.basename(__file__))[0]
 log = logging.getLogger(app_name)
+
+parser = Config()
+prestations_sociales_directory = parser.get('data', 'prestations_sociales_directory')
+assert prestations_sociales_directory != 'None', \
+    "Set prestations_sociales_directory in the data section of you config[_local].ini file to a valid directory"
 
 
 # Download a the xls file from url and unzipp it in directory
@@ -58,16 +62,12 @@ def prestations_sociales_downloader(years = None, directory = prestations_social
             try:
                 log.info('Downloading {}/{}'.format(url, filename))
                 source, hdrs = urllib.urlretrieve(url, target)  # TODO: use urlib2.urlopen
-            except Exception, e:
+            except Exception as e:
                 log.info("Can't retrieve %r to %r: %s" % (url, directory, e))
     return
 
 
 def main():
-    parser = Config()
-    prestations_sociales_directory = parser.get('data', 'prestations_sociales_directory')
-    assert prestations_sociales_directory != 'None', \
-        "Set prestations_sociales_directory in the data section of you config[_local].ini file to a valid directory"
 
     parser = argparse.ArgumentParser()
     # parser.add_argument('-e', '--end', default = 2015, help = 'ending year to be downloaded')

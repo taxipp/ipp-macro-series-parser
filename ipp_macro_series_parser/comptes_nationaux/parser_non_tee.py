@@ -10,7 +10,6 @@ import glob
 import logging
 import os
 import pandas
-import pkg_resources
 
 
 from ipp_macro_series_parser.config import Config

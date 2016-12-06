@@ -368,6 +368,7 @@ def test_compare_sheets_to_IPP():  # WIP. for now it only generates the first tw
 # NB : on a des variables calculées qui sont NaN pour une série d'année, alors qu'Agrégats IPP a mis en 0 les variables
 # d'input n'existant pas pour des années (du coup là le calcul se fait).
 
+
 # LE RUN
 if __name__ == '__main__':
 

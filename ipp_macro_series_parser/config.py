@@ -44,7 +44,8 @@ class Config(ConfigParser.SafeConfigParser):
     def __init__(self):
         ConfigParser.SafeConfigParser.__init__(self)
         if not check_template_config_files():
-            print("Problem with the configuration directory {}: cannot proceed and thus exiting\n".format(config_files_directory))
+            print("Problem with the configuration directory {}: cannot proceed and thus exiting\n".format(
+                config_files_directory))
             sys.exit()
         config_ini = os.path.join(config_files_directory, 'config.ini')
         if os.path.exists(config_ini):

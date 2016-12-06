@@ -1,12 +1,7 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Fri Jul 17 14:18:26 2015
 
-@author: thomas.douenne
-"""
 
 import os
-import pkg_resources
 import urllib
 
 from ipp_macro_series_parser.config import Config
@@ -23,8 +18,8 @@ def getunzipped(theurl, thedir, file_name):
         os.makedirs(thedir)
     try:
         name, hdrs = urllib.urlretrieve(theurl, name)
-    except IOError, e:
-        print "Can't retrieve %r to %r: %s" % (theurl, thedir, e)
+    except IOError as e:
+        print("Can't retrieve %r to %r: %s" % (theurl, thedir, e))
         return
 
 

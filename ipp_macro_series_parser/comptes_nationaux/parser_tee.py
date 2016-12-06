@@ -22,7 +22,7 @@ tee_folder_parser: transform all the TEE excel files in a given folder into a da
 import logging
 import os
 import pandas
-import pkg_resources
+
 
 from ipp_macro_series_parser.config import Config
 from ipp_macro_series_parser.comptes_nationaux.get_file_infos import file_infos
@@ -50,8 +50,8 @@ def tee_file_parser(excelfile_name):
     index_col = None
     parse_cols = "A:end"
 
-    print excelfile_name
-    assert os.path.exists(excelfile_name), 'Cannot find file {}. Use cn_dowloader to load and unzip the raw CN files'.format(excelfile_name)
+    assert os.path.exists(excelfile_name), \
+        'Cannot find file {}. Use cn_dowloader to load and unzip the raw CN files'.format(excelfile_name)
     df_ea = pandas.read_excel(excelfile_name, sheetname = 1, header = header, skiprows = skiprows,
                               skip_footer = skip_footer, index_col = index_col, parse_cols = parse_cols,
                               names = col_names_actifs, na_values = ['0'])
@@ -77,7 +77,8 @@ def tee_folder_parser(folder_year, list_years):
     assert max(list_years) <= folder_year, "the folder does not contain the year(s) demanded"
     dict_df_tee = dict()
     for year in list_years:
-        excelfile_name = os.path.join(cn_directory, 'comptes_annee_{}/Tee_{}.xls'.format(folder_year, year))  # TODO: change directory to hdf_directory as this is where is stored the big dataframe
+        excelfile_name = os.path.join(cn_directory, 'comptes_annee_{}/Tee_{}.xls'.format(folder_year, year))
+        # TODO: change directory to hdf_directory as this is where is stored the big dataframe
         df = tee_file_parser(excelfile_name)
         dict_df_tee[str(year)] = df
     return dict_df_tee

@@ -5,8 +5,6 @@ Created on Tue Jul 21 13:57:18 2015
 @author: thomas.douenne
 """
 
-import os
-import pkg_resources
 import pandas as pd
 
 from ipp_macro_series_parser.config import Config
@@ -35,6 +33,7 @@ def prix_carburants_parser(excelfile_name):
     data_frame.rename(columns = {'Super SP98.1': 'super_98_ttc'}, inplace = True)
     return data_frame
 
+
 prix_mensuel_carburants = prix_carburants_parser(prix_mensuel_carburants)
 prix_annuel_carburants = prix_carburants_parser(prix_annuel_carburants)
 
@@ -48,6 +47,7 @@ def prix_carburants_cleaner_90_96(data_frame):
     del data_frame['ident_year']
     del data_frame['Unnamed: 10']
     return data_frame
+
 
 prix_mensuel_carburants_90_96 = prix_carburants_cleaner_90_96(prix_mensuel_carburants)
 prix_carburants_90_96 = prix_carburants_cleaner_90_96(prix_annuel_carburants)
@@ -75,6 +75,7 @@ def prix_carburants_cleaner_97_06(data_frame):
     del data_frame['ident_year']
     return data_frame
 
+
 prix_mensuel_carburants_97_06 = prix_carburants_cleaner_97_06(prix_mensuel_carburants)
 prix_carburants_97_06 = prix_carburants_cleaner_97_06(prix_annuel_carburants)
 
@@ -99,6 +100,7 @@ def prix_carburants_cleaner_07_12(data_frame):
     del data_frame['Da']
     del data_frame['   ']
     return data_frame
+
 
 prix_mensuel_carburants_07_12 = prix_carburants_cleaner_07_12(prix_mensuel_carburants)
 prix_carburants_07_12 = prix_carburants_cleaner_07_12(prix_annuel_carburants)
@@ -128,6 +130,7 @@ def prix_carburants_cleaner_13_15(data_frame):
     del data_frame['t']
     return data_frame
 
+
 prix_carburants_13_14 = prix_carburants_cleaner_13_15(prix_annuel_carburants)
 prix_mensuel_carburants_13_15 = prix_carburants_cleaner_13_15(prix_mensuel_carburants)
 
@@ -150,6 +153,7 @@ def prix_mensuel_date_cleaner(data_frame):
     data_frame['mois'] = data_frame['mois'].astype(int)
     del data_frame['Date']
     return data_frame
+
 
 prix_mensuel_carburants_90_96 = prix_mensuel_date_cleaner(prix_mensuel_carburants_90_96)
 prix_mensuel_carburants_97_06 = prix_mensuel_date_cleaner(prix_mensuel_carburants_97_06)

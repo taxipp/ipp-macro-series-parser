@@ -5,7 +5,7 @@
 import logging
 import os
 import pandas as pd
-import pkg_resources
+
 
 """Parse dépenses and béénficiaires of presattaions sociales to produce the dataframe stored in a HDF5 file
 """

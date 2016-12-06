@@ -4,7 +4,6 @@
 import logging
 import os
 import pandas
-import pkg_resources
 import numpy
 
 

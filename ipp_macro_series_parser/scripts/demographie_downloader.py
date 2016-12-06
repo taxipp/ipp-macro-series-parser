@@ -9,7 +9,6 @@
 import argparse
 import logging
 import os
-import pkg_resources
 import sys
 import urllib
 
@@ -44,7 +43,7 @@ def demographie_downloader(years = None, directory = demographie_directory):
         try:
             log.info('Downloading {}/{}'.format(url, filename))
             source, hdrs = urllib.urlretrieve(url, target)  # TODO: use urlib2.urlopen
-        except Exception, e:
+        except Exception as e:
             log.info("Can't retrieve %r to %r: %s" % (url, directory, e))
             return
 

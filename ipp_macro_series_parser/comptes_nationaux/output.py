@@ -1,13 +1,7 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Thu Jul 16 14:13:25 2015
-
-@author: Antoine
-"""
 
 
 import os
-import pkg_resources
 
 from ipp_macro_series_parser.config import Config
 from ipp_macro_series_parser.comptes_nationaux.parser_main import get_comptes_nationaux_data
@@ -39,8 +33,8 @@ def reshape_to_long_for_output(df):
     >>> df = look_many(table2013, my_selection)
     >>> df_reshaped = reshape_to_long_for_output(df)
 
-    Returns a slice of get_comptes_nationaux_data(2013) containing the gross product (PIB) and the net product (PIN) of the whole
-    economy (S1), for all years. Observations are indexed by code (PIB, PIN) and values are given per year.
+    Returns a slice of get_comptes_nationaux_data(2013) containing the gross product (PIB) and the net product (PIN) of
+    the whole economy (S1), for all years. Observations are indexed by code (PIB, PIN) and values are given per year.
     The dataframe is reshaped vertically, each row corresponding to a year, and each column to an observation
     (PIB or PIN)
     """
@@ -81,8 +75,8 @@ def reshape_to_wide_for_output(df):
     >>> df = look_many(table2013, my_selection)
     >>> df_reshaped = reshape_to_wide_for_output(df)
 
-    Returns a slice of get_comptes_nationaux_data(2013) containing the gross product (PIB) and the net product (PIN) of the whole
-    economy (S1), for all years. Observations are indexed by code (PIB, PIN) and values are given per year.
+    Returns a slice of get_comptes_nationaux_data(2013) containing the gross product (PIB) and the net product (PIN) of
+    the whole economy (S1), for all years. Observations are indexed by code (PIB, PIN) and values are given per year.
     The dataframe is reshaped horizontally, each column corresponding to a year, and each row to an observation
     (PIB or PIN)
     """
