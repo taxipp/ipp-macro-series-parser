@@ -46,16 +46,19 @@ doc_lines = __doc__.split('\n')
 
 setup(
     name = 'IPP-Macro-Series-Parser',
-    version = '0.1.dev0',
+    version = '0.1.2',
 
     author = 'IPP',
     author_email = 'taxipp@ipp.eu',
     classifiers = [classifier for classifier in classifiers.split('\n') if classifier],
     description = doc_lines[0],
-    keywords = 'macro aggregates parser',
+    keywords = 'macro data aggregates beneficiaries parser',
     license = 'http://www.fsf.org/licensing/licenses/agpl-3.0.html',
     long_description = '\n'.join(doc_lines[2:]),
-    # url = 'https://github.com/ipp-aggregates-parser',
+    url = 'https://github.com/taxipp/ipp-macro-series-parser.git',
+    entry_points = {
+        'console_scripts': ['build-collection=openfisca_survey_manager.scripts.build_collection:main'],
+        },
 
     install_requires = [
         'glob2',
