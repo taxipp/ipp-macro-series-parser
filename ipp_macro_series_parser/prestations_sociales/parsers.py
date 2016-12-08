@@ -84,7 +84,7 @@ def build_histo_data_frames():
 
     data_frame = pd.read_excel(file_path, sheetname = sheetname, header = 1, inbdex_col = 0)
     print data_frame
-    dico = {
+    table_entry_by_variable = {
         'af': 'Allocations familiales (AF)',
         'af_base': None,
         'af_majoration': None,
@@ -97,7 +97,7 @@ def build_histo_data_frames():
         'ars': 'Allocation de rentrée scolaire (ARS)',
         'aeeh': 'Allocation d’éducation de l’enfant handicapé de base',
         'asf': 'Allocation de soutien familial (ASF)',
-        'aspa',
+        'aspa': None,
         'aah': ' Allocation adultes handicapés de base',
         'caah': 'Majoration pour la vie autonome (MVA) - Complément AAH',
         'rsa': ' Revenu solidarité active (RSA versé yc prime, créances, indus)',
@@ -105,12 +105,17 @@ def build_histo_data_frames():
         'aefa': 'Prime exceptionnelle décembre RSA (Etat)',
         'api': 'Allocation de parent isolé (API)',
         'psa': None,
-        'aides_logement',
+        'aides_logement': 'Total prestation logement',
         'alf': 'Allocation logement familiale (ALF)',
         'als': 'Allocation logement sociale (ALS)',
         'apl': 'Aide personnalisée au logement (APL)',
         },
 
+    slugified_table_entry_by_variable = dict([
+        (variable, slugify(table_entry)
+        for variable,  in table_entry_by_variable.iteritems()
+        ]
+        )
 
 if __name__ == '__main__':
     build_histo_data_frames()
