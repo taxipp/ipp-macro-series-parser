@@ -23,16 +23,24 @@ parser = Config()
 prestations_sociales_directory = parser.get('data', 'prestations_sociales_directory')
 assert prestations_sociales_directory != 'None', \
     "Set prestations_sociales_directory in the data section of you config[_local].ini file to a valid directory"
+prestations_sociales_raw = os.path.join(
+    prestations_sociales_directory,
+    'raw',
+    )
 
 
 # Download a the xls file from url and unzipp it in directory
-def prestations_sociales_downloader(years = None, directory = prestations_sociales_directory):
+def prestations_sociales_downloader(years = None, directory = prestations_sociales_raw):
     if years is not None:
         if type(years) is int:
             years = [years]
     if not os.path.exists(directory):
         log.info('Creating directory {} since it does not exist.'.format(directory))
         os.makedirs(directory)
+    caf_data_fr = os.path.join(directory, 'caf_data_fr')
+    if not os.path.exists(caf_data_fr):
+        log.info('Creating directory {} since it does not exist.'.format(caf_data_fr))
+        os.makedirs(caf_data_fr)
 
     base_url = 'http://data.caf.fr/dataset/'
 
@@ -72,7 +80,7 @@ def main():
     parser = argparse.ArgumentParser()
     # parser.add_argument('-e', '--end', default = 2015, help = 'ending year to be downloaded')
     # parser.add_argument('-s', '--start', default = 2008, help = 'starting year to be downloaded')
-    parser.add_argument('-t', '--target', default = prestations_sociales_directory,
+    parser.add_argument('-t', '--target', default = prestations_sociales_raw,
         help = 'path where to store downloaded files')
     parser.add_argument('-v', '--verbose', action = 'store_true', default = False, help = "increase output verbosity")
     args = parser.parse_args()

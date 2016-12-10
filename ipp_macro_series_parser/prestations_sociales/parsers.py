@@ -3,8 +3,9 @@
 
 
 import logging
-import os
 import pandas as pd
+import os
+from slugify import slugify
 
 
 """Parse dépenses and béénficiaires of presattaions sociales to produce the dataframe stored in a HDF5 file
@@ -24,6 +25,8 @@ def build_data_frame(section):
 
     directory = os.path.join(
         prestations_sociales_directory,
+        'raw',
+        'caf_data_fr'
         'les-{}-tous-regimes-de-prestations-familiales-et-sociales'.format(
             section
             ),
@@ -74,6 +77,7 @@ def create_prestations_sociales_data_frames():
 def build_histo_data_frames():
     directory = os.path.join(
         prestations_sociales_directory,
+        'raw',
         'xls',
         )
     file_path = os.path.join(directory, u"historique_dépenses_depuis 1946.xls")
@@ -83,7 +87,6 @@ def build_histo_data_frames():
     # sheetname = u'données histo MD'
 
     data_frame = pd.read_excel(file_path, sheetname = sheetname, header = 1, inbdex_col = 0)
-    print data_frame
     table_entry_by_variable = {
         'af': 'Allocations familiales (AF)',
         'af_base': None,
@@ -109,13 +112,25 @@ def build_histo_data_frames():
         'alf': 'Allocation logement familiale (ALF)',
         'als': 'Allocation logement sociale (ALS)',
         'apl': 'Aide personnalisée au logement (APL)',
-        },
+        }
 
     slugified_table_entry_by_variable = dict([
-        (variable, slugify(table_entry)
-        for variable,  in table_entry_by_variable.iteritems()
-        ]
+        (variable, slugify(table_entry, separator = "_"))
+        for variable, table_entry in table_entry_by_variable.iteritems()
+        if table_entry is not None]
         )
+
+    csv_file_path = os.path.join(
+        prestations_sociales_directory,
+        'clean',
+        'historique.csv'
+        )
+
+    (data_frame
+        .rename(index = lambda x: slugify(x, separator = "_"))
+        .rename(index = slugified_table_entry_by_variable)
+        ).to_csv(csv_file_path)
+
 
 if __name__ == '__main__':
     build_histo_data_frames()
