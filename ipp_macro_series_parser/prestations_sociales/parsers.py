@@ -359,7 +359,7 @@ def build_historical_beneficiaries_data():
         u"Allocation d'adoption": None,
         u"Famille : autres prestations": None,
         u"Allocations familiales (AF)": "af",
-        u"Complément familial (CF)": "cv",
+        u"Complément familial (CF)": "cf",
         u"Allocation de rentrée scolaire (ARS)": "ars",
         u"Aide à la scolarité": None,
         u"Allocation de soutien familial (ASF)": "asf",
@@ -422,23 +422,20 @@ def build_historical_beneficiaries_data():
         'clean',
         'historique_beneficiaires.csv'
         )
-
-    print data_frame.index
-    for var in data_frame.index:
-        print type(var)
-        print unicode(var)
-        print slugify(str(var), separator = "_")
-        print '---'
-
     data_frame = (data_frame
-        .rename(index = lambda x: slugify(str(x), separator = "_"))
+        .rename(index = lambda x: slugify(x.encode('utf-8') if not isinstance(x, float) else str(x), separator = "_"))
         .rename(index = variable_by_slugified_table_entry)
         )
 
     assert 'af' in data_frame.index
-    data_frame.to_csv(csv_file_path)
+    data_frame.drop([u'nan'], inplace = True)
+    assert not(u'nan' in data_frame.index)
+
+    # Adjust paje_adoption to reflect whole year
+    data_frame.loc['paje_naissance', data_frame.columns] = 12 * data_frame.loc['paje_naissance', data_frame.columns]
+    data_frame.to_csv(csv_file_path, encoding='utf-8')
 
 
 if __name__ == '__main__':
-    # build_historical_amounts_data()
+    build_historical_amounts_data()
     build_historical_beneficiaries_data()
