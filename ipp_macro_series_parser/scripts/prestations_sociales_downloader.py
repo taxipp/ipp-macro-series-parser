@@ -45,19 +45,14 @@ def minimum_vieillesse_downloader(directory = prestations_sociales_raw):
 
     for url in urls:
         target = os.path.join(statistiques_recherches_cnav_fr, os.path.basename(url))
-        print target
         try:
-            log.info('Downloading {}/{}'.format(url))
-            source, hdrs = urllib.urlretrieve(url, target)
-            # urlib2.urlopen not working
-            # source = urllib2.urlopen(url)
-            # with open(target, "wb") as local_file:
-            #     local_file.write(source.read())
-
+            log.info('Downloading {}'.format(url))
+            source = urllib2.urlopen(url)
+            with open(target, "wb") as local_file:
+                local_file.write(source.read())
         except Exception as e:
-                print("Can't retrieve {} to save it to {}:\n {}".format(url, target, e))
+            print("Can't retrieve {} to save it to {}:\n {}".format(url, target, e))
     return
-
 
 
 def prestations_sociales_downloader(years = None, directory = prestations_sociales_raw):
