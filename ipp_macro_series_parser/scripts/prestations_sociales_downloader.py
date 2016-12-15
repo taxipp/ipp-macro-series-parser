@@ -45,7 +45,7 @@ def minimum_vieillesse_downloader(directory = prestations_sociales_raw):
 
     for url in urls:
         target = os.path.join(statistiques_recherches_cnav_fr, os.path.basename(url))
-        print target
+        print(target)
         try:
             log.info('Downloading {}/{}'.format(url))
             source, hdrs = urllib.urlretrieve(url, target)
