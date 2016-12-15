@@ -65,6 +65,7 @@ setup(
         'glob2',
         'pandas',
         'py-expression-eval',
+        'pyxdg',
         'setuptools',
         'xlrd',
         'xlsxwriter',

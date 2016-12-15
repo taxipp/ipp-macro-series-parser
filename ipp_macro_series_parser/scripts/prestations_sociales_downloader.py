@@ -59,7 +59,6 @@ def minimum_vieillesse_downloader(directory = prestations_sociales_raw):
     return
 
 
-
 def prestations_sociales_downloader(years = None, directory = prestations_sociales_raw):
     if years is not None:
         if type(years) is int:
