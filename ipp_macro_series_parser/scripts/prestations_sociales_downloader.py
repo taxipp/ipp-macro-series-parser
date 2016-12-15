@@ -11,7 +11,7 @@ import logging
 import os
 import sys
 import urllib
-
+import urllib2
 
 from ipp_macro_series_parser.config import Config
 
@@ -29,7 +29,37 @@ prestations_sociales_raw = os.path.join(
     )
 
 
-# Download a the xls file from url and unzipp it in directory
+def minimum_vieillesse_downloader(directory = prestations_sociales_raw):
+    if not os.path.exists(directory):
+        log.info('Creating directory {} since it does not exist.'.format(directory))
+        os.makedirs(directory)
+    # http://www.statistiques-recherches.cnav.fr/le-minimum-vieillesse.html
+    statistiques_recherches_cnav_fr = os.path.join(directory, 'statistiques_recherches_cnav_fr')
+    if not os.path.exists(statistiques_recherches_cnav_fr):
+        log.info('Creating directory {} since it does not exist.'.format(statistiques_recherches_cnav_fr))
+        os.makedirs(statistiques_recherches_cnav_fr)
+    urls = [
+        'http://www.statistiques-recherches.cnav.fr/images/donnees-statistiques/serie-labellisee/Minimum-vieillesse-au-31-decembre-serie-labellisee.xls',
+        'http://www.statistiques-recherches.cnav.fr/images/donnees-statistiques/pensions/Les%20allocataires%20du%20minimum%20vieillesse%20en%20stock%20depuis%201994.xls'
+        ]
+
+    for url in urls:
+        target = os.path.join(statistiques_recherches_cnav_fr, os.path.basename(url))
+        print target
+        try:
+            log.info('Downloading {}/{}'.format(url))
+            source, hdrs = urllib.urlretrieve(url, target)
+            # urlib2.urlopen not working
+            # source = urllib2.urlopen(url)
+            # with open(target, "wb") as local_file:
+            #     local_file.write(source.read())
+
+        except Exception as e:
+                print("Can't retrieve {} to save it to {}:\n {}".format(url, target, e))
+    return
+
+
+
 def prestations_sociales_downloader(years = None, directory = prestations_sociales_raw):
     if years is not None:
         if type(years) is int:
@@ -89,4 +119,6 @@ def main():
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+
+    minimum_vieillesse_downloader()
+    # sys.exit(main())
