@@ -443,7 +443,7 @@ def build_minimum_vieillesse_serie():
         'statistiques_recherches_cnav_fr',
         )
 
-    df = pd.read_excel(
+    minimum_vieillesse = pd.read_excel(
         os.path.join(
             directory,
             'Les%20allocataires%20du%20minimum%20vieillesse%20en%20stock%20depuis%201994.xls',
@@ -452,8 +452,23 @@ def build_minimum_vieillesse_serie():
         index_col = 0,
         skip_footer = 3,
         parse_cols= 'A:M',
+        ).stack().unstack(level = 0)
+    minimum_vieillesse = (
+        minimum_vieillesse.loc[[row for row in minimum_vieillesse.index if row.startswith("Nombre de prestataires")]]
+        ).copy()
+    # \n\nNombre total de retraités\n\n (b)    Inutile
+    # \n%\n de prestataires\n\n(a/b)           Inutile
+    # Nombre d'allocataires du minimum vieillesse(2)   On compte 2 pour des aspa couples (bniveau individuel)
+    # Nombre de prestataires bénéficiaires d'un minim  On compte 1 pour un couple
+    minimum_vieillesse.index = ['minimum_vieillesse']
+    csv_file_path = os.path.join(
+        prestations_sociales_directory,
+        'clean',
+        'historique_beneficiaires_minimum_vieillesse.csv'
         )
-    print(df)
+    print minimum_vieillesse
+    print minimum_vieillesse[u'Métropole']
+    minimum_vieillesse[u'Métropole'].to_csv(csv_file_path, encoding='utf-8')
 
 
 if __name__ == '__main__':
