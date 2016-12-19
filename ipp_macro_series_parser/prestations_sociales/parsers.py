@@ -8,7 +8,7 @@ import os
 from slugify import slugify
 
 
-"""Parse dépenses and béénficiaires of presattaions sociales to produce the dataframe stored in a HDF5 file
+"""Parse dépenses and bénéficiaires of prestataions sociales to produce the dataframe stored in a HDF5 file or csv files
 """
 
 
