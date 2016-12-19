@@ -466,8 +466,6 @@ def build_minimum_vieillesse_serie():
         'clean',
         'historique_beneficiaires_minimum_vieillesse.csv'
         )
-    print minimum_vieillesse
-    print minimum_vieillesse[u'Métropole']
     minimum_vieillesse[u'Métropole'].to_csv(csv_file_path, encoding='utf-8')
 
 
