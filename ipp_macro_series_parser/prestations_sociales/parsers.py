@@ -436,6 +436,27 @@ def build_historical_beneficiaries_data():
     data_frame.to_csv(csv_file_path, encoding='utf-8')
 
 
+def build_minimum_vieillesse_serie():
+    directory = os.path.join(
+        prestations_sociales_directory,
+        'raw',
+        'statistiques_recherches_cnav_fr',
+        )
+
+    df = pd.read_excel(
+        os.path.join(
+            directory,
+            'Les%20allocataires%20du%20minimum%20vieillesse%20en%20stock%20depuis%201994.xls',
+            ),
+        header = [1, 2],
+        index_col = 0,
+        skip_footer = 3,
+        parse_cols= 'A:M',
+        )
+    print(df)
+
+
 if __name__ == '__main__':
-    build_historical_amounts_data()
-    build_historical_beneficiaries_data()
+    # build_historical_amounts_data()
+    # build_historical_beneficiaries_data()
+    build_minimum_vieillesse_serie()
