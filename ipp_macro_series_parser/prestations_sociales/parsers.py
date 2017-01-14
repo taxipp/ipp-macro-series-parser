@@ -26,7 +26,7 @@ def build_data_frame(section):
     directory = os.path.join(
         prestations_sociales_directory,
         'raw',
-        'caf_data_fr'
+        'caf_data_fr',
         'les-{}-tous-regimes-de-prestations-familiales-et-sociales'.format(
             section
             ),
