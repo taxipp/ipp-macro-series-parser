@@ -471,6 +471,6 @@ def build_minimum_vieillesse_serie():
 
 
 if __name__ == '__main__':
-    # build_historical_amounts_data()
-    # build_historical_beneficiaries_data()
+    build_historical_amounts_data()
+    build_historical_beneficiaries_data()
     build_minimum_vieillesse_serie()
