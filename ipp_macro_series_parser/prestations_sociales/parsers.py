@@ -65,6 +65,12 @@ def build_data_frame(section):
 
 
 def create_prestations_sociales_data_frames():
+    # From CAF historical series
+    build_historical_amounts_data()
+    build_historical_beneficiaries_data()
+    # From CNAV
+    build_minimum_vieillesse_serie()
+    # From data.caf.fr web site
     store = pd.HDFStore(os.path.join(
         prestations_sociales_directory,
         'prestations_sociales.h5'
@@ -434,6 +440,7 @@ def build_historical_beneficiaries_data():
     # Adjust paje_adoption to reflect whole year
     data_frame.loc['paje_naissance', data_frame.columns] = 12 * data_frame.loc['paje_naissance', data_frame.columns]
     data_frame.to_csv(csv_file_path, encoding='utf-8')
+    print csv_file_path
 
 
 def build_minimum_vieillesse_serie():

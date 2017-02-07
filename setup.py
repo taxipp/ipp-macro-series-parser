@@ -46,7 +46,7 @@ doc_lines = __doc__.split('\n')
 
 setup(
     name = 'IPP-Macro-Series-Parser',
-    version = '0.1.2',
+    version = '0.1.3',
     author = 'IPP',
     author_email = 'taxipp@ipp.eu',
     classifiers = [classifier for classifier in classifiers.split('\n') if classifier],
@@ -66,6 +66,7 @@ setup(
         'pandas',
         'py-expression-eval',
         'pyxdg',
+        'python-slugify',
         'setuptools',
         'xlrd',
         'xlsxwriter',

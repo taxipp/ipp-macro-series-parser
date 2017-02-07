@@ -22,8 +22,6 @@ log = logging.getLogger(app_name)
 
 def main():
     parser = argparse.ArgumentParser()
-    # parser.add_argument('-e', '--end', default = 2013, help = 'ending year to be downloaded')
-    # parser.add_argument('-s', '--start', default = 2009, help = 'starting year to be downloaded')
     parser.add_argument('-v', '--verbose', action = 'store_true', default = False, help = "increase output verbosity")
     parser.add_argument('-f', '--force', action = 'store_true', default = False,
         help = "Force overwrite of existing data")
@@ -36,7 +34,6 @@ def main():
     assert directory != 'None', \
         "Set prestations_sociales_directory in the data section of you config[_local].ini file to a valid directory"
 
-    # years = range(args.start, args.end + 1)
     hdf_file_path = os.path.join(directory, 'prestations_sociales.h5')
     if os.path.exists(hdf_file_path):
         if not args.force:
