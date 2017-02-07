@@ -26,7 +26,7 @@ def build_data_frame(section):
     directory = os.path.join(
         prestations_sociales_directory,
         'raw',
-        'caf_data_fr'
+        'caf_data_fr',
         'les-{}-tous-regimes-de-prestations-familiales-et-sociales'.format(
             section
             ),
@@ -471,6 +471,6 @@ def build_minimum_vieillesse_serie():
 
 
 if __name__ == '__main__':
-    # build_historical_amounts_data()
-    # build_historical_beneficiaries_data()
+    build_historical_amounts_data()
+    build_historical_beneficiaries_data()
     build_minimum_vieillesse_serie()
