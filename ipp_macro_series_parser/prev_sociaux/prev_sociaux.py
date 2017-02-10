@@ -22,32 +22,19 @@ log = logging.getLogger(app_name)
 
 parser = Config()
 prev_sociaux_source = parser.get('data', 'prev_sociaux_source')
-os.path.exists(prev_sociaux_source)
-os.path.exists(prev_sociaux_source.decode('utf-8').encode('iso8859_1'))
-save_path = parser.get('data', 'prev_sociaux_savepath')
+prev_sociaux_directory = parser.get('data', 'prev_sociaux_directory')
 
 assert prev_sociaux_source != 'None', \
     "Set prev_sociaux_source in the data section of you config[_local].ini file to a valid directory"
-assert save_path != 'None', \
+assert prev_sociaux_directory != 'None', \
     "Set prev_sociaux_directory in the data section of you config[_local].ini file to a valid directory"
 
 
-
-def save_obj(obj, name ):
-    with open('obj/'+ name + '.pkl', 'wb') as f:
-        pickle.dump(obj, f, pickle.HIGHEST_PROTOCOL)
-
-def load_obj(obj, name):
-    with open('obj/' + name + '.pkl', 'rb') as f:
-        return pickle.load(f)
-
     
-    
-def save_df_to_hdf(df, hdf_file_name, key):
+def save_df_to_hdf(df, hdf_file_name, key, save_path):
     file_path = os.path.join(save_path, hdf_file_name)
     df.to_hdf(file_path, key)
-        
-        
+            
     
 def prelevements_sociaux_downloader():
 
@@ -81,7 +68,8 @@ def prelevements_sociaux_cleaner(dict_df, var):
         df1.iloc[14:,1:3] = df1.iloc[14:,1:3]/6.57
     
 
-    save_df_to_hdf(df1, 'prev_sociaux.h5', var)
+    save_path = os.path.join(prev_sociaux_directory, "clean")
+    save_df_to_hdf(df1, 'prev_sociaux.h5', var, save_path)
 
     
 
