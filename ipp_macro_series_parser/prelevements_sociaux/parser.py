@@ -5,6 +5,7 @@
 from __future__ import unicode_literals
 import logging
 import os
+import platform
 import sys
 import pandas as pd
 
@@ -27,23 +28,28 @@ def prelevements_sociaux_downloader():
 
     sheetname1 = 'CSG-CRDS (V&M)'
     sheetname2 = 'Recettes CSG (CCSS)'
- #   sheetname3 = 'Calcul_assietteCSG'
+    #   sheetname3 = 'Calcul_assietteCSG'
 
-    file_path = prelevements_sociaux_source.encode('iso8859_1')
-    df1 = pd.read_excel(file_path, sheetname = sheetname1, encoding='utf-8')
-    df2 = pd.read_excel(file_path, sheetname = sheetname2, encoding='utf-8')
- #   df3 = pd.read_excel(file_path, sheetname = sheetname3, encoding='utf-8')
+    if platform.system == 'Windows':
+        file_path = prelevements_sociaux_source.encode('iso8859_1')
+        df1 = pd.read_excel(file_path, sheetname = sheetname1, encoding='utf-8')
+        df2 = pd.read_excel(file_path, sheetname = sheetname2, encoding='utf-8')
+    #   df3 = pd.read_excel(file_path, sheetname = sheetname3, encoding='utf-8')
+    else:
+        file_path = prelevements_sociaux_source
+        df1 = pd.read_excel(file_path, sheetname = sheetname1)
+        df2 = pd.read_excel(file_path, sheetname = sheetname2)
+        # df3 = pd.read_excel(file_path, sheetname = sheetname3)
 
-    dict_df = {sheetname1: df1, sheetname2: df2}
+    data_frame_by_sheet = {sheetname1: df1, sheetname2: df2}
 
-    return dict_df
+    return data_frame_by_sheet
 
 
-def prelevements_sociaux_cleaner(dict_df, var):
-
-    ## Clean CSG-CRDS: ##
+def prelevements_sociaux_cleaner(data_frame_by_sheet, var):
+    # Clean CSG-CRDS
     if var == "recette_csg_crds":
-        df1 = dict_df['CSG-CRDS (V&M)'].reset_index()
+        df1 = data_frame_by_sheet['CSG-CRDS (V&M)'].reset_index()
         # Columns
         df1 = df1.iloc[:, 0:3]
         # Names
@@ -54,28 +60,29 @@ def prelevements_sociaux_cleaner(dict_df, var):
         df1[["recette_csg", "recette_crds"]] = df1[["recette_csg", "recette_crds"]] * 1e6
         df1.iloc[14:, 1:3] = df1.iloc[14:, 1:3] / 6.57
 
-    ## Clean CSG par revenus ##
+    # Clean CSG par revenus
     if var == "recette_csg_by_type":
-        df1 = dict_df['Recettes CSG (CCSS)'].reset_index()
+        df1 = data_frame_by_sheet['Recettes CSG (CCSS)'].reset_index()
         # Columns
-        df1 = df1.iloc[:, [1, 2, 3, 9, 10, 11, 12, 13, 14, 18]]
+        df1 = df1.iloc[:, [1, 2, 3, 9, 10, 11, 12, 13, 14, 18]].copy()
         # Names
         df1.columns = ["annee", "csg_total", "csg_activite", "csg_remplacement", "csg_capital", "csg_placement",
-                       "csg_patrimoine", "csg_majo_pen", "csg_jeux", "source"]
+            "csg_patrimoine", "csg_majo_pen", "csg_jeux", "source"]
         # Drop lines
-        df1 = df1.iloc[1:27]
+        df1 = df1.iloc[1:27].copy()
         # Convert to euros
-        df1 = df1.iloc[:, 1:9] * 1e9
+        df1.iloc[:, 1:9] = df1.iloc[:, 1:9] * 1e9
+        df1.annee = df1.annee.astype(int)
 
     file_name = var + '.csv'
     save_path = os.path.join(prelevements_sociaux_directory, "clean", file_name)
-    df1.to_csv(save_path)
+    df1.to_csv(save_path, index = False)
 
 
 def main_parse():
     raw_data = prelevements_sociaux_downloader()
-    prelevements_sociaux_cleaner(dict_df = raw_data, var = "recette_csg_crds")
-    prelevements_sociaux_cleaner(dict_df = raw_data, var = "recette_csg_by_type")
+    prelevements_sociaux_cleaner(data_frame_by_sheet = raw_data, var = "recette_csg_crds")
+    prelevements_sociaux_cleaner(data_frame_by_sheet = raw_data, var = "recette_csg_by_type")
 
 
 if __name__ == "__main__":

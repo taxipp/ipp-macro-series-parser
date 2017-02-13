@@ -33,18 +33,18 @@ def main():
     prelevements_sociaux_source = config.get('data', 'prelevements_sociaux_source')
     prelevements_sociaux_directory = config.get('data', 'prelevements_sociaux_directory')
     assert prelevements_sociaux_source != 'None', \
-    "Set prelevements_sociaux_source in the data section of you config[_local].ini file to a valid directory"
+        "Set prelevements_sociaux_source in the data section of you config[_local].ini file to a valid directory"
     assert prelevements_sociaux_directory != 'None', \
-    "Set prelevements_sociaux_directory in the data section of you config[_local].ini file to a valid directory"
+        "Set prelevements_sociaux_directory in the data section of you config[_local].ini file to a valid directory"
 
-    clean_directory = os.path.join(prelevements_sociaux_directory,'clean')
+    clean_directory = os.path.join(prelevements_sociaux_directory, 'clean')
     if not os.path.exists(clean_directory):
         os.makedirs(clean_directory)
 
     file_path1 = os.path.join(clean_directory, 'recette_csg_crds.csv')
     file_path2 = os.path.join(clean_directory, 'recette_csg_by_type.csv')
 
-    if os.path.exists(file_path1) or  os.path.exists(file_path2):
+    if os.path.exists(file_path1) or os.path.exists(file_path2):
         if not args.force:
             log.error("The files {} and/or {} already exist. Use the --force to overwrite.".format(file_path1, file_path2))
             return
