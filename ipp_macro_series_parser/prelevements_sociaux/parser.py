@@ -76,7 +76,12 @@ def prelevements_sociaux_cleaner(data_frame_by_sheet, var):
 
     file_name = var + '.csv'
     save_path = os.path.join(prelevements_sociaux_directory, "clean", file_name)
-    df1.to_csv(save_path, index = False)
+    (df1
+        .set_index('annee')
+        .transpose()
+        .sort_index(axis = 1)
+        .to_csv(save_path)
+        )
 
 
 def main_parse():
