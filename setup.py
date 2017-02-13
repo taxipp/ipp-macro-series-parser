@@ -46,7 +46,7 @@ doc_lines = __doc__.split('\n')
 
 setup(
     name = 'IPP-Macro-Series-Parser',
-    version = '0.1.2',
+    version = '0.1.3',
     author = 'IPP',
     author_email = 'taxipp@ipp.eu',
     classifiers = [classifier for classifier in classifiers.split('\n') if classifier],
@@ -59,6 +59,7 @@ setup(
         'console_scripts': [
             'download-prestations-sociales=ipp_macro_series_parser.scripts.prestations_sociales_downloader:main',
             'parse-prestations-sociales=ipp_macro_series_parser.scripts.prestations_sociales_parser:main',
+            'parse-prelevements-sociaux=ipp_macro_series_parser.scripts.prelevements_sociaux_parser:main',
             ],
         },
     install_requires = [

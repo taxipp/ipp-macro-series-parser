@@ -24,7 +24,7 @@ def check_template_config_files():
             if not os.path.exists(config_template_ini_path):
                 log.info("Creating configuration template files in {}".format(config_files_directory))
                 templates_config_files_directory = os.path.join(
-                    pkg_resources.get_distribution('openfisca-survey-manager').location)
+                    pkg_resources.get_distribution('ipp-macro-series-parser').location)
                 shutil.copy(
                     os.path.join(templates_config_files_directory, 'config_template.ini'),
                     os.path.join(config_files_directory, 'config_template.ini'),
