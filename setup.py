@@ -60,6 +60,7 @@ setup(
             'download-prestations-sociales=ipp_macro_series_parser.scripts.prestations_sociales_downloader:main',
             'parse-prestations-sociales=ipp_macro_series_parser.scripts.prestations_sociales_parser:main',
             'parse-prelevements-sociaux=ipp_macro_series_parser.scripts.prelevements_sociaux_parser:main',
+            'download-demographic-projections=ipp_macro_series_parser.scripts.demographic_projections_downloader:main',
             ],
         },
     install_requires = [

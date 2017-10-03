@@ -7,6 +7,7 @@ import logging
 import os
 import sys
 import population
+import demographic_projections_downloader
 
 app_name = os.path.splitext(os.path.basename(__file__))[0]
 log = logging.getLogger(app_name)
@@ -103,6 +104,13 @@ def main():
         default = None,
         help = "input directory for til-specific files (dependance)"
         )
+        
+    parser.add_argument(
+        '-d',
+        '--download',
+        default = False,
+        action = store_true,
+        help = "download all input files from their sources"
 
     parser.add_argument(
         '-v',
@@ -123,17 +131,29 @@ def main():
     if not os.path.exists(output_dir):
         log.info('Creating directory {}'.format(output_dir))
         os.makedirs(output_dir)
-
-    pop_input = os.path.abspath(args.pop_input)
-    assert os.path.exists(pop_input)
+        
+    if args.download and (args.til_input or args.pop_input):
+      parser.error("-d cannot be used with -p nor -t")
+      sys.exit(-1)
+      
+    if args.til_input and not args.weight:
+      print("--weight 200 used by default")
     
-    til_input = args.til_input
-    
-    if til_input is not None:
-        til_input = os.path.abspath(args.til_input)
-        assert os.path.exists(til_input)
+    if args.download:
+        pop_input, til_input = demographic_projections_downloader.download_files(from_build_parameters = True)
+        
     else:
-        til_input = None
+
+      pop_input = os.path.abspath(args.pop_input)
+      assert os.path.exists(pop_input)
+      
+      til_input = args.til_input
+      
+      if til_input is not None:
+          til_input = os.path.abspath(args.til_input)
+          assert os.path.exists(til_input)
+      else:
+          til_input = None
 
     run_all(
         pop_input_dir = pop_input,

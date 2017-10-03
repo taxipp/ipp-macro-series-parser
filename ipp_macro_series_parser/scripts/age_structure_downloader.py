@@ -27,7 +27,7 @@ assert demographie_directory != 'None', \
 
 
 # Download a the xls file from url and unzipp it in directory
-def demographie_downloader(years = None, directory = demographie_directory):
+def age_structure_downloader(years = None, directory = demographie_directory):
     assert years is not None
     if type(years) is int:
         years = [years]
@@ -57,7 +57,7 @@ def main():
     parser.add_argument('-v', '--verbose', action = 'store_true', default = False, help = "increase output verbosity")
     args = parser.parse_args()
     logging.basicConfig(level = logging.DEBUG if args.verbose else logging.WARNING, stream = sys.stdout)
-    demographie_downloader(years = range(args.start, args.end + 1))
+    age_structure_downloader(years = range(args.start, args.end + 1))
 
 
 if __name__ == "__main__":

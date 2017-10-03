@@ -10,8 +10,6 @@ import os
 import pandas as pd
 
 from liam2.importer import array_to_disk_array
-from til_core.config import Config
-from til_france.tests.base import line_prepender, til_france_path
 
 
 log = logging.getLogger(__name__)
@@ -25,6 +23,7 @@ def build_prevalence_2010(input_dir = None,
                           output_dir = None, 
                           uniform_weight = None,
                           drees_filename = 'dss43_horizon_2060.xls'
+                          output_filename = 'dependance_prevalence_2010.csv'
                           ):
                           
     data_path = os.path.join(
@@ -52,7 +51,7 @@ def build_prevalence_2010(input_dir = None,
     
     csv_file_path = os.path.join(
             output_dir, 
-            'dependance_prevalence_2010.csv'
+            output_filename
             )
     
     data = pd.DataFrame(data.xs(2010)).T
