@@ -104,7 +104,6 @@ def main():
         help = "input directory for til-specific files (dependance)"
         )
 
-
     parser.add_argument(
         '-v',
         '--verbose',
@@ -140,7 +139,7 @@ def main():
         pop_input_dir = pop_input,
         til_input_dir = til_input,
         parameters_dir = output_dir,
-        uniform_weight = args.weight,
+        uniform_weight = int(args.weight),
         )
 
 if __name__ == "__main__":
