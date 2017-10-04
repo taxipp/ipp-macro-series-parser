@@ -10,7 +10,7 @@ import os
 import pandas as pd
 
 from liam2.importer import array_to_disk_array
-
+from ipp_macro_series_parser.scripts.utils import line_prepender
 
 log = logging.getLogger(__name__)
 
@@ -22,7 +22,7 @@ def check_directory_existence(directory):
 def build_prevalence_2010(input_dir = None, 
                           output_dir = None, 
                           uniform_weight = None,
-                          drees_filename = 'dss43_horizon_2060.xls'
+                          drees_filename = 'dss43_horizon_2060.xls',
                           output_filename = 'dependance_prevalence_2010.csv'
                           ):
                           

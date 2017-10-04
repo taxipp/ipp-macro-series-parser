@@ -7,7 +7,8 @@ import logging
 import os
 import sys
 import population
-import demographic_projections_downloader
+import ipp_macro_series_parser.scripts.demographic_projections_downloader as dpd
+from ipp_macro_series_parser.config import Config
 
 app_name = os.path.splitext(os.path.basename(__file__))[0]
 log = logging.getLogger(app_name)
@@ -76,10 +77,26 @@ def run_all(pop_input_dir = None, til_input_dir = None, uniform_weight = None, p
 
 def main():
     parser = argparse.ArgumentParser()
-
+   
+    parser.add_argument(
+        '-d',
+        '--download',
+        action = 'store_true',
+        help = "download all input files from their web sources"
+        )
+    
+    parser.add_argument(
+        '-v',
+        '--verbose',
+        action = 'store_true',
+        default = False,
+        help = "increase output verbosity"
+        )
+      
     parser.add_argument(
         '-o',
         '--output',
+        type = str,
         default = None,
         help = "output directory"
         )
@@ -87,6 +104,7 @@ def main():
     parser.add_argument(
         '-p',
         '--pop_input',
+        type = str,
         default = None,
         help = "input directory for population files"
         )
@@ -104,24 +122,10 @@ def main():
         default = None,
         help = "input directory for til-specific files (dependance)"
         )
-        
-    parser.add_argument(
-        '-d',
-        '--download',
-        default = False,
-        action = store_true,
-        help = "download all input files from their sources"
 
-    parser.add_argument(
-        '-v',
-        '--verbose',
-        action = 'store_true',
-        default = False,
-        help = "increase output verbosity"
-        )
 
     args = parser.parse_args()
-
+    
     logging.basicConfig(
         level = logging.DEBUG if args.verbose else logging.WARNING,
         stream = sys.stdout)
@@ -133,17 +137,20 @@ def main():
         os.makedirs(output_dir)
         
     if args.download and (args.til_input or args.pop_input):
-      parser.error("-d cannot be used with -p nor -t")
-      sys.exit(-1)
+        parser.error("-d cannot be used with -p nor -t")
+        sys.exit(-1)
       
     if args.til_input and not args.weight:
-      print("--weight 200 used by default")
+        print("--weight 200 used by default")
     
     if args.download:
-        pop_input, til_input = demographic_projections_downloader.download_files(from_build_parameters = True)
-        
-    else:
+        dpd.main()
+        files = ['insee_projections', 'drees_dependance']
+        output_dirs_by_file = {file : Config().get('data', file) for file in files}
+        pop_input = output_dirs_by_file['insee_projections']
+        til_input = output_dirs_by_file['drees_dependance']
 
+    else:
       pop_input = os.path.abspath(args.pop_input)
       assert os.path.exists(pop_input)
       

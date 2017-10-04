@@ -36,7 +36,7 @@ def main():
             'Set {}in the data section of your config_local.ini file to a valid directory'.format(name)
 
     parser.add_argument('-v', '--verbose', action = 'store_true', default = False, help = "increase output verbosity")
-    args = parser.parse_args()
+    args, garbage = parser.parse_known_args()
     logging.basicConfig(level = logging.DEBUG if args.verbose else logging.WARNING, stream = sys.stdout)
 
     urls_by_file = {
