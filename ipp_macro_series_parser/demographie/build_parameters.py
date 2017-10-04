@@ -130,7 +130,11 @@ def main():
         level = logging.DEBUG if args.verbose else logging.WARNING,
         stream = sys.stdout)
 
-    output_dir = os.path.abspath(args.output)
+    if not os.path.isabs(args.output):
+        output_dir = os.path.abspath(args.output)
+
+    else: 
+        output_dir = args.output
 
     if not os.path.exists(output_dir):
         log.info('Creating directory {}'.format(output_dir))
