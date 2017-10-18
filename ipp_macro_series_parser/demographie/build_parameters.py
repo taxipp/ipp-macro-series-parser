@@ -33,10 +33,7 @@ def run_all(pop_input_dir = None, til_input_dir = None, uniform_weight = None, p
             to_csv = True
             )
 
-    population_output_dir =  os.path.join(parameters_dir,
-        "population"
-        )
-
+    population_output_dir = os.path.join(parameters_dir, "population")
     population.build_mortality_rates(
         input_dir = pop_input_dir,
         output_dir = population_output_dir,
@@ -78,7 +75,8 @@ def main():
     parser.add_argument('-v', '--verbose', action = 'store_true', default = False, help = "increase output verbosity")
     parser.add_argument('-o', '--output', type = str, default = None, help = "output directory")
     parser.add_argument('-p', '--pop_input', type = str, default = None, help = "input directory for population files")
-    parser.add_argument('-w', '--weight', default = 200, help = "weight used for TIL-France")  # TODO remove weight from here
+    parser.add_argument('-w', '--weight', default = 200, help = "weight used for TIL-France")
+    # TODO remove weight from here
     parser.add_argument('-t', '--til_input', default = None,
         help = "input directory for til-specific files (dependance)")
     args = parser.parse_args()
@@ -106,21 +104,21 @@ def main():
     if args.download:
         dpd.main()
         files = ['insee_projections', 'drees_dependance']
-        output_dirs_by_file = {file : Config().get('data', file) for file in files}
+        output_dirs_by_file = {file: Config().get('data', file) for file in files}
         pop_input = output_dirs_by_file['insee_projections']
         til_input = output_dirs_by_file['drees_dependance']
 
     else:
-      pop_input = os.path.abspath(args.pop_input)
-      assert os.path.exists(pop_input)
+        pop_input = os.path.abspath(args.pop_input)
+        assert os.path.exists(pop_input)
 
-      til_input = args.til_input
+        til_input = args.til_input
 
-      if til_input is not None:
-          til_input = os.path.abspath(args.til_input)
-          assert os.path.exists(til_input)
-      else:
-          til_input = None
+        if til_input is not None:
+            til_input = os.path.abspath(args.til_input)
+            assert os.path.exists(til_input)
+        else:
+            til_input = None
 
     run_all(
         pop_input_dir = pop_input,
@@ -128,6 +126,7 @@ def main():
         parameters_dir = output_dir,
         uniform_weight = int(args.weight),
         )
+
 
 if __name__ == "__main__":
     sys.exit(main())
