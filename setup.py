@@ -46,7 +46,7 @@ doc_lines = __doc__.split('\n')
 
 setup(
     name = 'IPP-Macro-Series-Parser',
-    version = '0.1.5',
+    version = '0.1.6',
     author = 'IPP',
     author_email = 'taxipp@ipp.eu',
     classifiers = [classifier for classifier in classifiers.split('\n') if classifier],
