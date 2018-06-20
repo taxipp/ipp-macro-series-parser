@@ -12,6 +12,9 @@ import pandas as pd
 Library of functions for build_parameters.py
 """
 
+input_file_name_default = 'projpop0760_FECcentESPcentMIGcent.xls'
+
+
 log = logging.getLogger(__name__)
 
 
@@ -21,11 +24,7 @@ def check_directory_existence(directory):
         os.makedirs(directory)
 
 
-def get_data(input_directory,
-             file_name = None,
-             sheetname = None,
-             taille = 110,
-             ):
+def get_data(input_directory, file_name = None, sheetname = None, taille = 110):
 
     data_path = os.path.join(
         input_directory,
@@ -42,36 +41,26 @@ def get_data(input_directory,
         )
 
     feuille.index.names = ['age']
-
     feuille.drop(feuille.columns[0], axis=1, inplace=True)
-
     data = feuille[:taille]
 
-    return(data.copy())
+    return data.copy()
 
 
-def builder_kernel(input_dir = None,
-                 input_file_name = 'projpop0760_FECcentESPcentMIGcent.xls',
-                 sheetname = None,
-                 output_dir = None,
-                 output_file_name = None,
-                 to_do_if_csv = None,
-                 to_do_always = None,
-                 uniform_weight = None,
-                 taille = 110,
-                 to_csv = False
-                 ):
+def builder_kernel(input_dir = None, input_file_name = input_file_name_default, sheetname = None,
+        output_dir = None, output_file_name = None, to_do_if_csv = None, to_do_always = None, uniform_weight = None,
+        taille = 110, to_csv = False):
     """
     Core function to read the excel file and output a df or csv
     Used in the build_* functions
     """
+    data = get_data(
+        input_dir,
+        input_file_name,
+        sheetname,
+        taille = taille
+        ).reset_index()
 
-    data = get_data(input_dir,
-                    input_file_name,
-                    sheetname,
-                    taille = taille
-                    ).reset_index()
- 
     del data['age']
 
     if to_do_always is not None:
@@ -86,9 +75,7 @@ def builder_kernel(input_dir = None,
             )
 
         if to_do_if_csv is not None:
-            data = to_do_if_csv(data, 
-                                uniform_weight
-                                )
+            data = to_do_if_csv(data, uniform_weight)
 
         columns_for_liam = ['age', 'period'] + [''] * (len(data.columns) - 1)
         first_row = ','.join([''] + [str(year) for year in data.columns])
@@ -111,10 +98,7 @@ def builder_kernel(input_dir = None,
         return data
 
 
-def build_deaths(to_csv = False,
-                 input_dir = None,
-                 output_dir = None,
-                 uniform_weight = 200):
+def build_deaths(to_csv = False, input_dir = None, output_dir = None, uniform_weight = 200):
     """
     Create the df/csv containing death numbers
     """
@@ -142,25 +126,27 @@ def build_deaths(to_csv = False,
     for k in genders:
         if to_csv:
             for gender in genders:
-                builder_kernel(input_dir = input_dir,
-                             input_file_name = 'projpop0760_FECcentESPcentMIGcent.xls',
-                             sheetname = sheetname_by_gender[gender],
-                             output_dir = output_dir,
-                             output_file_name = output_file_name_by_gender[gender],
-                             to_do_if_csv = to_do_deaths,
-                             uniform_weight = uniform_weight,
-                             taille = 110,
-                             to_csv = True
-                             )
+                builder_kernel(
+                    input_dir = input_dir,
+                    input_file_name = input_file_name_default,
+                    sheetname = sheetname_by_gender[gender],
+                    output_dir = output_dir,
+                    output_file_name = output_file_name_by_gender[gender],
+                    to_do_if_csv = to_do_deaths,
+                    uniform_weight = uniform_weight,
+                    taille = 110,
+                    to_csv = True
+                    )
         else:
             data_by_gender = dict(
                 (
                     gender,
-                    builder_kernel(input_dir = input_dir,
-                                 sheetname = sheetname_by_gender[gender],
-                                 taille = 110,
-                                 to_csv = False
-                                 )
+                    builder_kernel(
+                        input_dir = input_dir,
+                        sheetname = sheetname_by_gender[gender],
+                        taille = 110,
+                        to_csv = False
+                        )
                     )
                 for gender in genders
                 )
@@ -168,10 +154,7 @@ def build_deaths(to_csv = False,
             return data_by_gender
 
 
-def build_mortality_rates(to_csv = False,
-                          input_dir = None,
-                          output_dir = None,
-                          uniform_weight = 200):
+def build_mortality_rates(to_csv = False, input_dir = None, output_dir = None, uniform_weight = 200):
     """
     Create the df/csv containing death rates
     """
@@ -193,31 +176,33 @@ def build_mortality_rates(to_csv = False,
 
     def to_do_mortality(data):
         data = data / 10**4
-        return(data)
+        return data
 
     for k in genders:
         if to_csv:
             for gender in genders:
-                builder_kernel(input_dir = input_dir,
-                             input_file_name = 'projpop0760_FECcentESPcentMIGcent.xls',
-                             sheetname = sheetname_by_gender[gender],
-                             output_dir = output_dir,
-                             output_file_name = output_file_name_by_gender[gender],
-                             to_do_always = to_do_mortality,
-                             uniform_weight = uniform_weight,
-                             taille = 110,
-                             to_csv = True
-                             )
+                builder_kernel(
+                    input_dir = input_dir,
+                    input_file_name = input_file_name_default,
+                    sheetname = sheetname_by_gender[gender],
+                    output_dir = output_dir,
+                    output_file_name = output_file_name_by_gender[gender],
+                    to_do_always = to_do_mortality,
+                    uniform_weight = uniform_weight,
+                    taille = 110,
+                    to_csv = True
+                    )
         else:
             data_by_gender = dict(
                 (
                     gender,
-                    builder_kernel(input_dir = input_dir,
-                                 sheetname = sheetname_by_gender[gender],
-                                 taille = 110,
-                                 to_csv = False,
-                                 to_do_always = to_do_mortality,
-                                 )
+                    builder_kernel(
+                        input_dir = input_dir,
+                        sheetname = sheetname_by_gender[gender],
+                        taille = 110,
+                        to_csv = False,
+                        to_do_always = to_do_mortality,
+                        )
                     )
                 for gender in genders
                 )
@@ -225,10 +210,7 @@ def build_mortality_rates(to_csv = False,
             return data_by_gender
 
 
-def build_fertility_rates(to_csv = False,
-                          input_dir = None,
-                          output_dir = None,
-                          uniform_weight = 200):
+def build_fertility_rates(to_csv = False, input_dir = None, output_dir = None, uniform_weight = 200):
     """
     Create the df/csv containing fertility rates
     """
@@ -255,26 +237,28 @@ def build_fertility_rates(to_csv = False,
     for k in genders:
         if to_csv:
             for gender in genders:
-                builder_kernel(input_dir = input_dir,
-                             input_file_name = 'projpop0760_FECcentESPcentMIGcent.xls',
-                             sheetname = sheetname_by_gender[gender],
-                             output_dir = output_dir,
-                             output_file_name = output_file_name_by_gender[gender],
-                             to_do_always = to_do_fertility,
-                             uniform_weight = uniform_weight,
-                             taille = 37,
-                             to_csv = True
-                             )
+                builder_kernel(
+                    input_dir = input_dir,
+                    input_file_name = input_file_name_default,
+                    sheetname = sheetname_by_gender[gender],
+                    output_dir = output_dir,
+                    output_file_name = output_file_name_by_gender[gender],
+                    to_do_always = to_do_fertility,
+                    uniform_weight = uniform_weight,
+                    taille = 37,
+                    to_csv = True
+                    )
         else:
             data_by_gender = dict(
                 (
                     gender,
-                    builder_kernel(input_dir = input_dir,
-                                 sheetname = sheetname_by_gender[gender],
-                                 taille = 37,
-                                 to_csv = False,
-                                 to_do_always = to_do_fertility,
-                                 )
+                    builder_kernel(
+                        input_dir = input_dir,
+                        sheetname = sheetname_by_gender[gender],
+                        taille = 37,
+                        to_csv = False,
+                        to_do_always = to_do_fertility,
+                        )
                     )
                 for gender in genders
                 )
@@ -282,10 +266,7 @@ def build_fertility_rates(to_csv = False,
             return data_by_gender
 
 
-def build_migration(to_csv = False,
-                    input_dir = None,
-                    output_dir = None,
-                    uniform_weight = 200):
+def build_migration(to_csv = False, input_dir = None, output_dir = None, uniform_weight = 200):
     """
     Create the df/csv containing net migration
     """
@@ -307,24 +288,26 @@ def build_migration(to_csv = False,
     for k in genders:
         if to_csv:
             for gender in genders:
-                builder_kernel(input_dir = input_dir,
-                             input_file_name = 'projpop0760_FECcentESPcentMIGcent.xls',
-                             sheetname = sheetname_by_gender[gender],
-                             output_dir = output_dir,
-                             output_file_name = output_file_name_by_gender[gender],
-                             uniform_weight = uniform_weight,
-                             taille = 110,
-                             to_csv = True
-                             )
+                builder_kernel(
+                    input_dir = input_dir,
+                    input_file_name = input_file_name_default,
+                    sheetname = sheetname_by_gender[gender],
+                    output_dir = output_dir,
+                    output_file_name = output_file_name_by_gender[gender],
+                    uniform_weight = uniform_weight,
+                    taille = 110,
+                    to_csv = True
+                    )
         else:
             data_by_gender = dict(
                 (
                     gender,
-                    builder_kernel(input_dir = input_dir,
-                                 sheetname = sheetname_by_gender[gender],
-                                 taille = 110,
-                                 to_csv = False,
-                                 )
+                    builder_kernel(
+                        input_dir = input_dir,
+                        sheetname = sheetname_by_gender[gender],
+                        taille = 110,
+                        to_csv = False,
+                        )
                     )
                 for gender in genders
                 )
@@ -332,9 +315,7 @@ def build_migration(to_csv = False,
             return data_by_gender
 
 
-def rescale_migration(input_dir = None,
-                      output_dir = None
-                      ):
+def rescale_migration(input_dir = None, output_dir = None):
     """
     Creates the csv containing net outmigration rates from the raw migration
     and total population
@@ -355,11 +336,12 @@ def rescale_migration(input_dir = None,
     population_insee_by_gender = dict(
         (
             gender,
-            builder_kernel(input_dir = input_dir,
-                           sheetname = sheetname_by_gender[gender],
-                           to_csv = False,
-                           taille = 109
-                           )
+            builder_kernel(
+                input_dir = input_dir,
+                sheetname = sheetname_by_gender[gender],
+                to_csv = False,
+                taille = 109
+                )
             )
         for gender in genders
         )
@@ -396,15 +378,8 @@ def rescale_migration(input_dir = None,
             )
 
         check_directory_existence(output_dir)
-
-        file_path = os.path.join(output_dir,
-                                 output_file_name_by_gender[gender]
-                                 )
-
-        migration_extract.to_csv(file_path,
-                         index = True,
-                         header = False
-                         )
+        file_path = os.path.join(output_dir, output_file_name_by_gender[gender])
+        migration_extract.to_csv(file_path, index = True, header = False)
 
         with open(file_path, 'r') as input_file:
             data = input_file.read().splitlines(True)
