@@ -3,10 +3,7 @@
 
 import collections
 import numpy
-import os
 import pandas
-import pkg_resources
-
 
 from py_expression_eval import Parser
 
