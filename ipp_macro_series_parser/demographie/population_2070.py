@@ -131,45 +131,44 @@ def build_mortality_rates(to_csv = False, input_file_path = None, output_dir = N
         data = data / 10**4
         return data
 
-    for k in genders:
-        if to_csv:
-            for gender in genders:
+    if to_csv:
+        for gender in genders:
+            builder_kernel(
+                input_file_path = input_file_path,
+                sheetname = sheetname_by_gender[gender],
+                output_dir = output_dir,
+                output_file_name = output_file_name_by_gender[gender],
+                to_do_always = to_do_mortality,
+                taille = taille,
+                to_csv = True
+                )
+    else:
+        data_by_gender = dict(
+            (
+                gender,
                 builder_kernel(
                     input_file_path = input_file_path,
                     sheetname = sheetname_by_gender[gender],
-                    output_dir = output_dir,
-                    output_file_name = output_file_name_by_gender[gender],
-                    to_do_always = to_do_mortality,
                     taille = taille,
-                    to_csv = True
+                    to_csv = False,
+                    to_do_always = to_do_mortality,
                     )
-        else:
-            data_by_gender = dict(
-                (
-                    gender,
-                    builder_kernel(
-                        input_file_path = input_file_path,
-                        sheetname = sheetname_by_gender[gender],
-                        taille = taille,
-                        to_csv = False,
-                        to_do_always = to_do_mortality,
-                        )
-                    )
-                for gender in genders
                 )
+            for gender in genders
+            )
 
-            dataframes = list()
-            for gender, dataframe in data_by_gender.items():
-                dataframe.index.name = 'age'
-                dataframe.columns.name = 'period'
-                dataframe = dataframe.stack('period').reset_index()
-                dataframe['sexe'] = False if gender == 'male' else True  # homme = False, femme = True
-                dataframe.rename(columns = {0: 'value'}, inplace = True)
-                dataframe = dataframe.set_index(['period', 'sexe', 'age'])
-                assert len(dataframe.columns) == 1
-                dataframes.append(dataframe)
+        dataframes = list()
+        for gender, dataframe in data_by_gender.items():
+            dataframe.index.name = 'age'
+            dataframe.columns.name = 'period'
+            dataframe = dataframe.stack('period').reset_index()
+            dataframe['sexe'] = False if gender == 'male' else True  # homme = False, femme = True
+            dataframe.rename(columns = {0: 'value'}, inplace = True)
+            dataframe = dataframe.set_index(['period', 'sexe', 'age'])
+            assert len(dataframe.columns) == 1
+            dataframes.append(dataframe)
 
-            return pd.concat(dataframes).sort_index()
+        return pd.concat(dataframes).sort_index()
 
 
 if __name__ == '__main__':
