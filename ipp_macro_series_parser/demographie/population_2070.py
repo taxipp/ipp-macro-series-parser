@@ -38,17 +38,18 @@ def get_data(input_directory = None, file_name = None, input_file_path = None, s
             file_name
             )
 
-    assert os.path.exists(input_file_path)
+    assert os.path.exists(input_file_path), input_file_path
 
     feuille = pd.read_excel(
         input_file_path,
         sheetname = sheetname,
-        skiprows = 2,
-        header = 2,
+        skiprows = 0,
+        header = 4,
         )
 
     feuille.index.names = ['age']
-    assert (feuille[feuille.columns[0]][0:taille] == range(taille)).all()
+    assert (feuille[feuille.columns[0]][0:taille-1] == range(taille-1)).all()
+    feuille.loc[feuille.columns[0],taille] = taille
     feuille.drop(feuille.columns[0], axis=1, inplace=True)
     data = feuille[:taille]
     cols = [col for col in data.columns if 'Unnamed' not in str(col)]
@@ -171,6 +172,66 @@ def build_mortality_rates(to_csv = False, input_file_path = None, output_dir = N
         return pd.concat(dataframes).sort_index()
 
 
+def build_population(to_csv = False, input_file_path = None, output_dir = None):
+    """
+    Create the df/csv containing planned population
+    """
+
+    genders = ['male', 'female']
+
+    sheetname_by_gender = dict(zip(
+        genders,
+        ['populationH', 'populationF']
+        ))
+
+    output_file_name_by_gender = dict(zip(
+        genders,
+        ['populationH.csv', 'populationF.csv']
+        ))
+
+    taille = 109
+
+
+    if to_csv:
+        for gender in genders:
+            builder_kernel(
+                input_file_path = input_file_path,
+                sheetname = sheetname_by_gender[gender],
+                output_dir = output_dir,
+                output_file_name = output_file_name_by_gender[gender],
+                to_do_always = None,
+                taille = taille,
+                to_csv = True
+                )
+    else:
+        data_by_gender = dict(
+            (
+                gender,
+                builder_kernel(
+                    input_file_path = input_file_path,
+                    sheetname = sheetname_by_gender[gender],
+                    taille = taille,
+                    to_csv = False,
+                    to_do_always = None,
+                    )
+                )
+            for gender in genders
+            )
+
+        dataframes = list()
+        for gender, dataframe in data_by_gender.items():
+            dataframe.index.name = 'age'
+            dataframe.columns.name = 'period'
+            dataframe = dataframe.stack('period').reset_index()
+            dataframe['sexe'] = False if gender == 'male' else True  # homme = False, femme = True
+            dataframe.rename(columns = {0: 'value'}, inplace = True)
+            dataframe = dataframe.set_index(['period', 'sexe', 'age'])
+            assert len(dataframe.columns) == 1
+            dataframes.append(dataframe)
+
+        return pd.concat(dataframes).sort_index()
+
+
 if __name__ == '__main__':
     config = Config()
     insee_projections_directory = config.get('data', 'insee_projections')
@@ -181,7 +242,7 @@ if __name__ == '__main__':
         }
     for hypothese, filename in insee_2070_projections_filename_by_hypothese.items():
         input_file_path = os.path.join(insee_projections_directory, filename)
-        output_path = os.path.join('/home/benjello/tmp', hypothese, 'mortalite.csv')
-        df = build_mortality_rates(input_file_path = input_file_path)
+        output_path = os.path.join('/home/benbel/temp', hypothese, 'population.csv')
+        df = build_population(input_file_path = input_file_path)
         check_directory_existence(os.path.dirname(output_path))
         df.to_csv(output_path)
