@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-import ConfigParser
+import configparser
 import logging
 import os
 import pkg_resources
@@ -38,11 +38,11 @@ def check_template_config_files():
     return True
 
 
-class Config(ConfigParser.SafeConfigParser):
+class Config(configparser.ConfigParser):
     config_ini = None
 
     def __init__(self):
-        ConfigParser.SafeConfigParser.__init__(self)
+        configparser.ConfigParser.__init__(self)
         if not check_template_config_files():
             print("Problem with the configuration directory {}: cannot proceed and thus exiting\n".format(
                 config_files_directory))
