@@ -4,10 +4,13 @@
 import configparser
 import logging
 import os
-import pkg_resources
 import shutil
 import sys
+
+
+import pkg_resources
 from xdg import BaseDirectory
+
 
 config_files_directory = BaseDirectory.save_config_path('ipp-macro-series-parser')
 

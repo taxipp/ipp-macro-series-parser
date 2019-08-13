@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Fri Jul 17 15:01:56 2015
 
-@author: thomas.douenne
-"""
 
 import os
 import pkg_resources
@@ -12,9 +8,8 @@ import numpy as np
 
 from ipp_macro_series_parser.config import Config
 
-parser = Config(
-    config_files_directory = os.path.join(pkg_resources.get_distribution('ipp-macro-series-parser').location)
-    )
+parser = Config()
+
 
 transports_directory = parser.get('data', 'transports_directory')
 a_activite_economique = parser.get('data', 'a_activite_economique')
