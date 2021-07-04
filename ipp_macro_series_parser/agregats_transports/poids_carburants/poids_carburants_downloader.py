@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 
 
 import os
@@ -22,7 +22,7 @@ def getunzipped(theurl, thedir, file_name):
         print("Can't retrieve %r to %r: %s" % (theurl, thedir, e))
         return
 
-to_be_downloaded = [    
+to_be_downloaded = [
     'Annexes_G_-_Bilan_de_la_circulation'
     ]
 

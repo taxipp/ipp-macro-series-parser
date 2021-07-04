@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 
 
 from ipp_macro_series_parser.demographie.parser import (

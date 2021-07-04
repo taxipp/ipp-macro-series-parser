@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-# -*- coding: utf-8 -*-
+
 
 
 """Download Comptes nationaux files from the INSEE website for specific years and unzip them

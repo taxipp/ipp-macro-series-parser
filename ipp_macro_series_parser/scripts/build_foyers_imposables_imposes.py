@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-# -*- coding: utf-8 -*-
+
 
 
 """Build an excel file containing with data parsed from the fiscal revenus files"""

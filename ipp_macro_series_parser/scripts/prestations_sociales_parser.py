@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-# -*- coding: utf-8 -*-
+
 
 
 """Parse dénombrements fiscaux to produce the dataframe stroed in a HDF5 file

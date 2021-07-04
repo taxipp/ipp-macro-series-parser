@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 
 
 from ipp_macro_series_parser.denombrements_fiscaux.agregats_ipp import (
@@ -92,7 +92,7 @@ def test_corrections():
         benefices_agricoles_reels_exoneres_sans_cga = [
             {'year': 2011, 'target': (10214497 + 2275427 + 171787)},
             ],
-        
+
         )
 
     def assert_value_construction(variable_name, test):

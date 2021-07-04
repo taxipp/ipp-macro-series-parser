@@ -1,5 +1,5 @@
 #! /usr/bin/env python
-# -*- coding: utf-8 -*-
+
 
 
 import argparse
@@ -17,7 +17,7 @@ log = logging.getLogger(app_name)
 def run_all(pop_input_dir = None, til_input_dir = None, uniform_weight = None, parameters_dir = None, til = False):
     if parameters_dir is None:
         parameters_dir = os.getcwd()
-    
+
     if til_input_dir is not None:
         import dependance
         assert uniform_weight is not None
