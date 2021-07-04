@@ -53,9 +53,9 @@ def create_demographie_data_frame():
                     Hommes = "Nombre d'hommes"), inplace = True)
                 data_frame = pandas.concat((data_frame, df))
                 del df
-            except Exception, e:
-                print year
-                print sheetname
+            except Exception as e:
+                print(year)
+                print(sheetname)
                 raise e
 
     return pandas.melt(data_frame, id_vars = ['year', 'champ', u'Âge révolu', u'Année de naissance'])

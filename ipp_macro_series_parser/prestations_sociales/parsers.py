@@ -440,7 +440,7 @@ def build_historical_beneficiaries_data():
     # Adjust paje_adoption to reflect whole year
     data_frame.loc['paje_naissance', data_frame.columns] = 12 * data_frame.loc['paje_naissance', data_frame.columns]
     data_frame.to_csv(csv_file_path, encoding='utf-8')
-    print csv_file_path
+    print(csv_file_path)
 
 
 def build_minimum_vieillesse_serie():

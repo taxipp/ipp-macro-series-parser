@@ -291,7 +291,7 @@ def get_or_construct_value(df, variable_name = None, index_by_variable = None, y
                 index = years,
                 )
             result_data_frame.index.name = 'year'
-        except Exception, e:
+        except Exception as e:
             log.error('FAILED')
             log.error(variable_name)
             log.error('data')

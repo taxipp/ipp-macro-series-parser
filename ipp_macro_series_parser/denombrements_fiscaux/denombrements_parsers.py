@@ -38,8 +38,8 @@ def parse_ipp_denombrements():
             df = df.convert_objects(convert_numeric=True)
             df = df.astype(float)
             df.year = df.year.astype(int)
-        except Exception, e:
-            print e
+        except Exception as e:
+            print(e)
             return name, df
         return name, df
 
@@ -626,8 +626,8 @@ def correct_errors(data_frame_by_bloc_name, show_only = False):
             data_frame.drop(labels = drop_columns, axis = 1, inplace = True)
             data_frame.rename(columns = correct_name_by_wrong_name, inplace = True)
 
-    print 'Remaining problematic columns'
-    print problematic_columns.difference(corrected_columns)
+    print('Remaining problematic columns')
+    print(problematic_columns.difference(corrected_columns))
 
 
 def parse_openfisca_denombrements():
@@ -657,7 +657,7 @@ def parse_dgfip_denombrements(years = None):
                 log.info("Using file {} for year {}".format(filename, year))
                 break
 
-        print year
+        print(year)
 
         if year in [2001, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013]:
             dgfip_denombrements = pandas.read_excel(os.path.join(dgfip_directory, filename))
@@ -685,7 +685,7 @@ def parse_dgfip_denombrements(years = None):
             new_variable_name_by_old = dict(
                 (x, "f{}".format(x.lower())) for x in dgfip_denombrements.index)
             dgfip_denombrements = dgfip_denombrements.rename(index = new_variable_name_by_old)
-            print dgfip_denombrements
+            print(dgfip_denombrements)
             boum
             # trouver un moyen de renommer les codes pour qu'il y ait le numéro des sections
 
@@ -866,7 +866,7 @@ def import_from_hdf(hdf_filename, key):
 if __name__ == '__main__':
     build_section_code()
     dgfip = parse_dgfip_denombrements(years = range(2008, 2009))
-    print dgfip
+    print(dgfip)
 #    denomb_fisc_all, errors = create_denombrements_fiscaux_data_frame(
 #        years = range(2009, 2014),
 #        overwrite = True,

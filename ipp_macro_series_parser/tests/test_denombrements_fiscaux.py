@@ -206,7 +206,7 @@ def test():
                         original_data_frame_by_irpp_table_name[irpp_table_name].loc[year, variable]
                         )
                 except KeyError:
-                    print '{} not found for {} in table {}'.format(variable, year, irpp_table_name)
+                    print('{} not found for {} in table {}'.format(variable, year, irpp_table_name))
                     continue
                 actual = data_frame.fillna(value = fill_value).loc[year, variable] / 1e9
                 if not abs(target - actual) / abs(target) <= 1e-3:

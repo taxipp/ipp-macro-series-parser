@@ -97,6 +97,6 @@ def test_get_or_construct_data_CN1():  # copied on the one in cn_test
     values_CN1_target = read_CN1(2013)
     variables_CN1 = generate_CN1_variables(2013)
     values_CN1, formulas_CN1 = get_or_construct_data(df, variables_CN1, range(1949, 2014))
-    print values_CN1.columns
-    print values_CN1_target.columns
+    print(values_CN1.columns)
+    print(values_CN1_target.columns)
     assert_frame_equal(values_CN1, values_CN1_target)

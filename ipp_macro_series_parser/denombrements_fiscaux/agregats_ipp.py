@@ -20,8 +20,8 @@ def update_index_by_variable_name_appearing_in_formula(index_by_variable_name, f
     parser_formula = Parser()
     try:
         expr = parser_formula.parse(formula)
-    except Exception, e:
-        print formula
+    except Exception as e:
+        print(formula)
         raise(e)
     formula_variables = expr.variables()
     components = dict(
@@ -75,9 +75,9 @@ def build_aggregates(raw_data, formula_by_variable_name, level_2_formula_by_vari
         else:
             try:
                 aggregates = pandas.concat([aggregates, serie], axis = 1, verify_integrity = True)
-            except Exception, e:
-                print "aggregates", aggregates
-                print "serie", serie
+            except Exception as e:
+                print("aggregates", aggregates)
+                print("serie", serie)
                 raise(e)
 
     return aggregates

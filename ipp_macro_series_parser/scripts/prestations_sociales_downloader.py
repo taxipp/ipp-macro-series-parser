@@ -11,7 +11,7 @@ import logging
 import os
 import sys
 import urllib
-import urllib2
+import urllib
 
 from ipp_macro_series_parser.config import Config
 
@@ -47,7 +47,7 @@ def minimum_vieillesse_downloader(directory = prestations_sociales_raw):
         target = os.path.join(statistiques_recherches_cnav_fr, os.path.basename(url))
         log.info('Downloading {}'.format(url))
         try:
-            source = urllib2.urlopen(url)
+            source = urllib.request.urlopen(url)
         except Exception as e:
             print("Can't retrieve {} to save it to {}:\n {}".format(url, target, e))
         with open(target, "wb") as local_file:
